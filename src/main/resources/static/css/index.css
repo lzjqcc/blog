@@ -1,0 +1,370 @@
+body{background: #eee;}
+.header{
+	width:100%;
+	height:64px;
+	background-color:#393d49;
+	border-bottom: 1px solid #404553;
+	position: fixed;
+	top:0px; 
+}
+.header ul{
+	float: right;
+    width:85%;
+    height:64px;
+}
+.header ul li{
+	width:15%;
+	float: left;
+	line-height:64px;
+}
+.header ul li a{
+	color:#909090;
+	font-size: 16px;
+}
+.header ul li a:hover{
+	color:#ddd;
+}
+.header .hide{
+	width:100%;
+	height: 54px;
+	font-size: 18px;
+	line-height: 54px;
+	text-align: center;
+	color:#ddd;
+  }
+ .header .hide img{
+ 	position:absolute;
+ 	right:5%;
+ 	top:15px;
+ }
+.banner{
+	width:100%;
+	background:#393d49;
+	
+}
+.banner .maxbanner{
+	width:auto;
+    max-width:1200px;
+    margin:0 auto;
+ }
+.banner img{
+     width:100%;
+}
+.motto{
+	width:100%;
+	margin:20px auto;
+	max-width: 1200px;
+	
+}
+.motto ul{
+	margin:0px auto;
+	width:100%;
+	font-weight: 300;
+
+}
+.motto ul li fieldset{
+	border-top: 1px solid #aaa;
+    border-right: 0; 
+    border-bottom: 0; 
+    border-left: 0; 
+  }
+.motto ul li fieldset legend{
+	font-size: 18px;
+	font-weight:500;
+}
+.motto ul li fieldset p{
+	padding:10px;
+	text-align: left;
+	text-indent: 20px;
+}
+.motto ul li:hover{
+	box-shadow: 0px 1px  16px #000;
+}
+.study{
+    width:100%;
+	margin:20px auto;
+	max-width: 1200px;
+	background: #fff;
+	padding:10px 0;
+}
+.study .img{
+	height:100px;
+	float: left;
+	width: 20%;
+	text-align:center;
+	vertical-align: top;
+}
+.study .word{
+	width: 70%;
+	float: left;
+}
+.study .word ul{
+     height:100px;
+	vertical-align: center;
+}
+.study .word ul li{
+	font-size: 16px;
+	line-height: 34px;
+	color: #111;
+	font-weight: bold;
+}
+.study .word ul li:first-of-type{
+	margin-left: 20%;
+}
+.study .word ul li:nth-of-type(2){
+	margin-left: 40%;
+}
+.study .word ul li:nth-of-type(3){
+	margin-left:70%;
+}
+.content{
+	width:100%;
+	margin:20px auto;
+	max-width: 1200px;
+	}
+.content .left ul li{
+	margin:15px 0;
+	background-color: #fff;
+	padding:10px;
+}
+  .content .left ul li:hover{
+     border-bottom: 1px solid #009688;
+ }
+.content .left ul li p{
+	margin-top: 10px;
+}
+.content .left button{
+	background: #efe;
+	padding: 5px;
+	line-height: 34px;
+	margin-left:40%;
+	border:0;
+}
+.content .left button:hover{
+	background: #fff;
+	border:1px solid #aaa;
+}
+.content .right  .right-hide{
+	background: #fff;
+	margin-top:15px;
+	margin-bottom: 30px;
+}
+.content .right .right-hide span{
+	line-height: 40px;
+	font-size: 18px;
+   display: inline-block;
+   text-indent: 35px;
+   color:#444;
+}
+ .content .right .right-hide ul{
+   	border-top: 1px solid  #009688 ;
+    padding:15px;
+ }
+ .content .right .infor ul{
+   	color: #009688;
+    font-style: oblique;
+}
+ .content .right .infor ul:hover{
+  	box-shadow: 0px 1px  16px #000;
+ }
+  .content .right .right-hide ul li{
+  	line-height: 30px;
+ }
+ .content .left h2 a:hover{
+ 	color: #009688;
+    font-style: oblique;
+ }
+ .content .right ul li a:hover{
+ 	color: red;
+    font-style: oblique;
+ }
+.foot{
+	margin-top: 20px;
+	width:100%;
+	background:#393d49;
+	color:#eee;
+	padding:20px;
+}
+.foot p{
+	line-height: 34px;
+	text-align: center;
+}
+.foot a{
+	color:#eee;
+}
+.top{
+	position:fixed;
+	right:0;
+	bottom:5%;
+}
+.hide-nav{
+	width:30%;
+	height:100%;
+	background:rgba(0.5,0.5,0.5,0.5);
+}
+
+
+/*大屏幕的css*/
+@media screen and (min-width: 1200px){
+	.header .hide{
+		display: none;
+	}
+  .motto ul li{
+		  width:25%;
+		  display: inline-block;
+		  background: #fff;
+		  padding:30px;
+		  line-height: 24px;
+		  vertical-align: top;
+		  box-sizing: border-box;
+		   margin-left:12%;
+    }
+   .motto ul li:first-of-type{
+     margin-left:0;	
+   }
+   .content .left{
+	   	float: left;
+	   	width: 70%;
+	   	margin-right: 5%;
+   }
+   .content .right{
+   	   float: right;
+   	   width:25%;
+   	}
+   
+ }
+
+
+/*pc端的css*/
+@media screen and (max-width: 1200px) and (min-width: 993px) {
+      .header .hide{
+		display: none;
+	}
+	  .banner{
+	  	width:100%;
+	  }
+	  .banner img{
+	  	width:100%;
+	  }
+      .motto ul li{
+		  width:25%;
+		  display: inline-block;
+		  background: #fff;
+		  padding:30px;
+		  line-height: 24px;
+		  vertical-align: top;
+		  box-sizing: border-box;
+		  margin-left:12%;
+    }
+   .motto ul li:first-of-type{
+      margin-left:0;	
+    }
+    .content .left{
+	   	float: left;
+	   	width: 70%;
+	   	margin-right: 5%;
+   }
+   .content .right{
+   	   float: right;
+   	   width:25%;
+   	}
+
+}
+
+
+/*ipad的css*/
+@media screen and (max-width:992px ) and (min-width: 768px) {
+	.header ul{
+		display: none;
+	}
+	.header .hide{
+		display: block;
+	}
+	.motto ul li{
+		width:40%;
+		display: inline-block;
+	    background: #fff;
+	    padding:30px;
+	    line-height: 24px;
+	    vertical-align: top;
+	    box-sizing: border-box;
+	    margin-top:20px;
+	    margin-left:5%;
+	}
+	.motto ul li:first-of-type{
+		width:90%;
+	}
+	.motto ul li:last-of-type{
+		margin-left:10%;
+	}
+	.study{
+		width:90%;
+	}
+	.content .left{
+   	    width: 90%;
+   	    margin-left: 5%;
+   }
+   .content .right{
+   	    width: 90%;
+   	    margin-left: 5%;
+   }
+
+
+}
+
+
+
+/*手机的css*/
+@media screen and (max-width:767px ){
+	.header ul{
+		display: none;
+	}
+    .header .hide{
+		display: block;
+	}
+	 .motto ul li{
+		width:80%;
+		display: inline-block;
+	    background: #fff;
+	    padding:30px;
+	    line-height: 24px;
+	    vertical-align: top;
+	    box-sizing: border-box;
+	    margin-top:20px;
+	    margin-left:10%;
+	}  
+  .study{
+		width:80%;
+	}
+  .sudy .img{
+     width:20%;
+     height: 15%;
+	}
+  .study .word ul li{
+	font-size: 12px;
+	line-height: 24px;
+	color: #111;
+	font-weight: 100px;
+	margin-left:10%;
+   }
+   .study .word ul li:first-of-type{
+	  margin-left: 20%;
+   }
+   .study .word ul li:nth-of-type(2){
+	  margin-left: 20%;
+    }
+   .study .word ul li:nth-of-type(3){
+	  margin-left:20%;
+   }
+   .study{
+		width:80%;
+	}
+	.content .left{
+   	    width: 80%;
+   	    margin-left: 10%;
+   }
+   .content .right{
+   	    width: 80%;
+   	    margin-left: 10%;
+   }
+}
