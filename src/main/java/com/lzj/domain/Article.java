@@ -1,31 +1,41 @@
 package com.lzj.domain;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by li on 17-8-6.
  */
 @Entity
 @Table(name = "article")
-public class Article implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+@EntityListeners(AuditingEntityListener.class)
+public class Article extends BaseEntity {
+
     private String title;
     private String description;
     private String content;
-    private Date publishDate;
     private String url;
 
-    public Integer getId() {
-        return id;
+    @OneToMany
+    @JoinTable(name = "article_comment",joinColumns = @JoinColumn(name = "article_id"),
+    inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    private Set<Comment>comments=new HashSet<>();
+
+    public Set<Comment> getComments() {
+        return comments;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
+
+
 
     public String getTitle() {
         return title;
@@ -51,13 +61,6 @@ public class Article implements Serializable{
         this.content = content;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
 
     public String getUrl() {
         return url;
@@ -65,5 +68,17 @@ public class Article implements Serializable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", content='" + content + '\'' +
+                ", url='" + url + '\'' +
+                ", comments=" + comments +
+
+                '}';
     }
 }
