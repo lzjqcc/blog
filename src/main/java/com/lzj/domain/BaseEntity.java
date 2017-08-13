@@ -1,5 +1,6 @@
 package com.lzj.domain;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * Created by li on 17-8-6.
  */
 @MappedSuperclass
+
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {
     @Id
@@ -19,12 +21,21 @@ public class BaseEntity implements Serializable {
     @CreatedDate
     private Date createTime;
 
+    private Date updateTime;
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Date getCreateTime() {

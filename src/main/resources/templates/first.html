@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <input type="button" value="点击">
+    <script src="/js/jquery.min.js" ></script>
+    <script type="text/javascript">
+        $("input").click(function () {
+            var APPID = "wxf509b4d3e16bc84c";
+            var SECRET = "1340472ee7127247f215367959e0e4d0";
+            var url = encodeURIComponent("http://b7eb9404.ngrok.io/webpub/index");
+            console.log(url)
+            //snsapi_userinfo
+            /*private final static String APPID="wxf509b4d3e16bc84c";
+             private final static String SECRET="1340472ee7127247f215367959e0e4d0";*/
+            //http://b7eb9404.ngrok.io/webpub/index
+            /*https://open.weixin.qq.com/connect/oauth2/authorize?appid="+APPID+"&redirect_uri="+url+"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect*/
+            $.ajax({
+                url: "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APPID + "&redirect_uri=" + url + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
+                dataType: 'jsonp',
+                processData: false,
+                type: 'get',
+                success: function (data) {
+                    alert(data.name);
+                }
+            })
+        })
+        //view-source:https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf509b4d3e16bc84c&redirect_uri=http%3A%2F%2Fb7eb9404.ngrok.io%2Fwebpub%2Findex&response_type=code&scope=snsapi_userinfo&state=STATE&callback=jQuery191038253978651903353_1502614729529&_=1502614729531&connect_redirect=1#wechat_redirect
+    </script>
+</head>
+<body>
+
+</body>
+</html>

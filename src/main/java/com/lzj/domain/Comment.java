@@ -1,44 +1,75 @@
 package com.lzj.domain;
 
 import com.sun.xml.internal.rngom.parse.host.Base;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by li on 17-8-6.
  */
 @Entity
 @Table(name = "commet")
-public class Comment extends BaseEntity{
 
-    @Column(name = "user_comment")
-    @Lob
-    private String userComent;//用户评论组合  这个真是不错 time=*** FromUserSaid1
+public class Comment extends BaseEntity implements Cloneable{
+
+
+    //用户评论组合  这个真是不错 time=*** FromUserSaid1
+   /* @ElementCollection(targetClass = String.class)
+    @MapKeyClass(value = String.class)
+    @MapKeyColumn(name = "key")
+    @Column(name = "comment")
+    @CollectionTable(name = "")
+    private Map<String,String> comments=new LinkedHashMap<>();*/
+    public interface CommentWithArticle{}
+    private Date createTime;
+    private String comments;
 
     @ManyToOne
     private User fromUser;//哪个用户评论
     @ManyToOne
     private User toUser;//给哪个用户
-
-    private String type;//1 表示回复，2表示直接评论
-
-    public String getType() {
-        return type;
+    @ManyToOne
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private Comment parent;
+    @Transient
+    private List<Comment> children;
+    public Comment getParent() {
+        return parent;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setParent(Comment parent) {
+        this.parent = parent;
     }
 
-    public String getUserComent() {
-        return userComent;
+    public List<Comment> getChildren() {
+        return children;
     }
 
-    public void setUserComent(String userComent) {
-        this.userComent = userComent;
+    public void setChildren(List<Comment> children) {
+        this.children = children;
     }
+
+    @Override
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
 
     public User getFromUser() {
         return fromUser;
@@ -55,14 +86,11 @@ public class Comment extends BaseEntity{
     public void setToUser(User toUser) {
         this.toUser = toUser;
     }
+  /*  @Transient
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    public Comment getThis() throws CloneNotSupportedException {
+        Comment comment= (Comment) this.clone();
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "userComent='" + userComent + '\'' +
-                ", fromUser=" + fromUser +
-                ", toUser=" + toUser +
-                ", type='" + type + '\'' +
-                '}';
-    }
+        return comment;
+    }*/
 }

@@ -1,8 +1,14 @@
 package com.lzj.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,23 +17,26 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "user")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = "@id")
 public class User extends BaseEntity{
 
     private String userName;
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private String email;
-    @OneToMany
-    @JoinTable(name = "user_article",joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "article_id"))
-    private Set<Article>articles=new HashSet<>();
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Enumerated(value =EnumType.STRING)
+    private Role role;
 
-    public Set<Article> getArticles() {
-        return articles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setArticles(Set<Article> articles) {
-        this.articles = articles;
+    public void setRole(Role role) {
+        this.role = role;
     }
+
 
     public String getUserName() {
         return userName;
@@ -52,6 +61,12 @@ public class User extends BaseEntity{
     public void setEmail(String email) {
         this.email = email;
     }
-
-
+    public static enum Role{
+        ROLE_ADMIN,ROLE_USER
+    }
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Override
+    public Date getCreateTime() {
+        return super.getCreateTime();
+    }
 }

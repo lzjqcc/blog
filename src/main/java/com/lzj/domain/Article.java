@@ -1,41 +1,62 @@
 package com.lzj.domain;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.*;
 
 /**
  * Created by li on 17-8-6.
  */
 @Entity
-@Table(name = "article")
-@EntityListeners(AuditingEntityListener.class)
-public class Article extends BaseEntity {
 
+@Table(name = "article")
+@org.hibernate.annotations.Entity(selectBeforeUpdate = true,dynamicUpdate = true)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = "@id")
+public class Article extends BaseEntity {
+    public interface ArticleInter{}
     private String title;
     private String description;
     private String content;
     private String url;
+    private Integer support;//点赞
+    private Integer disLike;//点踩
+    @ManyToOne
+    private User user;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     @OneToMany
-    @JoinTable(name = "article_comment",joinColumns = @JoinColumn(name = "article_id"),
-    inverseJoinColumns = @JoinColumn(name = "comment_id"))
-    private Set<Comment>comments=new HashSet<>();
+    private List<Comment> comments=new ArrayList<>();
 
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
+    public Integer getSupport() {
+        return support;
+    }
 
+    public void setSupport(Integer support) {
+        this.support = support;
+    }
+
+    public Integer getDisLike() {
+        return disLike;
+    }
+
+    public void setDisLike(Integer disLike) {
+        this.disLike = disLike;
+    }
 
     public String getTitle() {
         return title;
@@ -70,15 +91,5 @@ public class Article extends BaseEntity {
         this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", content='" + content + '\'' +
-                ", url='" + url + '\'' +
-                ", comments=" + comments +
 
-                '}';
-    }
 }

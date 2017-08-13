@@ -9,5 +9,6 @@ import org.springframework.data.repository.query.Param;
  * Created by li on 17-8-6.
  */
 public interface UserDao extends JpaRepository<User,Integer>{
-
+    public User findByUserName(String userName);
+    public User findByUserNameAndPassword(String userName,String pasword);
 }
