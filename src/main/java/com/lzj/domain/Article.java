@@ -8,20 +8,16 @@ import java.util.*;
 /**
  * Created by li on 17-8-6.
  */
-@Entity
 
-@Table(name = "article")
-@org.hibernate.annotations.Entity(selectBeforeUpdate = true,dynamicUpdate = true)
+//@org.hibernate.annotations.Entity(selectBeforeUpdate = true,dynamicUpdate = true)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = "@id")
 public class Article extends BaseEntity {
-    public interface ArticleInter{}
     private String title;
     private String description;
     private String content;
     private String url;
     private Integer support;//点赞
     private Integer disLike;//点踩
-    @ManyToOne
     private User user;
 
     public User getUser() {
@@ -31,7 +27,6 @@ public class Article extends BaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
-    @OneToMany
     private List<Comment> comments=new ArrayList<>();
 
     public List<Comment> getComments() {

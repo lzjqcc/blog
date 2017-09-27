@@ -10,8 +10,7 @@ import java.util.*;
 /**
  * Created by li on 17-8-6.
  */
-@Entity
-@Table(name = "commet")
+
 
 public class Comment extends BaseEntity implements Cloneable{
 
@@ -27,14 +26,9 @@ public class Comment extends BaseEntity implements Cloneable{
     private Date createTime;
     private String comments;
 
-    @ManyToOne
     private User fromUser;//哪个用户评论
-    @ManyToOne
     private User toUser;//给哪个用户
-    @ManyToOne
-    @com.fasterxml.jackson.annotation.JsonIgnore
     private Comment parent;
-    @Transient
     private List<Comment> children;
     public Comment getParent() {
         return parent;

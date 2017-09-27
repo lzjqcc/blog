@@ -11,14 +11,13 @@ import java.util.Date;
 /**
  * Created by li on 17-8-6.
  */
-@MappedSuperclass
 
-@EntityListeners(AuditingEntityListener.class)
+
+
 public class BaseEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer id;
-    @CreatedDate
+
     private Date createTime;
 
     private Date updateTime;

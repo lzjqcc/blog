@@ -22,7 +22,6 @@ import java.util.*;
 @Service
 
 public class ArticleService {
-    @Autowired
     private ArticleDao articleDao;
     @Autowired
     private UserDao userDao;
@@ -37,14 +36,14 @@ public class ArticleService {
      */
     @Transactional
     public void saveArticle(Integer userId, Article article) {
-        User user = userDao.getOne(userId);
+/*        User user = userDao.getOne(userId);
         article.setUser(user);
-        articleDao.save(article);
+        articleDao.save(article);*/
     }
     //给内部调用，用于更新
     @Transactional
     public Article getArticleToInnerById(Integer id){
-        return articleDao.getOne(id);
+        return null;
     }
     //这是给前端调用的
     @Transactional(readOnly = true)

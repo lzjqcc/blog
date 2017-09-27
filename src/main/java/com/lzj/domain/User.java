@@ -15,18 +15,11 @@ import java.util.Set;
 /**
  * Created by li on 17-8-6.
  */
-@Entity
-@Table(name = "user")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = "@id")
 public class User extends BaseEntity{
 
     private String userName;
-    @com.fasterxml.jackson.annotation.JsonIgnore
     private String password;
-    @com.fasterxml.jackson.annotation.JsonIgnore
     private String email;
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    @Enumerated(value =EnumType.STRING)
     private Role role;
 
     public Role getRole() {

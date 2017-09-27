@@ -8,6 +8,7 @@ import java.util.Map;
  * Created by li on 17-8-10.
  */
 public class JsonUtils {
+
     public static String toJson(Object object){
         return JSONObject.fromObject(object).toString();
     }

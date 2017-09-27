@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by li on 17-8-6.
  */
-public interface ArticleDao extends JpaRepository<Article,Integer>{
+public interface ArticleDao {
     //根据文章获取评论
     @Query("select a from Article  a where id=:id order by a.id")
     public Article findArticleById(@Param("id") Integer id);

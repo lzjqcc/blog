@@ -22,11 +22,9 @@ import java.util.Set;
  */
 @Service
 public class CommentService {
-    @Autowired
     private CommentDao commentDao;
     @Autowired
     private UserDao userDao;
-    @Autowired
     private ArticleDao articleDao;
 
     /**
@@ -38,7 +36,7 @@ public class CommentService {
      */
     @Transactional
     public void saveComent(Integer fromUserId, Integer toUserId, String comments, Integer articleId,Integer commentId) {
-        Article article = articleDao.getOne(articleId);
+      /*  Article article = articleDao.getOne(articleId);
         Comment comment = new Comment();
         User fromUser = userDao.getOne(fromUserId);
         User toUser = userDao.getOne(toUserId);
@@ -55,11 +53,11 @@ public class CommentService {
         }
         commentSet.add(comment);
         commentDao.save(comment);
-        articleDao.save(article);
+        articleDao.save(article);*/
     }
     @Transactional(readOnly = true)
     public Comment getCommentById(Integer id){
-        return  commentDao.getOne(id);
+        return  null;
     }
 
     /**
