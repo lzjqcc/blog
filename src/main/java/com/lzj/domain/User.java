@@ -21,6 +21,15 @@ public class User extends BaseEntity{
     private String password;
     private String email;
     private Role role;
+    private String icon;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public Role getRole() {
         return role;
@@ -57,9 +66,5 @@ public class User extends BaseEntity{
     public static enum Role{
         ROLE_ADMIN,ROLE_USER
     }
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    @Override
-    public Date getCreateTime() {
-        return super.getCreateTime();
-    }
+
 }

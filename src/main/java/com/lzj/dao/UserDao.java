@@ -16,4 +16,15 @@ public interface UserDao{
     public Integer insertUser(User user);
     void updateUser(User user);
     User findByEmailOrNameAndPassword(User user);
+    User findById(Integer id);
+
+    /**name==null根据email查询
+     * email==null 根据name查询
+     * email=null&&name=null 查询所有
+     * @param name
+     * @param email
+     * @return
+     */
+    User findByNameOrEmail(@Param("name") String name,
+                           @Param("email") String email);
 }

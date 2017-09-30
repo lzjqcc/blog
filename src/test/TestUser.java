@@ -22,26 +22,32 @@ import java.util.Date;
 public class TestUser {
     @Autowired
     private UserDao userDao;
+
     @Test
-    public void testInsert(){
-        User user=new User();
-        user.setUserName("qccdf");
+    public void testInsert() {
+        User user = new User();
+        user.setUserName("李志坚");
         user.setPassword("123");
         user.setRole(User.Role.ROLE_ADMIN);
-        user.setEmail("1213@qq.com");
-        int id=userDao.insertUser(user);
-        System.out.println(id+":-----------");
+        user.setEmail("121233@qq.com");
+        int id = userDao.insertUser(user);
+        System.out.println(id + ":-----------");
     }
+
     @Test
-    public void testUpdate(){
-        User user=new User();
-        user.setUserName("qcc");
-        user.setPassword("123");
-        user=userDao.findByEmailOrNameAndPassword(user);
-        System.out.print(user+"-----------");
+    public void testUpdate() {
+        User user = userDao.findById(1);
+        System.out.print(user + "-----------");
         user.setPassword("234");
         user.setUpdateTime(new Date());
         userDao.updateUser(user);
+        System.out.println(user.getUpdateTime());
+    }
+
+    @Test
+    public void testfindById() {
+        User user = userDao.findById(1);
+        System.out.print(user + "-----------------");
     }
 
 }

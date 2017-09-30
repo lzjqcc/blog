@@ -13,9 +13,8 @@ import java.util.List;
  */
 public interface ArticleDao {
     //根据文章获取评论
-    @Query("select a from Article  a where id=:id order by a.id")
     public Article findArticleById(@Param("id") Integer id);
     public List<Article> getAllByUser_Id(Integer userId);
-
+    void insertArticle(Article article);
 
 }

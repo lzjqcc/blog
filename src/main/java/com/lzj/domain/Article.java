@@ -1,8 +1,5 @@
 package com.lzj.domain;
 
-import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.*;
 
 /**
@@ -12,29 +9,29 @@ import java.util.*;
 //@org.hibernate.annotations.Entity(selectBeforeUpdate = true,dynamicUpdate = true)
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,property = "@id")
 public class Article extends BaseEntity {
-    private String title;
-    private String description;
-    private String content;
+    private String title;//标题
+    private String description;//描述
+    private String contentURL;//文章内容保存在本地，这个字段用来保存内容的地址
+    private String assortment;//文章分类
     private String url;
     private Integer support;//点赞
     private Integer disLike;//点踩
-    private User user;
+    private Integer userId;
 
-    public User getUser() {
-        return user;
+    public String getAssortment() {
+        return assortment;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-    private List<Comment> comments=new ArrayList<>();
-
-    public List<Comment> getComments() {
-        return comments;
+    public void setAssortment(String assortment) {
+        this.assortment = assortment;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getSupport() {
@@ -69,12 +66,12 @@ public class Article extends BaseEntity {
         this.description = description;
     }
 
-    public String getContent() {
-        return content;
+    public String getContentURL() {
+        return contentURL;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContentURL(String contentURL) {
+        this.contentURL = contentURL;
     }
 
 
