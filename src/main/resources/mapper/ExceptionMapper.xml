@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.ExceptionDao" >
+    <resultMap id="excrptionResultMap" type="com.lzj.domain.Exception">
+        <id column="code" property="code"></id>
+        <result column="message" property="message"></result>
+        <result column="class_name" property="className"/>
+        <result column="method" property="method"/>
+        <result column="create_time" property="createTime"/>
+        <result column="exception" property="exceptionString"/>
+    </resultMap>
+    <sql id="userColumns">
+    ${alias}.code,
+    ${alias}.message,
+    ${alias}.class_name,
+    ${alias}.exception,
+    ${alias}.create_time,
+    ${alias}.method
+    </sql>
+    <insert id="insertException" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" >
+      INSERT INTO exception t
+      (<include refid="userColumns"><property name="alias" value="t"/></include>)
+      VALUES
+      (#{code},#{message},#{class_name},#{exception},#{createTime},#{method})
+    </insert>
+</mapper>

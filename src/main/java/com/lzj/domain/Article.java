@@ -1,6 +1,6 @@
 package com.lzj.domain;
 
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by li on 17-8-6.
@@ -11,19 +11,54 @@ import java.util.*;
 public class Article extends BaseEntity {
     private String title;//标题
     private String description;//描述
-    private String contentURL;//文章内容保存在本地，这个字段用来保存内容的地址
-    private String assortment;//文章分类
-    private String url;
+    //contentURL  resources/article/作者名称/分类（默认是default）/文章名.txt
+    private String content;//这个字段保存文章内容，但不保存数据库中
     private Integer support;//点赞
-    private Integer disLike;//点踩
+    private Integer dislike;//点踩
+    private Integer visitTimes;//访问次数
     private Integer userId;
+    private Integer top;//置顶排序
+    private Boolean toTop;//是否置顶
+    private Integer assortmentId;
 
-    public String getAssortment() {
-        return assortment;
+    public Integer getAssortmentId() {
+        return assortmentId;
     }
 
-    public void setAssortment(String assortment) {
-        this.assortment = assortment;
+    public void setAssortmentId(Integer assortmentId) {
+        this.assortmentId = assortmentId;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
+    }
+
+    public Boolean getToTop() {
+        return toTop;
+    }
+
+    public void setToTop(Boolean toTop) {
+        this.toTop = toTop;
+    }
+
+    public Integer getVisitTimes() {
+        return visitTimes;
+    }
+
+    public void setVisitTimes(Integer visitTimes) {
+        this.visitTimes = visitTimes;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Integer getUserId() {
@@ -42,12 +77,12 @@ public class Article extends BaseEntity {
         this.support = support;
     }
 
-    public Integer getDisLike() {
-        return disLike;
+    public Integer getDislike() {
+        return dislike;
     }
 
-    public void setDisLike(Integer disLike) {
-        this.disLike = disLike;
+    public void setDislike(Integer dislike) {
+        this.dislike = dislike;
     }
 
     public String getTitle() {
@@ -66,22 +101,19 @@ public class Article extends BaseEntity {
         this.description = description;
     }
 
-    public String getContentURL() {
-        return contentURL;
+    @Override
+    public String toString() {
+        return "Article{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", content='" + content + '\'' +
+                ", support=" + support +
+                ", dislike=" + dislike +
+                ", visitTimes=" + visitTimes +
+                ", userId=" + userId +
+                ", top=" + top +
+                ", toTop=" + toTop +
+                ", assortmentId=" + assortmentId +
+                '}';
     }
-
-    public void setContentURL(String contentURL) {
-        this.contentURL = contentURL;
-    }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-
 }

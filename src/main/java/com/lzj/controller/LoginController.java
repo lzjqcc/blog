@@ -1,11 +1,14 @@
 package com.lzj.controller;
 
 import com.lzj.dao.UserDao;
+import com.lzj.domain.EmailObject;
 import com.lzj.domain.User;
 import com.lzj.service.UserService;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.SHA1;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +27,13 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
     @Autowired
     private UserService userService;
-    @RequestMapping(value = "/loginAct",method = RequestMethod.POST)
+    @Value("${userName}")
+    String userName;
+    @Value("${password}")
+    String password;
+    @Value("${host}")
+    String host;
+    @RequestMapping(value = "/loginAct",method = RequestMethod.GET)
     @ResponseBody
     public String loginAct(@RequestParam("nameOrEmail")String nameOrEmail,
                            @RequestParam("password")String password,
@@ -71,7 +80,15 @@ public class LoginController {
         if (i==2){
             return "邮箱已存在";
         }
-        ComentUtils.sendEmail(email);
+        EmailObject object=new EmailObject();
+        object.setUserName(userName);
+        object.setHost(host);
+        object.setPassword(password);
+        object.setSendTo(email);
+        object.setDefaultEncoding("UTF-8");
+        object.setSubject("用户注册");
+        object.setContent("");
+        ComentUtils.sendEmail(object);
         return "注册成功";
     }
 

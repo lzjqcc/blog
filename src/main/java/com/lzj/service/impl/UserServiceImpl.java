@@ -5,11 +5,13 @@ import com.lzj.domain.User;
 import com.lzj.service.UserService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 
 @Service
+@Cacheable(value = "users")
 public class UserServiceImpl implements UserService{
     @Autowired
     UserDao userDao;
@@ -65,7 +67,6 @@ public class UserServiceImpl implements UserService{
         user.setPassword(password);
         return userDao.findByEmailOrNameAndPassword(user);
     }
-
     @Override
     public User findById(Integer id) {
         return userDao.findById(id);

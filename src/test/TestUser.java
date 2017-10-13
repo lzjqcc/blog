@@ -4,6 +4,7 @@ import com.lzj.dao.UserDao;
 import com.lzj.domain.Article;
 import com.lzj.domain.User;
 import com.lzj.service.ArticleService;
+import com.lzj.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import java.util.Date;
 public class TestUser {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    ArticleDao articleDao;
 
     @Test
     public void testInsert() {
@@ -33,21 +36,28 @@ public class TestUser {
         int id = userDao.insertUser(user);
         System.out.println(id + ":-----------");
     }
-
+    @Autowired
+    UserService userService;
     @Test
     public void testUpdate() {
-        User user = userDao.findById(1);
+        User user = userService.findById(1);
         System.out.print(user + "-----------");
         user.setPassword("234");
         user.setUpdateTime(new Date());
-        userDao.updateUser(user);
+        userService.updateUser(user);
         System.out.println(user.getUpdateTime());
     }
 
     @Test
     public void testfindById() {
         User user = userDao.findById(1);
-        System.out.print(user + "-----------------");
+        User user1 = userDao.findById(2);
+
+        User user2=userService.findByEmailOrNameAndPassword("li","123");
+        User user3 = userService.findByEmailOrNameAndPassword("li", "123");
+        System.out.print(user2==user3);
+        System.out.println(user == user1);
+
     }
 
 }

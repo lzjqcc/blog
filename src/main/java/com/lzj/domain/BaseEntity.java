@@ -1,10 +1,8 @@
 package com.lzj.domain;
 
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 

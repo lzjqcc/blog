@@ -3,7 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzj.dao.UserDao" >
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+    </cache>
     <resultMap id="userResultMap" type="com.lzj.domain.User">
+
         <id column="id" property="id"></id>
         <result column="user_name" property="userName"></result>
         <result column="password" property="password"></result>
@@ -33,7 +36,7 @@
         update_time=#{updateTime}
         WHERE id=#{id}
     </update>
-    <select id="findByEmailOrNameAndPassword" resultMap="userResultMap">
+    <select id="findByEmailOrNameAndPassword" resultMap="userResultMap" useCache="true">
         SELECT id,email,password,user_name,role,icon FROM user
         WHERE
         <choose>
@@ -46,11 +49,11 @@
         </choose>
         and password=#{password}
     </select>
-    <select id="findById" resultMap="userResultMap">
+    <select id="findById" resultMap="userResultMap" useCache="true" >
         SELECT id,email,password,user_name,role,icon FROM user
         WHERE id=#{id}
     </select>
-    <select id="findByNameOrEmail" resultMap="userResultMap">
+    <select id="findByNameOrEmail" resultMap="userResultMap" useCache="true">
         SELECT id,email,password,user_name,role FROM user
         WHERE 1=1
         <if test="email!=null">

@@ -1,11 +1,13 @@
 package com.lzj.config;
 
+import com.lzj.filter.ParseURLFilter;
 import com.lzj.filter.UploadIconFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.MultipartFilter;
 
@@ -42,16 +44,27 @@ public class WebConfig {
     }
 
     /**
-     * 注册过滤器
+     * 注册过滤器UploadIconFilter
      * @return
      */
     @Bean
-    public FilterRegistrationBean helloFilterRegistrationBean() {
+    @Order(2)
+    public FilterRegistrationBean uploadIconFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setName("hello");
         UploadIconFilter helloFilter = new UploadIconFilter();
+
         registrationBean.setFilter(helloFilter);
-        beanFactory.autowireBean(helloFilter);
         return registrationBean;
     }
+ /*   @Bean
+    @Order(1)
+    public FilterRegistrationBean parseURLFilter(){
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setName("parseURL");
+        ParseURLFilter filter=new ParseURLFilter();
+        registrationBean.setFilter(filter);
+        return registrationBean;
+    }*/
+
 }

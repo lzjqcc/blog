@@ -42,7 +42,7 @@ public class UploadIconFilter implements Filter {
             response.setLocale(Locale.CHINESE);
             response.setContentType("application/json");
             Map<String, String> map = new HashMap<>();
-            map.put("error", "上传头像大于1M");
+            map.put("error", "上传图片不能大于1M");
             writer.write(JsonUtils.toJson(map));
             writer.flush();
             writer.close();

@@ -1,26 +1,16 @@
-package com.lzj.domain;
+package com.lzj.VO;
 
-/**
- * Created by li on 17-8-6.
- */
+import com.lzj.domain.BaseEntity;
+import com.lzj.domain.Comment;
 
+import java.util.List;
 
-public class Comment extends BaseEntity implements Cloneable{
-
-
-    //用户评论组合  这个真是不错 time=*** FromUserSaid1
-   /* @ElementCollection(targetClass = String.class)
-    @MapKeyClass(value = String.class)
-    @MapKeyColumn(name = "key")
-    @Column(name = "comment")
-    @CollectionTable(name = "")
-    private Map<String,String> comments=new LinkedHashMap<>();*/
-   // public interface CommentWithArticle{}
+public class CommentMongo extends BaseEntity{
     private String comment;
     private Integer articleId;
     private Integer fromUserId;//哪个用户评论
     private Integer toUserId;//给哪个用户
-    private Integer replayComentId;//回复评论的id
+    private List<Comment> list;
 
     public String getComment() {
         return comment;
@@ -54,11 +44,11 @@ public class Comment extends BaseEntity implements Cloneable{
         this.toUserId = toUserId;
     }
 
-    public Integer getReplayComentId() {
-        return replayComentId;
+    public List<Comment> getList() {
+        return list;
     }
 
-    public void setReplayComentId(Integer replayComentId) {
-        this.replayComentId = replayComentId;
+    public void setList(List<Comment> list) {
+        this.list = list;
     }
 }

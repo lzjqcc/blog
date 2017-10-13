@@ -1,20 +1,40 @@
 package com.lzj.dao;
 
 import com.lzj.domain.Article;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+
+import com.lzj.domain.LimitCondition;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by li on 17-8-6.
  */
+@Repository("articleDao")
 public interface ArticleDao {
-    //根据文章获取评论
-    public Article findArticleById(@Param("id") Integer id);
-    public List<Article> getAllByUser_Id(Integer userId);
     void insertArticle(Article article);
+    Article findById(Integer id);
+    List<Article> findByUserId(@Param("userId") Integer userId,@Param("condition") LimitCondition condition);
+    void deleteById(Integer id);
+    void updateArticle(Article article);
+    void updateByMap(@Param("map") Map map);
+    List<Article> findByUserIdAndAssortment(@Param("userId")Integer userId,
+                                            @Param("assortmentId")Integer assortmentId,
+                                            @Param("condition")LimitCondition condition);
+    /**
+     * 描述：获取这个人的文章分类
+     * @param user_id
+     * @return
+     */
+    List<Map<String,Object>> findGroupByUserId(Integer user_id);
+
+    /**
+     * 描述：获取这个人文章阅读排名
+     * @param userId
+     * @return
+     */
+    List<Article>   findHistoryMax(@Param("userId")Integer userId,@Param("condition")LimitCondition condition);
 
 }

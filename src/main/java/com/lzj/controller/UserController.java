@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.Buffer;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用户信息修改，头像上传,查看个人信息
@@ -63,16 +65,21 @@ public class UserController {
      */
     @RequestMapping(value = "/uploadHeadPortrait", method = RequestMethod.POST)
     @ResponseBody
-    public void uploadHeadPortrait(@RequestParam(value = "headPortrait", required = true) MultipartFile uploadFile, HttpSession session) throws IOException {
+    public Map<String,String> uploadHeadPortrait(@RequestParam(value = "headPortrait", required = true) MultipartFile uploadFile, HttpSession session) throws IOException {
         if (uploadFile != null) {
             BufferedInputStream inputStream = null;
             BufferedOutputStream outputStream = null;
             try {
                 inputStream = new BufferedInputStream(uploadFile.getInputStream());
                 User user = (User) session.getAttribute("user");
-                String userIconDir = ComentUtils.ICON_DIR + "/" + user.getRole().toString() + "/" + user.getUserName();
-                user.setIcon(userIconDir.substring(ComentUtils.ICON_DIR.indexOf("static")) + "/" + uploadFile.getOriginalFilename());
-                File file = new File(userIconDir, uploadFile.getOriginalFilename());
+                String userIconDir = ComentUtils.ICON_DIR + "/" + user.getId().toString();
+                String preUserIcon=user.getIcon();
+                if (!preUserIcon.contains("defaultIcon")){
+                    File file=new File(preUserIcon);
+                    file.deleteOnExit();
+                }
+                user.setIcon(userIconDir.substring(ComentUtils.ICON_DIR.indexOf("static")) + "/" + System.currentTimeMillis()+uploadFile.getOriginalFilename().split(".")[1]);
+                File file = new File(userIconDir, System.currentTimeMillis()+uploadFile.getOriginalFilename().split(".")[1]);
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));
                 byte[] buff = new byte[1024*2];
                 int length;
@@ -81,6 +88,9 @@ public class UserController {
                 }
                 outputStream.flush();
                 userService.updateUser(user);
+                Map<String,String> map=new HashMap<>();
+                map.put("iconURL",ComentUtils.HOST+user.getIcon());
+                return map;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -92,6 +102,7 @@ public class UserController {
                 }
             }
         }
+        return null;
     }
 
 }

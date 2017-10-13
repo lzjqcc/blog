@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ehcache>
+    <diskStore path="java.io.temdir"></diskStore>
+    <defaultCache
+            maxElementsInMemory="100000"
+            timeToIdleSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+        />
+    <cache name="users"
+           maxEntriesLocalHeap="200"
+           timeToLiveSeconds="600">
+    </cache>
+    <cache name="articles"
+           maxEntriesLocalHeap="200"
+           timeToLiveSeconds="600">
+    </cache>
+</ehcache>

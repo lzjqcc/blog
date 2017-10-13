@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.CommentDao" >
+    <resultMap id="commentResultMap" type="com.lzj.domain.Comment">
+        <id column="id" property="id"></id>
+        <result column="comment" property="comment"></result>
+        <result column="article_id" property="articleId"/>
+        <result column="from_user_id" property="fromUserId"/>
+        <result column="to_user_id" property="toUserId"/>
+        <result column="replay_comment_id" property="replayComentId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <sql id="userColumns">
+    ${alias}.comment,
+    ${alias}.article_id,
+    ${alias}.from_user_id,
+    ${alias}.to_user_id,
+    ${alias}.replay_comment_id,
+    ${alias}.create_time,
+    ${alias}.update_time
+    </sql>
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" >
+      INSERT INTO comment t
+      (<include refid="userColumns"><property name="alias" value="t"/></include>)
+      VALUES
+      (#{comment},#{article_id},#{from_user_id},#{to_user_id},#{replayCommentId}#{createTime},#{updateTime})
+    </insert>
+    <select id="findByArticleId" useCache="true" resultMap="commentResultMap">
+        SELECT t.id,<include refid="userColumns"><property name="alias" value="t"/></include>
+        FROM comment t WHERE t.article_id=#{articleId}
+    </select>
+</mapper>

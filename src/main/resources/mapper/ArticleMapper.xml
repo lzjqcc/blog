@@ -2,62 +2,86 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lzj.dao.UserDao" >
-    <resultMap id="userResultMap" type="com.lzj.domain.User">
+<mapper namespace="com.lzj.dao.ArticleDao" >
+    <resultMap id="articleResultMap" type="com.lzj.domain.Article">
         <id column="id" property="id"></id>
-        <result column="user_name" property="userName"></result>
-        <result column="password" property="password"></result>
-        <result column="email" property="email"></result>
-        <result column="role" property="role" typeHandler="com.lzj.utils.handler.EnumTypeHandler"></result>
+        <result column="title" property="title"></result>
+        <result column="description" property="description"></result>
         <result column="create_time" property="createTime"></result>
         <result column="update_time" property="updateTime"></result>
-        <result column="icon" property="icon"></result>
+        <result column="support" property="support"></result>
+        <result column="dislike" property="dislike"></result>
+        <result column="user_id" property="userId"/>
+        <result column="visit_times" property="visitTimes"/>
+        <result column="top" property="top"/>
+        <result column="to_top" property="toTop"/>
+        <result column="assortment_id" property="assortmentId"/>
     </resultMap>
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.User" >
-      INSERT INTO user (user_name,password,email,role,create_time,update_time,icon) VALUES (#{userName},#{password},#{email},#{role},#{createTime},#{updateTime},#{icon})
+    <sql id="userColumns">
+    ${alias}.id,
+    ${alias}.assortment_id,
+    ${alias}.title,
+    ${alias}.description,
+    ${alias}.support,
+    ${alias}.update_time,
+    ${alias}.create_time,
+    ${alias}.dislike,
+    ${alias}.visit_times,
+    ${alias}.user_id,
+    ${alias}.top,
+    ${alias}.to_top
+    </sql>
+    <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" flushCache="true">
+      INSERT INTO article (assortment_id,title,description,support,create_time,update_time,dislike,visit_times,user_id,top,to_top)
+      VALUES
+      (#{assortmentId},#{title},#{description},#{support},#{createTime},#{updateTime},#{dislike},#{visitTimes},#{userId},#{top},#{toTop})
     </insert>
-    <update id="updateUser" parameterType="com.lzj.domain.User">
-        UPDATE user set
-        <if test="userName!=null">
-            user_name=#{userName},
+    <select id="findById" resultMap="articleResultMap" useCache="true" >
+        SELECT
+        <include refid="userColumns"><property name="alias" value="a"/></include>
+        FROM article a
+        WHERE a.id=#{id}
+    </select>
+    <select id="findByUserId" resultMap="articleResultMap" useCache="true">
+        SELECT
+        <include refid="userColumns"><property name="alias" value="a"/></include>
+        FROM article a
+        WHERE a.user_id=#{userId}
+
+        <if test="condition!=null">
+            and a.id BETWEEN #{condition.first} and #{condition.second}
         </if>
-        <if test="password!=null">
-            password=#{password},
-        </if>
-        <if test="email!=null">
-            email=#{email},
-        </if>
-        <if test="icon!=null">
-            icon=#{icon}
-        </if>
-        update_time=#{updateTime}
-        WHERE id=#{id}
-    </update>
-    <select id="findByEmailOrNameAndPassword" resultMap="userResultMap">
-        SELECT id,email,password,user_name,role,icon FROM user
+    </select>
+    <delete id="deleteById" flushCache="true">
+        DELETE FROM article WHERE id=#{id}
+    </delete>
+    <update id="updateByMap" parameterType="Map" flushCache="true">
+        UPDATE article set
+        <foreach collection="map" index="key" item="value" separator=",">
+          <if test="key!='id' and key!=null and key!='user_id'">
+              ${key}=#{value}
+          </if>
+        </foreach>
         WHERE
-        <choose>
-            <when test="email!=null">
-                email=#{email}
-            </when>
-            <when test="userName!=null">
-                user_name=#{userName}
-            </when>
-        </choose>
-        and password=#{password}
-    </select>
-    <select id="findById" resultMap="userResultMap">
-        SELECT id,email,password,user_name,role,icon FROM user
-        WHERE id=#{id}
-    </select>
-    <select id="findByNameOrEmail" resultMap="userResultMap">
-        SELECT id,email,password,user_name,role FROM user
-        WHERE 1=1
-        <if test="email!=null">
-            and email=#{email}
+        id=#{map.id}
+    </update>
+
+    <select id="findByUserIdAndAssortment" resultMap="articleResultMap" useCache="true">
+        SELECT
+        <include refid="userColumns"><property name="alias" value="a"/></include>
+        FROM article a
+        WHERE a.user_id=#{userId} and a.assortment_id=#{assortmentId}
+        <if test="condition!=null">
+            and a.id BETWEEN #{condition.first} and #{condition.second}
         </if>
-        <if test="name!=null">
-            and name=#{name}
+
+    </select>
+    <select id="findHistoryMax" resultMap="articleResultMap" useCache="true">
+        SELECT id,title,visit_times from article WHERE
+        <if test="condition!=null">
+            id BETWEEN #{condition.first} and #{condition.second} and
         </if>
+
+        user_id=#{userId} ORDER BY visit_times DESC
     </select>
 </mapper>
