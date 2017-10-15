@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzj.dao.ExceptionDao" >
     <resultMap id="excrptionResultMap" type="com.lzj.domain.Exception">
-        <id column="code" property="code"></id>
+        <id column="id" property="id"></id>
+        <result column="code" property="code"></result>
         <result column="message" property="message"></result>
         <result column="class_name" property="className"/>
         <result column="method" property="method"/>
@@ -19,7 +20,7 @@
     ${alias}.create_time,
     ${alias}.method
     </sql>
-    <insert id="insertException" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" >
+    <insert id="insertException" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Exception" >
       INSERT INTO exception t
       (<include refid="userColumns"><property name="alias" value="t"/></include>)
       VALUES

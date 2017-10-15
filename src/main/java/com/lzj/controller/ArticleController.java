@@ -1,24 +1,18 @@
 package com.lzj.controller;
 
 import com.lzj.dao.AssortmentDao;
-import com.lzj.dao.UserDao;
 import com.lzj.domain.Article;
 import com.lzj.domain.Assortment;
 import com.lzj.domain.LimitCondition;
 import com.lzj.domain.User;
-import com.lzj.exception.BusinessException;
 import com.lzj.service.ArticleService;
 
-import com.lzj.service.CommentService;
 import com.lzj.utils.ComentUtils;
-import com.lzj.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.RegEx;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.*;
@@ -40,23 +34,7 @@ public class ArticleController {
     public String test(){
         return "test";
     }
-    /**需要登录
-     * 写博客页面
-     */
-    @RequestMapping(value = "writePage" ,method = RequestMethod.GET)
-    public String writePage(){
-        return "writePage";
-    }
-    /**不需要登录
-     * 显示博客页面
-     */
-    @RequestMapping(value = "articlePage",method = RequestMethod.GET)
-    public String articlePage(HttpServletResponse response) throws IOException {
-        Article article= articleService.findById(10);
-        String json=JsonUtils.toJson(article);
-        //response.getWriter().write(json);
-        return "first";
-    }
+
 
     /**
      * bu需要登录

@@ -92,7 +92,15 @@
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
     </dependency>
-
+    <!--消息推送-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-messaging</artifactId>
+    </dependency>
     <!--springboot集成mongodb-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -197,11 +205,6 @@
         <configuration>
           <!--fork : 如果没有该项配置，肯呢个devtools不会起作用，即应用不会restart -->
           <fork>true</fork>
-      <!--    <source>1.8</source>
-          <target>1.8</target>
-          <compilerArguments>
-            <extdirs>WebContent\WEB-INF\lib</extdirs>
-          </compilerArguments>-->
         </configuration>
       </plugin>
 

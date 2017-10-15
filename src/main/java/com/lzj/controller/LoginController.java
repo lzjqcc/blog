@@ -1,30 +1,33 @@
 package com.lzj.controller;
 
-import com.lzj.dao.UserDao;
+import com.lzj.dao.MessageDao;
 import com.lzj.domain.EmailObject;
+import com.lzj.domain.MessageInfo;
 import com.lzj.domain.User;
 import com.lzj.service.UserService;
+import com.lzj.service.impl.WebScoketService;
 import com.lzj.utils.ComentUtils;
-import com.lzj.utils.SHA1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import sun.security.provider.SHA;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**用户登录，注册
  * Created by li on 17-8-7.
  */
 @Controller
 public class LoginController {
+    @Autowired
+    SimpUserRegistry simpUserRegistry;
     @Autowired
     private UserService userService;
     @Value("${userName}")
@@ -33,6 +36,18 @@ public class LoginController {
     String password;
     @Value("${host}")
     String host;
+    @Autowired
+    MessageDao messageDao;
+
+    @Autowired
+    WebScoketService webScoketService;
+    /**
+     * 登录成功后发送未读信息
+     * @param nameOrEmail
+     * @param password
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/loginAct",method = RequestMethod.GET)
     @ResponseBody
     public String loginAct(@RequestParam("nameOrEmail")String nameOrEmail,
@@ -41,23 +56,13 @@ public class LoginController {
         User user=userService.findByEmailOrNameAndPassword(nameOrEmail,password);
         if (user!=null){
             session.setAttribute("user",user);
+            List<MessageInfo> list=messageDao.getMessages(ComentUtils.buildMessageCondition(user.getId(),false,null));
+            webScoketService.sendNotReadMessageToUser(list);
             return "success";
         }
         return "fail";
     }
 
-    @RequestMapping("/loginPage")
-    public String loginHTML(){
-        return "login";
-    }
-    @RequestMapping("/registerPage")
-    public String registerHTML(){
-        return "register";
-    }
-    @RequestMapping("/indexPage")
-    public String index(){
-        return "index";
-    }
     /**
      * 用户注册成功后将用户名密码发送给用户邮箱
      * @param name

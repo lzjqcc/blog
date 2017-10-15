@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.MultipartFilter;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * 与实体有关的配置
@@ -56,6 +57,12 @@ public class WebConfig {
 
         registrationBean.setFilter(helloFilter);
         return registrationBean;
+    }
+    /*spring-webscoket 消息推送
+    * */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter(){
+        return new ServerEndpointExporter();
     }
  /*   @Bean
     @Order(1)

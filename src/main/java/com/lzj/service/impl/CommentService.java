@@ -1,4 +1,4 @@
-package com.lzj.service;
+package com.lzj.service.impl;
 
 import com.lzj.VO.CommentMongo;
 import com.lzj.dao.ArticleDao;
@@ -35,7 +35,7 @@ public class CommentService {
         List<CommentMongo> commentMongos = new ArrayList<>();
        List<Comment> list= commentDao.findByArticleId(articleId);
        for (Comment comment:list){
-           if (comment.getReplayComentId().equals(new Integer(0))){
+           if (comment.getReplayComentId()==null){
                CommentMongo mongo=new CommentMongo();
                BeanUtils.copyProperties(comment,mongo);
                List<Comment> children = new ArrayList<>();

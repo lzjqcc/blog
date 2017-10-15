@@ -3,6 +3,7 @@ package com.lzj.utils;
 import com.lzj.domain.EmailObject;
 import com.lzj.domain.User;
 import com.lzj.exception.BusinessException;
+import com.lzj.exception.SystemException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,14 +14,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by li on 17-8-9.
  */
 public class ComentUtils {
+    private final static List<SystemException> list = new ArrayList<>(50);
     public final static String TYPE_REPLY="reply";
     public final static String TYPE_COMMENT="comment";
     public final static String ICON_DIR="./src/main/resources/static/icon";
@@ -48,10 +48,40 @@ public class ComentUtils {
             }
         });
     }
+
+    /**
+     * 保存系统系统在内存中，等管理员登录将系统异常发送给管理员
+     * @param ex
+     */
+    public static void saveSystemException(SystemException ex){
+        list.add(ex);
+    }
+    public static void cleanSystemException(){
+        list.clear();
+    }
+    public static List<SystemException> getSystemExceptions(){
+        return list;
+    }
+    public static void removeSystemEx(int index){
+        list.remove(index);
+    }
     public static void sureLogin(User user){
         if (user==null){
             throw  new BusinessException(232,"请登录");
         }
+    }
+    public static Map<String,Object> buildMessageCondition(Integer toId,Boolean type,Byte flag ){
+        Map<String, Object> map = new HashMap<>();
+        if (toId != null){
+            map.put("to_user_id",toId);
+        }
+        if (type != null){
+            map.put("type",type);
+        }
+        if (flag != null){
+            map.put("flag",flag);
+        }
+        return map;
     }
     public static void closeStream(Closeable stream){
         if (stream!=null){

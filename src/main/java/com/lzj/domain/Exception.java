@@ -2,13 +2,13 @@ package com.lzj.domain;
 
 import java.util.Date;
 
-public class Exception {
+public class Exception extends BaseEntity{
+
     private Integer code;
     private String message;
     private String className;
     private String method;
     private String exceptionString;
-    private Date createTime;
 
     public Integer getCode() {
         return code;
@@ -50,11 +50,5 @@ public class Exception {
         this.exceptionString = exceptionString;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

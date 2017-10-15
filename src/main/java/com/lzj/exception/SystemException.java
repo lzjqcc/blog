@@ -1,4 +1,7 @@
 package com.lzj.exception;
+
+import java.util.Date;
+
 //系统异常
 public class SystemException extends RuntimeException{
     private Integer code;
@@ -7,6 +10,15 @@ public class SystemException extends RuntimeException{
     private String method;
     private Exception e;
     private String exceptionString;
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public SystemException(){
 
