@@ -48,19 +48,22 @@ public class LoginController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "/loginAct",method = RequestMethod.GET)
+    @RequestMapping(value = "/loginAct",method = RequestMethod.POST)
     @ResponseBody
-    public String loginAct(@RequestParam("nameOrEmail")String nameOrEmail,
+    public Map<String,String> loginAct(@RequestParam("nameOrEmail")String nameOrEmail,
                            @RequestParam("password")String password,
                            HttpSession session){
         User user=userService.findByEmailOrNameAndPassword(nameOrEmail,password);
+        Map<String, String> result = new HashMap<>();
         if (user!=null){
             session.setAttribute("user",user);
             List<MessageInfo> list=messageDao.getMessages(ComentUtils.buildMessageCondition(user.getId(),false,null));
             webScoketService.sendNotReadMessageToUser(list);
-            return "success";
+            result.put("result", "success");
+            return result;
         }
-        return "fail";
+        result.put("result", "fail");
+        return result;
     }
 
     /**
@@ -72,18 +75,22 @@ public class LoginController {
      */
     @RequestMapping("/registerAct")
     @ResponseBody
-    public String registerAct(@RequestParam("name")String name,
+    public Map<String,String> registerAct(@RequestParam("name")String name,
                               @RequestParam("password")String password,
                               @RequestParam("email")String email,HttpSession session){
+        Map<String, String> result = new HashMap<>();
         if (email!=null && !email.contains("@") && email.lastIndexOf(".com")==-1){
-            return "邮箱格式错误";
+            result.put("result", "邮箱格式错误");
+            return result;
         }
         Integer i=userService.insertUser(name,email,password,session);
         if (i==1){
-            return "用户名存在";
+            result.put("result", "用户名存在");
+            return result;
         }
         if (i==2){
-            return "邮箱已存在";
+            result.put("result", "邮箱已存在");
+            return result;
         }
         EmailObject object=new EmailObject();
         object.setUserName(userName);
@@ -94,7 +101,8 @@ public class LoginController {
         object.setSubject("用户注册");
         object.setContent("");
         ComentUtils.sendEmail(object);
-        return "注册成功";
+        result.put("result", "注册成功");
+        return result;
     }
 
 }

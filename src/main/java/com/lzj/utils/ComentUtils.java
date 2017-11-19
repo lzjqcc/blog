@@ -10,10 +10,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import javax.mail.internet.MimeMessage;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -91,6 +90,36 @@ public class ComentUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 获取token防止用户多次提交
+     */
+    public static String getToken(){
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-","");
+
+    }
+    public static Boolean vailedToken(HttpServletResponse response, HttpServletRequest request){
+        PrintWriter writer = null;
+        try {
+            String token = (String) request.getAttribute("token");
+            if (token == null) {
+                token = ComentUtils.getToken();
+                writer = response.getWriter();
+                Map<String, String> map = new HashMap<>();
+                map.put("token", token);
+                writer.write(JsonUtils.toJson(map));
+                return true;
+            }else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            ComentUtils.closeStream(writer);
+        }
+        return null;
     }
 
 }

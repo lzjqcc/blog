@@ -59,5 +59,13 @@ public class TestUser {
         System.out.println(user == user1);
 
     }
+    @Test
+    public void testFindByName(){
+        User user =new User();
+        user.setUserName("lzj");
+        user.setPassword("lzj941005");
+        User user1 = userDao.findByEmailOrNameAndPassword(user);
+        System.out.print(user1);
+    }
 
 }

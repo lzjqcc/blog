@@ -1,3 +1,4 @@
+/*
 package com.lzj.controller;
 
 import com.lzj.dao.ExceptionDao;
@@ -19,9 +20,11 @@ import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpSession;
 
+*/
 /**
  * 业务异常直接显示在前端,系统异常保存
- */
+ *//*
+
 @ControllerAdvice(basePackages = "com.lzj.controller")
 public class ExceptionController {
     @Autowired
@@ -52,3 +55,4 @@ public class ExceptionController {
 
 }
 
+*/

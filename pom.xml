@@ -7,6 +7,9 @@
   <version>1.0-SNAPSHOT</version>
   <name>Blog Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <java.version>1.8</java.version>
+  </properties>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>

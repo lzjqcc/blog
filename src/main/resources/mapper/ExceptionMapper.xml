@@ -24,6 +24,6 @@
       INSERT INTO exception t
       (<include refid="userColumns"><property name="alias" value="t"/></include>)
       VALUES
-      (#{code},#{message},#{class_name},#{exception},#{createTime},#{method})
+      (#{code},#{message},#{className},#{exceptionString},#{createTime},#{method})
     </insert>
 </mapper>

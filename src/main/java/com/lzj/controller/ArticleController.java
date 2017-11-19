@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.*;
@@ -71,8 +73,12 @@ public class ArticleController {
                               @RequestParam(name = "title") String title,
                               @RequestParam(name = "assortment", required = false) String assortment,
                               @RequestParam(name = "top", required = false) Integer top,
-                              @RequestParam(name = "toTop", required = false) Boolean toTop) {
-
+                              @RequestParam(name = "toTop", required = false) Boolean toTop,
+                              HttpServletResponse response, HttpServletRequest request) {
+        boolean isAccess =  ComentUtils.vailedToken(response, request);
+        if (!isAccess){
+            return;
+        }
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
