@@ -98,7 +98,7 @@ public class PaginationInterceptor implements Interceptor{
         page.setStartIndex(startIndex);
         String pageSql = null;
         if (sql !=null && page !=null) {
-            if (!sql.contains("and")) {
+            if (!sql.contains("and") && !sql.contains("join")) {
                 // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
                 pageSql = sql + " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
             }else if (!sql.contains("join")) {
@@ -120,7 +120,7 @@ public class PaginationInterceptor implements Interceptor{
     }
     private String getTableAlias(String sql){
         String [] splitsFrom = sql.split("from");
-        return splitsFrom[splitsFrom.length-1].split(" ")[1];
+        return splitsFrom[splitsFrom.length-1].split(" ")[2];
     }
     @Override
     public void setProperties(Properties properties) {
