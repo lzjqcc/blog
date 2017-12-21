@@ -7,15 +7,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.session.ExpiringSession;
+import org.springframework.session.web.socket.config.annotation.AbstractSessionWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+import java.beans.Expression;
 import java.util.List;
 
 @Configuration
+@EnableScheduling
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig extends AbstractSessionWebSocketMessageBrokerConfigurer<ExpiringSession> {
     @Value("${push.message.topic}")
     String topic;
     @Value("${push.message.queue}")
@@ -25,10 +30,11 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Value("${push.message.endpoint}")
     String endpoint;
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void configureStompEndpoints(StompEndpointRegistry registry) {
         //允许跨与
         registry.addEndpoint(endpoint).setAllowedOrigins("*").withSockJS();//注册一个Stomp 协议的endpoint,并指定 SockJS协议。
     }
+
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

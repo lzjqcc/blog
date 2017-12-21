@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by li on 17-8-6.
@@ -30,7 +31,7 @@ public class ArticleController {
 
     @Autowired
     AssortmentDao assortmentDao;
-    private final static Map<Integer, List<String>> picMap = new HashMap<>();
+    private final static Map<Integer, List<String>> picMap = new ConcurrentHashMap<>();
     @RequestMapping(value = "test" ,method = RequestMethod.GET)
     @ResponseBody
     public String test(){
