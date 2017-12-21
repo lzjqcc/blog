@@ -22,20 +22,49 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 
-@Intercepts({@Signature(method = "query", type = Executor.class, args = {
-        MappedStatement.class, Object.class, RowBounds.class,
-        ResultHandler.class })})
+@Intercepts({@Signature(type = StatementHandler.class,method = "prepare",args = {Connection.class,Integer.class})})
 @Component
 public class PaginationInterceptor implements Interceptor{
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        if (invocation.getTarget() instanceof CachingExecutor) {
+        if (invocation.getTarget() instanceof RoutingStatementHandler) {
+            StatementHandler handler = (StatementHandler) invocation.getTarget();
+            Field delegateField = ReflectionUtils.findField(handler.getClass(), "delegate");
+            delegateField.setAccessible(true);
+            StatementHandler delegate = (StatementHandler) delegateField.get(handler);
+            Field mappedStatementField = ReflectionUtils.findField(delegate.getClass(), "mappedStatement");
+            mappedStatementField.setAccessible(true);
+            BoundSql boundSql = delegate.getBoundSql();
+            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) boundSql.getParameterObject();
+            Set<Map.Entry> entries = paramMap.entrySet();
+            if (boundSql != null) {
+                for (Map.Entry entry : entries) {
+                    if (entry.getValue() instanceof Page) {
+                        Page page = (Page) entry.getValue();
+                        if (boundSql != null && !boundSql.getSql().contains("limit")) {
+                            Connection connection = (Connection) invocation.getArgs()[0];
+                            Field sqlField = ReflectionUtils.findField(BoundSql.class, "sql");
+                            sqlField.setAccessible(true);
+                            String sql = (String) sqlField.get(boundSql);
+                            count(sql,connection,page);
+                            sql = getPageSql(sql,page);
+                            sqlField.set(boundSql,sql);
+
+
+                        }
+                    }
+                }
+
+            }
+        }
+    /*    if (invocation.getTarget() instanceof CachingExecutor) {
             Object [] args = invocation.getArgs();
             MappedStatement statement = (MappedStatement) args[0];
             MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) args[1];
@@ -57,7 +86,7 @@ public class PaginationInterceptor implements Interceptor{
                 }
             }
 
-        }
+        }*/
         return invocation.proceed();
     }
 
@@ -110,5 +139,23 @@ public class PaginationInterceptor implements Interceptor{
             return boundSql;
         }
     }
-
+    private String getCountSql(String sql) {
+        return "select count(1) from" +sql.split("from")[1];
+    }
+    private void count(String sql, Connection connection, Page page) throws SQLException {
+        PreparedStatement statement = null;
+        try {
+             statement = connection.prepareStatement(getCountSql(sql));
+            ;
+            page.setCount(statement.executeQuery().getInt(0));
+        } catch (SQLException e) {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e1) {
+                   throw e1;
+                }
+            }
+        }
+    }
 }
