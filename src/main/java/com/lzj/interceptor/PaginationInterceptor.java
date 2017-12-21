@@ -20,10 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -103,7 +100,7 @@ public class PaginationInterceptor implements Interceptor{
         if (sql !=null && page !=null) {
             if (!sql.contains("and")) {
                 // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
-                pageSql = sql + " where id >= +" +getSubSql(page,sql)+ " limit "+ page.getPageSize();
+                pageSql = sql + " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
             }else if (!sql.contains("join")) {
                 pageSql = sql + " and id >=" +getSubSql(page,sql) + " limit " +page.getPageSize();
             }else if (sql.contains("join")) {
@@ -144,17 +141,20 @@ public class PaginationInterceptor implements Interceptor{
     }
     private void count(String sql, Connection connection, Page page) throws SQLException {
         PreparedStatement statement = null;
+        ResultSet set = null;
         try {
-             statement = connection.prepareStatement(getCountSql(sql));
-            ;
-            page.setCount(statement.executeQuery().getInt(0));
+            statement = connection.prepareStatement(getCountSql(sql));
+             set = statement.executeQuery();
+            set.next();
+            page.setCount(set.getInt("count(1)"));
         } catch (SQLException e) {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e1) {
-                   throw e1;
-                }
+            throw e;
+        }finally {
+            if (statement != null){
+                statement.close();
+            }
+            if (set != null) {
+                set.close();
             }
         }
     }
