@@ -115,7 +115,7 @@ public class PaginationInterceptor implements Interceptor{
     }
     private String getTableName(String sql) {
         String [] splitFrom = sql.split("from");
-        String tableName = splitFrom[splitFrom.length-1].split(" ")[0];
+        String tableName = splitFrom[splitFrom.length-1].split(" ")[1];
         return tableName;
     }
     private String getTableAlias(String sql){
