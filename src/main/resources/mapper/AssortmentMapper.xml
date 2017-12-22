@@ -9,7 +9,7 @@
         <result column="assortment_name" property="assortmentName"></result>
         <result column="article_num" property="articleNum"/>
         <result column="create_time" property="createTime"/>
-        <result column="user_id" property="userId"/>
+        <result column="current_account_id" property="currentAccountId"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <sql id="userColumns">
@@ -20,13 +20,13 @@
     </sql>
     <insert id="insertAssortment" useGeneratedKeys="true" keyProperty="id" flushCache="true">
       INSERT INTO tb_assortment
-      (assortment_name, user_id, article_num, create_time, update_time)
+      (assortment_name, current_account_id, article_num, create_time, update_time)
       VALUES
-      (#{assortmentName},#{userId},#{articleNum},#{createTime},#{updateTime})
+      (#{assortmentName},#{currentAccountId},#{articleNum},#{createTime},#{updateTime})
     </insert>
     <select id="findByUserIdAndName" resultMap="assortmentResultMap" useCache="true">
       SELECT t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
-        FROM  tb_assortment t WHERE t.user_id=#{userId} and t.assortment_name=#{name}
+        FROM  tb_assortment t WHERE t.current_account_id=#{currentAccountId} and t.assortment_name=#{name}
     </select>
     <select id="updateAssortment" flushCache="true">
         UPDATE tb_assortment SET

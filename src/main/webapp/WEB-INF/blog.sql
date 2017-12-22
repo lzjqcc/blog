@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-12-22 09:28:50
+Date: 2017-12-22 16:59:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,17 +23,17 @@ CREATE TABLE `tb_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `head_icon` varchar(255) DEFAULT NULL COMMENT 't头像地址',
   `gender` tinyint(255) DEFAULT NULL,
-  `birth` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
   `age` smallint(6) DEFAULT NULL,
   `school` varchar(255) DEFAULT NULL,
   `blog_year` smallint(255) DEFAULT NULL,
   `mobile` varchar(255) DEFAULT NULL,
-  `occupation` varchar(255) DEFAULT NULL,
+  `occupation` varchar(255) DEFAULT NULL COMMENT '职业',
   `personal_signature` text COMMENT '个性签名',
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT NULL,
+  `update_time` timestamp NULL DEFAULT NULL,
   `sign` text COMMENT '标签',
+  `birth` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -57,6 +57,7 @@ CREATE TABLE `tb_article` (
   `top` varchar(255) DEFAULT NULL,
   `to_top` varchar(255) DEFAULT NULL,
   `assortment_id` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -137,7 +138,7 @@ CREATE TABLE `tb_conference` (
   `end_time` datetime DEFAULT NULL,
   `member_id` int(11) DEFAULT NULL COMMENT '会议成员 tb_account',
   `sponsor_id` int(11) DEFAULT NULL COMMENT '会议发起人 tb_account',
-  `theme` text,
+  `theme` text COMMENT '会议主题',
   `details` text,
   `is_email` tinyint(255) DEFAULT '0' COMMENT '是否发送邮件 0：不发送，1发松',
   `place` text,
@@ -156,10 +157,10 @@ CREATE TABLE `tb_conference_flow` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  `conference_id` int(11) DEFAULT NULL,
+  `conference_id` int(11) DEFAULT NULL COMMENT '会议id',
   `describe` varchar(255) DEFAULT NULL,
   `record` varchar(255) DEFAULT NULL COMMENT '会议记录',
-  `recorder_id` int(11) DEFAULT NULL,
+  `recorder_id` int(11) DEFAULT NULL COMMENT '会议记录人 tb_account',
   `is_delete` varchar(255) DEFAULT '0' COMMENT '0 否 1 是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -197,6 +198,7 @@ CREATE TABLE `tb_discussion_group_member` (
   `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `discussion_group_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL COMMENT '对应account_id',
+  `current_account_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -213,7 +215,7 @@ CREATE TABLE `tb_disscussion_group` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `discussion_group_name` varchar(255) DEFAULT NULL,
-  `account_id` int(11) DEFAULT NULL,
+  `current_account_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -323,9 +325,9 @@ DROP TABLE IF EXISTS `tb_group`;
 CREATE TABLE `tb_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `update` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `group_name` varchar(255) DEFAULT NULL,
-  `account_id` int(11) DEFAULT NULL,
+  `current_account_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -389,22 +391,22 @@ CREATE TABLE `tb_group_function` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tb_leave_message
+-- Table structure for tb_message_info
 -- ----------------------------
-DROP TABLE IF EXISTS `tb_leave_message`;
-CREATE TABLE `tb_leave_message` (
-  `id` int(11) NOT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `leave_message` varchar(255) DEFAULT NULL,
-  `current_account_id` int(11) DEFAULT NULL,
-  `friend_id` int(11) DEFAULT NULL,
-  `is_friend` tinyint(4) DEFAULT NULL COMMENT '是否是好友',
+DROP TABLE IF EXISTS `tb_message_info`;
+CREATE TABLE `tb_message_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `push_message` varchar(255) DEFAULT NULL,
+  `from_account_id` int(11) DEFAULT NULL,
+  `to_account_id` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of tb_leave_message
+-- Records of tb_message_info
 -- ----------------------------
 
 -- ----------------------------
@@ -463,32 +465,13 @@ CREATE TABLE `tb_picture_group_function` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for tb_push_message
--- ----------------------------
-DROP TABLE IF EXISTS `tb_push_message`;
-CREATE TABLE `tb_push_message` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `push_message` varchar(255) DEFAULT NULL,
-  `from_account_id` int(11) DEFAULT NULL,
-  `to_account_id` varchar(255) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of tb_push_message
--- ----------------------------
-
--- ----------------------------
 -- Table structure for tb_user
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_user`;
 CREATE TABLE `tb_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account_id` int(11) DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

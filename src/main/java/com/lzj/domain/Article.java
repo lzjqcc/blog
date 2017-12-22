@@ -1,7 +1,5 @@
 package com.lzj.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * Created by li on 17-8-6.
  */
@@ -16,7 +14,7 @@ public class Article extends BaseEntity {
     private Integer support;//点赞
     private Integer dislike;//点踩
     private Integer visitTimes;//访问次数
-    private Integer userId;
+    private Integer currentAccountId;
     private Integer top;//置顶排序
     private Boolean toTop;//是否置顶
     private Integer assortmentId;
@@ -61,12 +59,12 @@ public class Article extends BaseEntity {
         this.content = content;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCurrentAccountId() {
+        return currentAccountId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCurrentAccountId(Integer currentAccountId) {
+        this.currentAccountId = currentAccountId;
     }
 
     public Integer getSupport() {
@@ -110,7 +108,7 @@ public class Article extends BaseEntity {
                 ", support=" + support +
                 ", dislike=" + dislike +
                 ", visitTimes=" + visitTimes +
-                ", userId=" + userId +
+                ", currentAccountId=" + currentAccountId +
                 ", top=" + top +
                 ", toTop=" + toTop +
                 ", assortmentId=" + assortmentId +

@@ -1,11 +1,13 @@
 package com.lzj.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by li on 17-8-6.
  */
 
 
-public class Comment extends BaseEntity implements Cloneable{
+public class Comment extends BaseEntity implements Cloneable,Serializable{
 
 
     //用户评论组合  这个真是不错 time=*** FromUserSaid1
@@ -18,9 +20,39 @@ public class Comment extends BaseEntity implements Cloneable{
    // public interface CommentWithArticle{}
     private String comment;
     private Integer articleId;
-    private Integer fromUserId;//哪个用户评论
-    private Integer toUserId;//给哪个用户
+    private Integer fromAccountId;//哪个用户评论
+    private Integer toAccountId;//给哪个用户
     private Integer replayComentId;//回复评论的id
+    private Integer source;
+    private Integer currentAccountId;
+    private Integer picrureGroupId;
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public Comment setSource(Integer source) {
+        this.source = source;
+        return this;
+    }
+
+    public Integer getCurrentAccountId() {
+        return currentAccountId;
+    }
+
+    public Comment setCurrentAccountId(Integer currentAccountId) {
+        this.currentAccountId = currentAccountId;
+        return this;
+    }
+
+    public Integer getPicrureGroupId() {
+        return picrureGroupId;
+    }
+
+    public Comment setPicrureGroupId(Integer picrureGroupId) {
+        this.picrureGroupId = picrureGroupId;
+        return this;
+    }
 
     public String getComment() {
         return comment;
@@ -38,20 +70,20 @@ public class Comment extends BaseEntity implements Cloneable{
         this.articleId = articleId;
     }
 
-    public Integer getFromUserId() {
-        return fromUserId;
+    public Integer getFromAccountId() {
+        return fromAccountId;
     }
 
-    public void setFromUserId(Integer fromUserId) {
-        this.fromUserId = fromUserId;
+    public void setFromAccountId(Integer fromAccountId) {
+        this.fromAccountId = fromAccountId;
     }
 
-    public Integer getToUserId() {
-        return toUserId;
+    public Integer getToAccountId() {
+        return toAccountId;
     }
 
-    public void setToUserId(Integer toUserId) {
-        this.toUserId = toUserId;
+    public void setToAccountId(Integer toAccountId) {
+        this.toAccountId = toAccountId;
     }
 
     public Integer getReplayComentId() {

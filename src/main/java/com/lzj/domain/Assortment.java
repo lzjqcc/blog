@@ -1,11 +1,9 @@
 package com.lzj.domain;
 
-import com.lzj.domain.BaseEntity;
-
 public class Assortment extends BaseEntity {
     private String assortmentName;
     private Integer articleNum;
-    private Integer userId;
+    private Integer currentAccountId;
 
     public String getAssortmentName() {
         return assortmentName;
@@ -23,11 +21,11 @@ public class Assortment extends BaseEntity {
         this.articleNum = articleNum;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCurrentAccountId() {
+        return currentAccountId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCurrentAccountId(Integer currentAccountId) {
+        this.currentAccountId = currentAccountId;
     }
 }

@@ -7,8 +7,8 @@
         <id column="id" property="id"></id>
         <result column="comment" property="comment"></result>
         <result column="article_id" property="articleId"/>
-        <result column="from_account_id" property="fromUserId"/>
-        <result column="to_account_id" property="toUserId"/>
+        <result column="from_account_id" property="fromAccountId"/>
+        <result column="to_account_id" property="toAccountId"/>
         <result column="replay_comment_id" property="replayComentId"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
@@ -47,7 +47,7 @@
         </include>
         )
         VALUES
-        (#{comment},#{articleId},#{fromUserId},#{toUserId},#{replayComentId},#{createTime},#{updateTime})
+        (#{comment},#{articleId},#{fromAccountId},#{toAccountId},#{replayComentId},#{createTime},#{updateTime})
     </insert>
     <select id="findByArticleId" useCache="true" resultMap="commentResultMap">
         SELECT t.id,

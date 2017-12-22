@@ -6,8 +6,8 @@
     <resultMap id="messageMap" type="com.lzj.domain.MessageInfo">
         <id column="id" property="id"></id>
         <result column="content" property="content"></result>
-        <result column="from_user_id" property="fromUserId"/>
-        <result column="to_user_id" property="toUserId"/>
+        <result column="from_user_id" property="fromAccountId"/>
+        <result column="to_user_id" property="toAccountId"/>
         <result column="create_time" property="createTime"/>
         <result column="type" property="type"/>
         <result column="flag" property="flag"/>
@@ -23,12 +23,12 @@
     <insert id="insertMessage" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO message
         (<include refid="columns" ></include>)
-        VALUES (#{content},#{fromUserId},#{toUserId},#{createTime},#{type},#{flag})
+        VALUES (#{content},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag})
     </insert>
     <select id="getMessageByToUserIdAndType" resultMap="messageMap" >
         SELECT id ,<include refid="columns"></include>
         FROM message
-        WHERE to_user_id=#{toUserId} AND type=#{type}
+        WHERE to_user_id=#{toAccountId} AND type=#{type}
     </select>
     <select id="getMessages" resultMap="messageMap">
         select id,<include refid="columns"></include>

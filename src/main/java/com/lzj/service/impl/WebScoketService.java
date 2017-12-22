@@ -6,9 +6,7 @@ import com.lzj.exception.SystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,10 +50,10 @@ public class WebScoketService {
     public void sendSingleMessageToUser(final MessageInfo messageInfo) {
         executor.execute(() -> {
             try {
-                template.convertAndSendToUser(messageInfo.getToUserId() + "", queueMessage, messageInfo);
+                template.convertAndSendToUser(messageInfo.getToAccountId() + "", queueMessage, messageInfo);
                 messageDao.insertMessage(messageInfo);
             } catch (Exception e) {
-                throw new SystemException(246, messageInfo.getToUserId() + "消息发送失败" + messageInfo.getFromUserId(), this.getClass().getSimpleName(), "sendMessageToUser", e.toString());
+                throw new SystemException(246, messageInfo.getToAccountId() + "消息发送失败" + messageInfo.getFromAccountId(), this.getClass().getSimpleName(), "sendMessageToUser", e.toString());
             }
         });
 
@@ -69,7 +67,7 @@ public class WebScoketService {
         if (list!=null && list.size()>0){
             MessageInfo info=list.get(0);
             executor.execute(() -> {
-                template.convertAndSendToUser(info.getToUserId().toString(),queueMessage,list);
+                template.convertAndSendToUser(info.getToAccountId().toString(),queueMessage,list);
             });
         }
 

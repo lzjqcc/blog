@@ -11,17 +11,11 @@ import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import com.lzj.service.ArticleService;
 import com.lzj.utils.ComentUtils;
-import com.mongodb.WriteResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
             assortmentEntity = new Assortment();
             assortmentEntity.setArticleNum(1);
             assortmentEntity.setAssortmentName(assortment);
-            assortmentEntity.setUserId(user.getId());
+            assortmentEntity.setCurrentAccountId(user.getId());
             assortmentDao.insertAssortment(assortmentEntity);
         } else {
             assortmentDao.updateAssortment(null, assortmentEntity.getArticleNum() + 1, assortmentEntity.getId());

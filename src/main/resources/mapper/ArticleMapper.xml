@@ -11,7 +11,7 @@
         <result column="update_time" property="updateTime"></result>
         <result column="support" property="support"></result>
         <result column="dislike" property="dislike"></result>
-        <result column="user_id" property="userId"/>
+        <result column="current_account_id" property="currentAccountId"/>
         <result column="visit_times" property="visitTimes"/>
         <result column="top" property="top"/>
         <result column="to_top" property="toTop"/>
@@ -27,14 +27,14 @@
     ${alias}.create_time,
     ${alias}.dislike,
     ${alias}.visit_times,
-    ${alias}.user_id,
+    ${alias}.current_account_id,
     ${alias}.top,
     ${alias}.to_top
     </sql>
     <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" flushCache="true">
-      INSERT INTO tb_artile (assortment_id,title,description,support,create_time,update_time,dislike,visit_times,user_id,top,to_top)
+      INSERT INTO tb_artile (assortment_id,title,description,support,create_time,update_time,dislike,visit_times,current_account_id,top,to_top)
       VALUES
-      (#{assortmentId},#{title},#{description},#{support},#{createTime},#{updateTime},#{dislike},#{visitTimes},#{userId},#{top},#{toTop})
+      (#{assortmentId},#{title},#{description},#{support},#{createTime},#{updateTime},#{dislike},#{visitTimes},#{currentAccountId},#{top},#{toTop})
     </insert>
     <select id="findById" resultMap="articleResultMap" useCache="true" >
         SELECT
@@ -42,11 +42,11 @@
         FROM tb_artile a
         WHERE a.id=#{id}
     </select>
-    <select id="findByUserId" resultMap="articleResultMap" useCache="true">
+    <select id="findBycurrentAccountId" resultMap="articleResultMap" useCache="true">
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>
         FROM tb_artile a
-        WHERE a.user_id=#{userId}
+        WHERE a.current_account_id=#{currentAccountId}
 
         <if test="condition!=null">
             and a.id BETWEEN #{condition.first} and #{condition.second}
@@ -58,7 +58,7 @@
     <update id="updateByMap" parameterType="Map" flushCache="true">
         UPDATE tb_artile set
         <foreach collection="map" index="key" item="value" separator=",">
-          <if test="key!='id' and key!=null and key!='user_id'">
+          <if test="key!='id' and key!=null and key!='current_account_id'">
               ${key}=#{value}
           </if>
         </foreach>
@@ -66,11 +66,11 @@
         id=#{map.id}
     </update>
 
-    <select id="findByUserIdAndAssortment" resultMap="articleResultMap" useCache="true">
+    <select id="findBycurrentAccountIdAndAssortment" resultMap="articleResultMap" useCache="true">
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>
         FROM tb_artile a
-        WHERE a.user_id=#{userId} and a.assortment_id=#{assortmentId}
+        WHERE a.current_account_id=#{currentAccountId} and a.assortment_id=#{assortmentId}
         <if test="condition!=null">
             and a.id BETWEEN #{condition.first} and #{condition.second}
         </if>
@@ -82,6 +82,6 @@
             id BETWEEN #{condition.first} and #{condition.second} and
         </if>
 
-        user_id=#{userId} ORDER BY visit_times DESC
+        current_account_id=#{currentAccountId} ORDER BY visit_times DESC
     </select>
 </mapper>

@@ -85,7 +85,7 @@ public class ArticleController {
         article.setContent(content);
         article.setTop(top);
         article.setToTop(toTop);
-        article.setUserId(((User) session.getAttribute("user")).getId());
+        article.setCurrentAccountId(((User) session.getAttribute("user")).getId());
 
         articleService.insertArticle(article, (User) session.getAttribute("user"), assortment, picMap.get(((User) session.getAttribute("user")).getId()));
 
