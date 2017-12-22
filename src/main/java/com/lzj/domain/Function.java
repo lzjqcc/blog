@@ -1,7 +1,5 @@
 package com.lzj.domain;
 
-import constant.AuthorityEnum;
-
 import java.io.Serializable;
 
 public class Function extends BaseEntity implements Serializable {

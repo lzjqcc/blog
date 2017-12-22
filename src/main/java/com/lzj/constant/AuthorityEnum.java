@@ -1,4 +1,4 @@
-package constant;
+package com.lzj.constant;
 
 public enum  AuthorityEnum {
 }
