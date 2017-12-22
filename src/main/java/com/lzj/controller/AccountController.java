@@ -1,21 +1,15 @@
 package com.lzj.controller;
 
 import com.lzj.domain.User;
-import com.lzj.exception.BusinessException;
-import com.lzj.service.UserService;
+import com.lzj.service.AccountService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.Buffer;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +18,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class AccountController {
     @Autowired
-    UserService userService;
+    AccountService userService;
 
     /**
      * 用户详细信息页面

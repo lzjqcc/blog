@@ -3,6 +3,8 @@ package com.lzj.service.impl;
 import com.lzj.VO.ArticleMongo;
 import com.lzj.dao.ArticleDao;
 import com.lzj.dao.AssortmentDao;
+import com.lzj.dao.dto.AccountDto;
+import com.lzj.domain.Account;
 import com.lzj.domain.Article;
 import com.lzj.domain.Assortment;
 import com.lzj.domain.LimitCondition;
@@ -39,7 +41,7 @@ public class ArticleServiceImpl implements ArticleService {
     String mongoDB;
     public static final String ARTICLE_DIR = "./src/main/resources/article/username/assortment/title";
     @Transactional
-    public void insertArticle(Article article, User user, String assortment,List<String> picURLs) {
+    public void insertArticle(Article article, AccountDto user, String assortment, List<String> picURLs) {
         if (assortment==null){
             throw new BusinessException(232,"文章分类不能为空");
         }

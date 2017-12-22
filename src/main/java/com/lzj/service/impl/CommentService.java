@@ -1,25 +1,16 @@
 package com.lzj.service.impl;
 
 import com.lzj.VO.CommentMongo;
-import com.lzj.dao.ArticleDao;
 import com.lzj.dao.CommentDao;
-import com.lzj.dao.UserDao;
-import com.lzj.domain.Article;
 import com.lzj.domain.Comment;
 import com.lzj.domain.User;
-import com.lzj.utils.ComentUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by li on 17-8-6.

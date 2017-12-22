@@ -1,20 +1,18 @@
 package com.lzj.controller;
 
 import com.lzj.dao.MessageDao;
+import com.lzj.dao.dto.AccountDto;
+import com.lzj.domain.Account;
 import com.lzj.domain.EmailObject;
 import com.lzj.domain.MessageInfo;
-import com.lzj.domain.User;
-import com.lzj.service.UserService;
+import com.lzj.service.AccountService;
 import com.lzj.service.impl.WebScoketService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -29,7 +27,7 @@ public class LoginController {
     @Autowired
     SimpUserRegistry simpUserRegistry;
     @Autowired
-    private UserService userService;
+    private AccountService userService;
     @Value("${userName}")
     String userName;
     @Value("${password}")
@@ -43,17 +41,15 @@ public class LoginController {
     WebScoketService webScoketService;
     /**
      * 登录成功后发送未读信息
-     * @param nameOrEmail
-     * @param password
+
      * @param session
      * @return
      */
     @RequestMapping(value = "/loginAct",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> loginAct(@RequestParam("nameOrEmail")String nameOrEmail,
-                           @RequestParam("password")String password,
+    public Map<String,String> loginAct(@RequestBody AccountDto dto,
                            HttpSession session){
-        User user=userService.findByEmailOrNameAndPassword(nameOrEmail,password);
+        Account user=userService.findByDto(dto);
         Map<String, String> result = new HashMap<>();
         if (user!=null){
             session.setAttribute("user",user);
@@ -68,35 +64,25 @@ public class LoginController {
 
     /**
      * 用户注册成功后将用户名密码发送给用户邮箱
-     * @param name
-     * @param password
-     * @param email
      * @return
      */
     @RequestMapping("/registerAct")
     @ResponseBody
-    public Map<String,String> registerAct(@RequestParam("name")String name,
-                              @RequestParam("password")String password,
-                              @RequestParam("email")String email,HttpSession session){
+    public Map<String,String> registerAct(@RequestBody AccountDto user, HttpSession session){
         Map<String, String> result = new HashMap<>();
-        if (email!=null && !email.contains("@") && email.lastIndexOf(".com")==-1){
+        if (user.getEmail()!=null && !user.getEmail().contains("@") && user.getEmail().lastIndexOf(".com")==-1){
             result.put("result", "邮箱格式错误");
             return result;
         }
-        Integer i=userService.insertUser(name,email,password,session);
-        if (i==1){
+        if (!userService.insertUser(user,session)){
             result.put("result", "用户名存在");
-            return result;
-        }
-        if (i==2){
-            result.put("result", "邮箱已存在");
             return result;
         }
         EmailObject object=new EmailObject();
         object.setUserName(userName);
         object.setHost(host);
         object.setPassword(password);
-        object.setSendTo(email);
+        object.setSendTo(user.getEmail());
         object.setDefaultEncoding("UTF-8");
         object.setSubject("用户注册");
         object.setContent("");

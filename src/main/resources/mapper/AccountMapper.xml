@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.AccountDao" >
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+    </cache>
+    <resultMap id="userResultMap" type="com.lzj.domain.User">
+
+        <id column="id" property="id"></id>
+        <result column="password" property="password"></result>
+        <result column="email" property="email"></result>
+        <result column="head_icon" property="headIcon"/>
+        <result column="gender" property="gender"/>
+        <result column="city" property="city"/>
+        <result column="age" property="age"/>
+        <result column="school" property="school"/>
+        <result column="blog_year" property="blogYear"/>
+        <result column="mobile" property="mobile"/>
+        <result column="occupation" property="occupation"/>
+        <result column="personal_signature" property="personalSignature"/>
+        <result column="sign" property="sign"/>
+        <result column="birth" property="birth"/>
+        <result column="create_time" property="createTime"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="user_name" property="userName"/>
+    </resultMap>
+    <sql id="userField">
+        password,
+        email,
+        create_time,
+        head_icon,
+        gender,
+        city,
+        age,
+        school,
+        blog_year,
+        mobile,
+        occupation,
+        personal_signature,
+        sign,
+        birth,
+        user_name
+    </sql>
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO tb_account
+        (<include refid="userField"></include>,update_time)
+        VALUES
+        (#{param.password},#{param.email},#{param.createTime},#{param.head_icon},#{param.gender},#{param.city},#{param.age},
+        #{param.school},#{param.blogYear},#{param.mobile},#{param.occupation},#{param.personalSignature},#{param.sign},
+        #{param.birth},#{param.userName},#{param.updateTime})
+    </insert>
+    <update id="updateUser">
+        UPDATE tb_account set
+        <if test="param.headIcon != null">
+            head_icon =#{param.headIcon},
+        </if>
+        <if test="param.password!=null">
+            password=#{param.password},
+        </if>
+        <if test="param.email!=null">
+            email=#{param.email},
+        </if>
+        <if test="param.gender !=null">
+            gender = #{param.gender},
+        </if>
+        <if test="param.birth != null">
+            birth = #{param.birth},
+        </if>
+        <if test="param.age">
+            age = #{param.age},
+        </if>
+        <if test="param.blogYear != null">
+            blog_year=#{param.blogYear},
+        </if>
+        <if test="param.mobile != null">
+            mobile = #{param.mobile},
+        </if>
+        <if test="param.occupation ! = null">
+            occupation = #{param.occupation},
+        </if>
+        <if test="param.personSignature != null">
+            personSignature = #{param.personSignature},
+        </if>
+        <if test="param.sign != null">
+            sign = #{param.sign},
+        </if>
+        <if test="param.userName !=null">
+            user_name=#{param.userName}
+        </if>
+        update_time=#{updateTime}
+        WHERE id=#{id}
+    </update>
+
+    <select id="findByUserDto" resultMap="userResultMap" useCache="true">
+        SELECT id,<include refid="userField"></include> from tb_account WHERE
+        <if test="param.email != null" >
+            email = #{param.email} and
+        </if>
+        <if test="param.password != null ">
+            password = #{param.password} and
+        </if>
+        <if test="param.id != null">
+            id = #{param.id}
+        </if>
+    </select>
+</mapper>

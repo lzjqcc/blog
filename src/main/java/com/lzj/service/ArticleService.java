@@ -1,12 +1,7 @@
 package com.lzj.service;
 
-import com.lzj.dao.ArticleDao;
-import com.lzj.dao.UserDao;
+import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.*;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -15,7 +10,7 @@ import java.util.*;
  */
 public interface ArticleService {
     
-    void insertArticle(Article article, User user,String assortment,List<String> picURL);
+    void insertArticle(Article article, AccountDto user, String assortment, List<String> picURL);
     Article findById(Integer id);
     List<Article> findAllByUserId(Integer userId, LimitCondition condition);
     void updateByMap(Map map);

@@ -1,11 +1,9 @@
-package com.lzj.domain;
+package com.lzj.dao.dto;
 
-import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.Date;
 
-
-public class Account extends BaseEntity implements Serializable {
+public class AccountDto {
+    private Integer id;
     //
     private String headIcon;
     private Integer gender;
@@ -21,23 +19,87 @@ public class Account extends BaseEntity implements Serializable {
     // 标签
     private String sign;
     private String userName;
-    private String password;
     private String email;
+    private String password;
 
-    public String getPassword() {
-        return password;
+    public String getHeadIcon() {
+        return headIcon;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHeadIcon(String headIcon) {
+        this.headIcon = headIcon;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getGender() {
+        return gender;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Date birth) {
+        this.birth = birth;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getBlogYear() {
+        return blogYear;
+    }
+
+    public void setBlogYear(Integer blogYear) {
+        this.blogYear = blogYear;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getPersonalSignature() {
+        return personalSignature;
+    }
+
+    public void setPersonalSignature(String personalSignature) {
+        this.personalSignature = personalSignature;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 
     public String getUserName() {
@@ -48,93 +110,27 @@ public class Account extends BaseEntity implements Serializable {
         this.userName = userName;
     }
 
-    public String getHeadIcon() {
-        return headIcon;
+    public String getEmail() {
+        return email;
     }
 
-    public Account setHeadIcon(String headIcon) {
-        this.headIcon = headIcon;
-        return this;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Integer getGender() {
-        return gender;
+    public String getPassword() {
+        return password;
     }
 
-    public Account setGender(Integer gender) {
-        this.gender = gender;
-        return this;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public Date getBirth() {
-        return birth;
+    public Integer getId() {
+        return id;
     }
 
-    public Account setBirth(Date birth) {
-        this.birth = birth;
-        return this;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public Account setCity(String city) {
-        this.city = city;
-        return this;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public Account setAge(Integer age) {
-        this.age = age;
-        return this;
-    }
-
-    public Integer getBlogYear() {
-        return blogYear;
-    }
-
-    public Account setBlogYear(Integer blogYear) {
-        this.blogYear = blogYear;
-        return this;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public Account setMobile(String mobile) {
-        this.mobile = mobile;
-        return this;
-    }
-
-    public String getOccupation() {
-        return occupation;
-    }
-
-    public Account setOccupation(String occupation) {
-        this.occupation = occupation;
-        return this;
-    }
-
-    public String getPersonalSignature() {
-        return personalSignature;
-    }
-
-    public Account setPersonalSignature(String personalSignature) {
-        this.personalSignature = personalSignature;
-        return this;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public Account setSign(String sign) {
-        this.sign = sign;
-        return this;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
