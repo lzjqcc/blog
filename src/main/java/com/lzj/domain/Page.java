@@ -9,6 +9,16 @@ public class Page implements Serializable{
     @NotNull
     private Integer pageSize;
     private Integer startIndex;
+    private Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public Page setCount(Integer count) {
+        this.count = count;
+        return this;
+    }
 
     public Integer getStartIndex() {
         return startIndex;

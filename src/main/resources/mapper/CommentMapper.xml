@@ -7,32 +7,41 @@
         <id column="id" property="id"></id>
         <result column="comment" property="comment"></result>
         <result column="article_id" property="articleId"/>
-        <result column="from_user_id" property="fromUserId"/>
-        <result column="to_user_id" property="toUserId"/>
+        <result column="from_account_id" property="fromUserId"/>
+        <result column="to_account_id" property="toUserId"/>
         <result column="replay_comment_id" property="replayComentId"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
+        <result column="current_account_id" property="currentAccountId"></result>
+        <result column="source" property="source" typeHandler="com.lzj.utils.handler.EnumTypeHandler"></result>
+        <result column="picture_group_id" property="pictureGroupId"></result>
     </resultMap>
     <sql id="userColumns">
     ${alias}.comment,
     ${alias}.article_id,
-    ${alias}.from_user_id,
-    ${alias}.to_user_id,
+    ${alias}.from_account_id,
+    ${alias}.to_account_id,
     ${alias}.replay_comment_id,
     ${alias}.create_time,
-    ${alias}.update_time
+    ${alias}.update_time,
+    ${alias}.current_account_id,
+    ${alias}.source,
+    ${alias}.picture_group_id,
     </sql>
     <sql id="colums">
       comment,
     article_id,
-    from_user_id,
-    to_user_id,
+    from_account_id,
+    to_account_id,
     replay_comment_id,
     create_time,
-    update_time
+    update_time,
+    picture_group_id,
+    source,
+    current_account_id
     </sql>
     <insert id="insertComment" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Comment">
-        INSERT INTO comment
+        INSERT INTO tb_comment
         (
         <include refid="colums">
         </include>
@@ -45,6 +54,6 @@
         <include refid="userColumns">
             <property name="alias" value="t"/>
         </include>
-        FROM comment t WHERE t.article_id=#{articleId}
+        FROM tb_comment t WHERE t.article_id=#{articleId}
     </select>
 </mapper>

@@ -19,17 +19,17 @@
     ${alias}.update_time
     </sql>
     <insert id="insertAssortment" useGeneratedKeys="true" keyProperty="id" flushCache="true">
-      INSERT INTO assortment
+      INSERT INTO tb_assortment
       (assortment_name, user_id, article_num, create_time, update_time)
       VALUES
       (#{assortmentName},#{userId},#{articleNum},#{createTime},#{updateTime})
     </insert>
     <select id="findByUserIdAndName" resultMap="assortmentResultMap" useCache="true">
       SELECT t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
-        FROM  assortment t WHERE t.user_id=#{userId} and t.assortment_name=#{name}
+        FROM  tb_assortment t WHERE t.user_id=#{userId} and t.assortment_name=#{name}
     </select>
     <select id="updateAssortment" flushCache="true">
-        UPDATE assortment SET
+        UPDATE tb_assortment SET
         <if test="name!=null">
             assortment_name=#{name},
         </if>

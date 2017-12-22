@@ -32,20 +32,20 @@
     ${alias}.to_top
     </sql>
     <insert id="insertArticle" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Article" flushCache="true">
-      INSERT INTO article (assortment_id,title,description,support,create_time,update_time,dislike,visit_times,user_id,top,to_top)
+      INSERT INTO tb_artile (assortment_id,title,description,support,create_time,update_time,dislike,visit_times,user_id,top,to_top)
       VALUES
       (#{assortmentId},#{title},#{description},#{support},#{createTime},#{updateTime},#{dislike},#{visitTimes},#{userId},#{top},#{toTop})
     </insert>
     <select id="findById" resultMap="articleResultMap" useCache="true" >
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>
-        FROM article a
+        FROM tb_artile a
         WHERE a.id=#{id}
     </select>
     <select id="findByUserId" resultMap="articleResultMap" useCache="true">
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>
-        FROM article a
+        FROM tb_artile a
         WHERE a.user_id=#{userId}
 
         <if test="condition!=null">
@@ -53,10 +53,10 @@
         </if>
     </select>
     <delete id="deleteById" flushCache="true">
-        DELETE FROM article WHERE id=#{id}
+        DELETE FROM tb_artile WHERE id=#{id}
     </delete>
     <update id="updateByMap" parameterType="Map" flushCache="true">
-        UPDATE article set
+        UPDATE tb_artile set
         <foreach collection="map" index="key" item="value" separator=",">
           <if test="key!='id' and key!=null and key!='user_id'">
               ${key}=#{value}
@@ -69,7 +69,7 @@
     <select id="findByUserIdAndAssortment" resultMap="articleResultMap" useCache="true">
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>
-        FROM article a
+        FROM tb_artile a
         WHERE a.user_id=#{userId} and a.assortment_id=#{assortmentId}
         <if test="condition!=null">
             and a.id BETWEEN #{condition.first} and #{condition.second}
@@ -77,7 +77,7 @@
 
     </select>
     <select id="findHistoryMax" resultMap="articleResultMap" useCache="true">
-        SELECT id,title,visit_times from article WHERE
+        SELECT id,title,visit_times from tb_artile WHERE
         <if test="condition!=null">
             id BETWEEN #{condition.first} and #{condition.second} and
         </if>
