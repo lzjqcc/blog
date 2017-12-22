@@ -31,7 +31,6 @@ public class WebConfig {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver getMutipart(){
         CommonsMultipartResolver resolver=new CommonsMultipartResolver();
-        resolver.setMaxUploadSize(1024*1024);
         resolver.setResolveLazily(true);
         resolver.setDefaultEncoding("UTF-8");
         return resolver;
