@@ -8,9 +8,18 @@ public class SystemException extends RuntimeException{
     private String message;
     private String className;
     private String method;
+    private String args;
     private Exception e;
     private String exceptionString;
     private Date createTime;
+
+    public String getArgs() {
+        return args;
+    }
+
+    public void setArgs(String args) {
+        this.args = args;
+    }
 
     public Date getCreateTime() {
         return createTime;
@@ -32,9 +41,6 @@ public class SystemException extends RuntimeException{
         this.message=message;
         this.e=e;
     }
-    public SystemException(Integer code,String message,String className,String method,Exception e){
-
-    }
     public SystemException(Integer code,String message,String className,String method,String exceptionString){
         this.code=code;
         this.message=message;
@@ -42,7 +48,13 @@ public class SystemException extends RuntimeException{
         this.method=method;
         this.exceptionString=exceptionString;
     }
-
+    public SystemException(Integer code, String message,String className,String method,String args , String exceptionString) {
+        this.code = code;
+        this.message= message;
+        this.className = className;
+        this.method = method;
+        this.args = args;
+    }
     public String getExceptionString() {
         return exceptionString;
     }

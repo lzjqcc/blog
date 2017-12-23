@@ -1,9 +1,16 @@
 package com.lzj.controller;
 
-import com.lzj.domain.User;
+import com.lzj.dao.dto.AccountDto;
+import com.lzj.domain.Account;
+import com.lzj.exception.BusinessException;
+import com.lzj.exception.SystemException;
 import com.lzj.service.AccountService;
 import com.lzj.utils.ComentUtils;
+import com.lzj.utils.ReflectUtils;
+import org.assertj.core.util.Arrays;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,36 +28,25 @@ import java.util.Map;
 @RequestMapping("/user")
 public class AccountController {
     @Autowired
-    AccountService userService;
-
-    /**
-     * 用户详细信息页面
-     *
-     * @return
-     */
-    @RequestMapping(value = "userDetailPage", method = RequestMethod.GET)
-    public String userDetail() {
-        return "userDetail";
-    }
-
+    AccountService accountService;
     @RequestMapping(value = "getUserDetail", method = RequestMethod.GET)
     @ResponseBody
-    public User getUser(@RequestParam("id") Integer id) {
-
-        return userService.findById(id);
+    public AccountDto getUser(HttpSession session) {
+        Account account = (Account) session.getAttribute("user");
+        AccountDto dto = new AccountDto();
+        BeanUtils.copyProperties(account,dto);
+        dto.setHeadIconURL(ComentUtils.getImageURL(account.getHeadIcon()));
+        return dto;
     }
 
     @RequestMapping(value = "updateUser", method = RequestMethod.POST)
     @ResponseBody
-    public void updateUser(@RequestParam("name") String name,
-                           @RequestParam("password") String password,
-                           HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        user.setUserName(name);
-        user.setPassword(password);
-        userService.updateUser(user);
+    public void updateUser(@RequestBody AccountDto dto, HttpSession session) {
+        Account user = (Account) session.getAttribute("user");
+        BeanUtils.copyProperties(user, dto, ReflectUtils.findNullFieldName(dto));
+        dto.setId(user.getId());
+        accountService.updateUser(dto);
     }
-
     /**
      * 头像上传
      *
@@ -65,15 +62,9 @@ public class AccountController {
             BufferedOutputStream outputStream = null;
             try {
                 inputStream = new BufferedInputStream(uploadFile.getInputStream());
-                User user = (User) session.getAttribute("user");
-                String userIconDir = ComentUtils.ICON_DIR + "/" + user.getId().toString();
-                String preUserIcon=user.getIcon();
-                if (!preUserIcon.contains("defaultIcon")){
-                    File file=new File(preUserIcon);
-                    file.deleteOnExit();
-                }
-                user.setIcon(userIconDir.substring(ComentUtils.ICON_DIR.indexOf("static")) + "/" + System.currentTimeMillis()+uploadFile.getOriginalFilename().split(".")[1]);
-                File file = new File(userIconDir, System.currentTimeMillis()+uploadFile.getOriginalFilename().split(".")[1]);
+                Account user = (Account) session.getAttribute("user");
+                setAccountHeadIcon(user,uploadFile.getOriginalFilename());
+                File file = new File(user.getHeadIcon());
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));
                 byte[] buff = new byte[1024*2];
                 int length;
@@ -81,12 +72,14 @@ public class AccountController {
                     outputStream.write(buff, 0, length);
                 }
                 outputStream.flush();
-                userService.updateUser(user);
+                AccountDto dto = new AccountDto();
+                ReflectUtils.copyFieldValue(user,dto,"id","headIcon");
+                accountService.updateUser(dto);
                 Map<String,String> map=new HashMap<>();
-                map.put("iconURL",ComentUtils.HOST+user.getIcon());
+                map.put("iconURL",ComentUtils.getImageURL(user.getHeadIcon()));
                 return map;
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new BusinessException(300,"头像上传失败！");
             } finally {
                 if (inputStream != null) {
                     ComentUtils.closeStream(inputStream);
@@ -97,6 +90,21 @@ public class AccountController {
             }
         }
         return null;
+    }
+
+    private void setAccountHeadIcon(Account account, String sourceName) {
+        String iconDir = ComentUtils.ICON_DIR + account.getId();
+        if (account != null && account.getHeadIcon() != null) {
+            File file = new File(account.getHeadIcon());
+            file.deleteOnExit();;
+            File dir = new File(iconDir);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        }
+        String iconName = System.currentTimeMillis()+sourceName.split(".")[1];
+        account.setHeadIcon(iconDir+File.separator+iconName);
+
     }
 
 }

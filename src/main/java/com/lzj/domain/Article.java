@@ -18,6 +18,15 @@ public class Article extends BaseEntity {
     private Integer top;//置顶排序
     private Boolean toTop;//是否置顶
     private Integer assortmentId;
+    private String tips;//标签
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
 
     public Integer getAssortmentId() {
         return assortmentId;

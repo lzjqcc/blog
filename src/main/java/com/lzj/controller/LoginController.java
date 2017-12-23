@@ -27,7 +27,7 @@ public class LoginController {
     @Autowired
     SimpUserRegistry simpUserRegistry;
     @Autowired
-    private AccountService userService;
+    private AccountService accountService;
     @Value("${userName}")
     String userName;
     @Value("${password}")
@@ -49,11 +49,11 @@ public class LoginController {
     @ResponseBody
     public Map<String,String> loginAct(@RequestBody AccountDto dto,
                            HttpSession session){
-        Account user=userService.findByDto(dto);
+        Account account= accountService.findByDto(dto);
         Map<String, String> result = new HashMap<>();
-        if (user!=null){
-            session.setAttribute("user",user);
-            List<MessageInfo> list=messageDao.getMessages(ComentUtils.buildMessageCondition(user.getId(),false,null));
+        if (account!=null){
+            session.setAttribute("user",account);
+            List<MessageInfo> list=messageDao.getMessages(ComentUtils.buildMessageCondition(account.getId(),false,null));
             webScoketService.sendNotReadMessageToUser(list);
             result.put("result", "success");
             return result;
@@ -74,7 +74,7 @@ public class LoginController {
             result.put("result", "邮箱格式错误");
             return result;
         }
-        if (!userService.insertUser(user,session)){
+        if (!accountService.insertUser(user,session)){
             result.put("result", "用户名存在");
             return result;
         }
@@ -90,5 +90,4 @@ public class LoginController {
         result.put("result", "注册成功");
         return result;
     }
-
 }

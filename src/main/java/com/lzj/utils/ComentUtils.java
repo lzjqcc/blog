@@ -1,7 +1,7 @@
 package com.lzj.utils;
 
+import com.lzj.domain.Account;
 import com.lzj.domain.EmailObject;
-import com.lzj.domain.User;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,11 +20,12 @@ import java.util.*;
  */
 public class ComentUtils {
     private final static List<SystemException> list = new ArrayList<>(50);
-    public final static String TYPE_REPLY="reply";
-    public final static String TYPE_COMMENT="comment";
+
     public final static String ICON_DIR="./src/main/resources/static/icon";
     public final static String HOST="http://localhost:8080";
     public final static String ARTICLE_PIC="./src/main/resources/static/articlepic";
+    public final static  String ARTICLE="articlepic";
+    public final static String ICON = "icon";
     public static Date getCurrentTime(){
         Calendar calendar=Calendar.getInstance(Locale.CHINESE);
 
@@ -64,8 +65,8 @@ public class ComentUtils {
     public static void removeSystemEx(int index){
         list.remove(index);
     }
-    public static void sureLogin(User user){
-        if (user==null){
+    public static void sureLogin(Account account){
+        if (account==null){
             throw  new BusinessException(232,"请登录");
         }
     }
@@ -91,7 +92,9 @@ public class ComentUtils {
             }
         }
     }
-
+    public static String getImageURL(String local) {
+        return ComentUtils.HOST+local.split("static")[1];
+    }
     /**
      * 获取token防止用户多次提交
      */

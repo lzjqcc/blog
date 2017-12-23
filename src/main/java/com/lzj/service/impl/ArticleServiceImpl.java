@@ -8,7 +8,6 @@ import com.lzj.domain.Account;
 import com.lzj.domain.Article;
 import com.lzj.domain.Assortment;
 import com.lzj.domain.LimitCondition;
-import com.lzj.domain.User;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import com.lzj.service.ArticleService;

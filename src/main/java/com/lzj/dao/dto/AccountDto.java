@@ -21,6 +21,15 @@ public class AccountDto {
     private String userName;
     private String email;
     private String password;
+    private String headIconURL;
+
+    public String getHeadIconURL() {
+        return headIconURL;
+    }
+
+    public void setHeadIconURL(String headIconURL) {
+        this.headIconURL = headIconURL;
+    }
 
     public String getHeadIcon() {
         return headIcon;

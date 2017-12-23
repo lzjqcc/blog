@@ -11,6 +11,7 @@
         <result column="method" property="method"/>
         <result column="create_time" property="createTime"/>
         <result column="exception" property="exceptionString"/>
+        <result column="args" property="args"/>
     </resultMap>
     <sql id="userColumns">
     ${alias}.code,
@@ -18,7 +19,8 @@
     ${alias}.class_name,
     ${alias}.exception,
     ${alias}.create_time,
-    ${alias}.method
+    ${alias}.method,
+    ${alias}.args
     </sql>
     <insert id="insertException" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Exception" >
       INSERT INTO exception t

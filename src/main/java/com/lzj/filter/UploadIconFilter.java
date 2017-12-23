@@ -35,18 +35,14 @@ public class UploadIconFilter implements Filter {
         try {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 
-            response.setHeader("Access-Control-Max-Age", "0");
-
-            response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
+            response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token,withCredentials");
 
             response.setHeader("Access-Control-Allow-Credentials", "true");
-
-            response.setHeader("XDomainRequestAllowed","1");;
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(servletRequest, response);
         } catch (MultipartException e) {
             HttpServletResponse response= (HttpServletResponse) servletResponse;
             PrintWriter writer = servletResponse.getWriter();
