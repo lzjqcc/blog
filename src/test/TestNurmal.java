@@ -1,7 +1,6 @@
 
 import com.lzj.VO.ArticleMongo;
 import com.lzj.domain.Article;
-import com.lzj.domain.User;
 
 import com.lzj.utils.ComentUtils;
 import org.apache.commons.logging.Log;
@@ -29,13 +28,13 @@ import java.util.*;
 
 public class TestNurmal {
 
-
+/*
     @Test
     public void testEnum() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IntrospectionException {
         User user = new User();
         Object o = user;
         Class clazz = o.getClass();
-     /*   Method method=clazz.getMethod("setUpdateTime", Date.class);
+     *//*   Method method=clazz.getMethod("setUpdateTime", Date.class);
         try {
             method.invoke(user,new Date());
             System.out.println(user.getUpdateTime());
@@ -45,11 +44,11 @@ public class TestNurmal {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-        }*/
+        }*//*
         PropertyDescriptor descriptor = new PropertyDescriptor("updateTime", clazz);
         descriptor.getWriteMethod().invoke(user, new Date());
         System.out.println(user.getUpdateTime());
-    }
+    }*/
 
     @Test
     public void testRemove() {

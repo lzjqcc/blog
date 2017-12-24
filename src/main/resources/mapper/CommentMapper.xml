@@ -13,7 +13,7 @@
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
         <result column="current_account_id" property="currentAccountId"></result>
-        <result column="source" property="source" typeHandler="com.lzj.utils.handler.EnumTypeHandler"></result>
+        <result column="source" property="source"></result>
         <result column="picture_group_id" property="pictureGroupId"></result>
     </resultMap>
     <sql id="userColumns">
@@ -55,5 +55,12 @@
             <property name="alias" value="t"/>
         </include>
         FROM tb_comment t WHERE t.article_id=#{articleId}
+    </select>
+    <select id="findByPictureGroupId" useCache="true" resultMap="commentResultMap">
+        SELECT  t.id
+        <include refid="userColumns">
+            <property name="alias" value="t"/>
+        </include>
+        from tb_comment t where t.picture_group_id = #{pictureGroupId}
     </select>
 </mapper>

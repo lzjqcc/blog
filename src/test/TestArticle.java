@@ -1,7 +1,6 @@
 import com.lzj.Application;
 import com.lzj.dao.ArticleDao;
 import com.lzj.domain.Article;
-import com.lzj.domain.User;
 import com.lzj.service.ArticleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,7 @@ public class TestArticle {
             System.out.println(entry.getKey()+":"+entry.getValue().size());
         }
     }
-    @Test
+/*    @Test
     public void testInsert(){
         Article article=new Article();
         article.setTitle("真实");
@@ -61,5 +60,5 @@ public class TestArticle {
         article.setUserId(1);
         articleService.insertArticle(article,user,"散文",null);
 
-    }
+    }*/
 }

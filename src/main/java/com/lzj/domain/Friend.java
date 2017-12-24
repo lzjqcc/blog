@@ -1,16 +1,31 @@
 package com.lzj.domain;
 
+import com.lzj.annotation.EnableRelationTable;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Friend extends BaseEntity implements Serializable {
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = {"friend_id"})
+    private Integer id;
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = {"current_account_id"})
     private Integer currentAccountId;
     private Integer friendId;
     private Boolean specialAttention;
     private Boolean isDefriend;
     private Boolean isDelete;
     private Boolean isAgree;
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = {"function_id"},keyRow = true)
+    private List<Function> list = null;
+
+    public List<Function> getList() {
+        return list;
+    }
+
+    public void setList(List<Function> list) {
+        this.list = list;
+    }
 
     public Integer getCurrentAccountId() {
         return currentAccountId;

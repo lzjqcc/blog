@@ -2,11 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lzj.dao.AccountDao" >
+<mapper namespace="com.lzj.dao.AccountDao">
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
     </cache>
-    <resultMap id="userResultMap" type="com.lzj.domain.User">
-
+    <resultMap id="userResultMap" type="com.lzj.domain.Account">
         <id column="id" property="id"></id>
         <result column="password" property="password"></result>
         <result column="email" property="email"></result>
@@ -103,5 +102,8 @@
         <if test="param.id != null">
             id = #{param.id}
         </if>
+    </select>
+    <select id="findAll" resultMap="userResultMap" useCache="true">
+          select id , <include refid="userField"></include> from tb_account
     </select>
 </mapper>

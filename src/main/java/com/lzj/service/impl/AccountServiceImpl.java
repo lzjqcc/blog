@@ -5,6 +5,7 @@ import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
 import com.lzj.service.AccountService;
 import com.lzj.utils.ComentUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,9 @@ public class AccountServiceImpl implements AccountService {
 
         String icon=ComentUtils.ICON_DIR.substring(ComentUtils.ICON_DIR.indexOf("static"));
         dto.setHeadIcon(icon+"/default/default.jpg");
-        int count = accountDao.insertUser(dto);
+        Account account = new Account();
+        BeanUtils.copyProperties(dto,account);
+        int count = accountDao.insertAccount(account);
         if (count == 0) {
             return false;
         }

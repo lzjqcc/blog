@@ -2,15 +2,19 @@ package com.lzj.dao;
 
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
+import com.lzj.domain.Function;
+import com.lzj.domain.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by li on 17-8-6.
  */
 @Repository("userDao")
 public interface AccountDao {
-     Integer insertUser(@Param("param")AccountDto accountDto);
+     Integer insertAccount(@Param("param")Account accountDto);
     void updateUser(@Param("param") AccountDto dto);
     /**name==null根据email查询
      * email==null 根据name查询
@@ -19,4 +23,7 @@ public interface AccountDao {
      * @return
      */
     Account findByDto(@Param("param") AccountDto dto);
+    List<Function> findFriendFunction(Integer accountId,Integer friendId);
+
+    List<Account> findAll(Page page);
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class TestMessage {
     @Autowired
     MessageDao messageDao;
-    @Test
+  /*  @Test
     public void testInsert(){
         MessageInfo info=new MessageInfo();
 
@@ -26,7 +26,7 @@ public class TestMessage {
         info.setFromUserId(2);
         info.setType(true);
         messageDao.insertMessage(info);
-    }
+    }*/
     @Test
     public void testSelect(){
 

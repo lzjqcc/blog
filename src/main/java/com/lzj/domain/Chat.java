@@ -1,14 +1,13 @@
 package com.lzj.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Chat extends BaseEntity implements Serializable {
     private Integer currentAccountId;
     private Integer fromAccountId;
     private Integer toAccountId;
     private String message;
-    private Boolean delete;
+    private Boolean isDelete;
 
     public Integer getCurrentAccountId() {
         return currentAccountId;
@@ -46,12 +45,12 @@ public class Chat extends BaseEntity implements Serializable {
         return this;
     }
 
-    public Boolean getDelete() {
-        return delete;
+    public Boolean getIsDelete() {
+        return isDelete;
     }
 
-    public Chat setDelete(Boolean delete) {
-        this.delete = delete;
+    public Chat setIsDelete(Boolean isDelete) {
+        this.isDelete = isDelete;
         return this;
     }
 }

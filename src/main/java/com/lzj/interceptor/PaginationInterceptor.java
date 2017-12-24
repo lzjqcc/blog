@@ -1,6 +1,7 @@
 package com.lzj.interceptor;
 
 import com.lzj.domain.Page;
+import com.lzj.exception.SystemException;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.Executor;
@@ -25,6 +26,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * 允许拦截，Excutor,ParameterHandler,ResultSetHandler,StatementHandler
+ */
 
 @Intercepts({@Signature(type = StatementHandler.class,method = "prepare",args = {Connection.class,Integer.class})})
 @Component
@@ -36,29 +40,22 @@ public class PaginationInterceptor implements Interceptor{
             Field delegateField = ReflectionUtils.findField(handler.getClass(), "delegate");
             delegateField.setAccessible(true);
             StatementHandler delegate = (StatementHandler) delegateField.get(handler);
-            Field mappedStatementField = ReflectionUtils.findField(delegate.getClass(), "mappedStatement");
-            mappedStatementField.setAccessible(true);
             BoundSql boundSql = delegate.getBoundSql();
-            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) boundSql.getParameterObject();
-            Set<Map.Entry> entries = paramMap.entrySet();
-            if (boundSql != null) {
-                for (Map.Entry entry : entries) {
-                    if (entry.getValue() instanceof Page) {
-                        Page page = (Page) entry.getValue();
-                        if (boundSql != null && !boundSql.getSql().contains("limit")) {
-                            Connection connection = (Connection) invocation.getArgs()[0];
-                            Field sqlField = ReflectionUtils.findField(BoundSql.class, "sql");
-                            sqlField.setAccessible(true);
-                            String sql = (String) sqlField.get(boundSql);
-                            count(sql,connection,page);
-                            sql = getPageSql(sql,page);
-                            sqlField.set(boundSql,sql);
-
-
+            if (boundSql.getParameterObject() instanceof MapperMethod.ParamMap) {
+                MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) boundSql.getParameterObject();
+                Set<Map.Entry> entries = paramMap.entrySet();
+                if (boundSql != null) {
+                    for (Map.Entry entry : entries) {
+                        if (entry.getValue() instanceof Page) {
+                            Page page = (Page) entry.getValue();
+                            setPageSql(page, boundSql, invocation);
                         }
                     }
-                }
 
+                }
+            }else if (boundSql.getParameterObject() instanceof Page) {
+                Page page = (Page) boundSql.getParameterObject();
+                setPageSql(page,boundSql,invocation);
             }
         }
     /*    if (invocation.getTarget() instanceof CachingExecutor) {
@@ -86,7 +83,19 @@ public class PaginationInterceptor implements Interceptor{
         }*/
         return invocation.proceed();
     }
+    private void setPageSql(Page page,BoundSql boundSql, Invocation invocation) throws IllegalAccessException, SQLException {
+        if (boundSql != null && !boundSql.getSql().contains("limit")) {
+            Connection connection = (Connection) invocation.getArgs()[0];
+            Field sqlField = ReflectionUtils.findField(BoundSql.class, "sql");
+            sqlField.setAccessible(true);
+            String sql = (String) sqlField.get(boundSql);
+            count(sql,connection,page);
+            sql = getPageSql(sql,page);
+            sqlField.set(boundSql,sql);
 
+
+        }
+    }
     @Override
     public Object plugin(Object target) {
         return   Plugin.wrap(target, this);
@@ -95,6 +104,9 @@ public class PaginationInterceptor implements Interceptor{
         // 1，单表查询分页
        // 2，关联查询分页
         Integer startIndex = (page.getCurrentPage()-1)* page.getPageSize();
+        if (startIndex < 0) {
+            throw new SystemException(210,"sql 分页 page.getStartIndex < 0, currentPage 必须 >=1");
+        }
         page.setStartIndex(startIndex);
         String pageSql = null;
         if (sql !=null && page !=null) {

@@ -1,13 +1,13 @@
 package com.lzj.controller;
 
+import com.lzj.constant.CommentTypeEnum;
 import com.lzj.dao.AssortmentDao;
 import com.lzj.dao.dto.AccountDto;
-import com.lzj.domain.Account;
-import com.lzj.domain.Article;
-import com.lzj.domain.Assortment;
-import com.lzj.domain.LimitCondition;
+import com.lzj.domain.*;
+import com.lzj.exception.BusinessException;
 import com.lzj.service.ArticleService;
 
+import com.lzj.service.impl.CommentService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
-
+    @Autowired
+    private CommentService commentService;
     @Autowired
     AssortmentDao assortmentDao;
     private final static Map<Integer, List<String>> picMap = new ConcurrentHashMap<>();
@@ -51,6 +52,9 @@ public class ArticleController {
         map.put("id", id);
         map.put("visit_times", article.getVisitTimes()+1);
         articleService.updateByMap(map);
+        Map<String, Object> entityMap = new HashMap<>();
+        entityMap.put("article", article);
+        entityMap.put("comment", commentService.getComments(article.getId(), CommentTypeEnum.ARTICLE.code));
         return article;
     }
 
@@ -170,37 +174,22 @@ public class ArticleController {
         Map<String,List<Article>> listMap=articleService.findDateNum(userId);
         return listMap.get(singleDate);
     }
-    /**需要登录
-     *
-     * 上传文章相关的图片
-     * @return
-     */
-
-    /**需要登录
-     * 显示单月文章数的页面
-     */
-    @RequestMapping(value = "findSingleDateNumPage")
-    public String findSinglePage(){
-        return "findSinglePage";
-    }
-    @RequestMapping(value = "/uploadPic",method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadArticlePic",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,String> uploadArticlePic(@RequestParam(value = "image", required = true) MultipartFile uploadFile, HttpSession session) throws IOException {
-        if (uploadFile != null) {
             BufferedInputStream inputStream = null;
-            BufferedOutputStream outputStream = null;
+            File file = null;
             try {
                 inputStream = new BufferedInputStream(uploadFile.getInputStream());
 
                 Account user = (Account) session.getAttribute("user");
                 ComentUtils.sureLogin(user);
-                String articlePic = ComentUtils.ARTICLE_PIC + "/" + user.getId().toString();
-                String []dd=uploadFile.getOriginalFilename().split("\\.");
+                String articlePic = ComentUtils.ARTICLE_PIC + File.separator+ user.getId().toString();
                 File parent=new File(articlePic);
                 if (!parent.exists()){
                     parent.mkdirs();
                 }
-                File file = new File(parent, System.currentTimeMillis()+"."+uploadFile.getOriginalFilename().split("\\.")[1]);
+                file = new File(parent, System.currentTimeMillis()+"."+uploadFile.getOriginalFilename().split("\\.")[1]);
                 Files.copy(inputStream, Paths.get(articlePic, file.getName()));
                 String picURL = ComentUtils.getImageURL(file.getPath());
                 Map<String,String> map=new HashMap<>();
@@ -214,18 +203,15 @@ public class ArticleController {
                 map.put("picURL",picURL);
                 return map;
             } catch (IOException e) {
-                e.printStackTrace();
+                if (file != null) {
+                    file.deleteOnExit();
+                }
+                throw new BusinessException(300, "图片上传失败");
             } finally {
                 if (inputStream != null) {
                     ComentUtils.closeStream(inputStream);
                 }
-                if (outputStream != null) {
-                    ComentUtils.closeStream(outputStream);
-                }
             }
-        }
-
-        return null;
     }
 
     /**需要登录

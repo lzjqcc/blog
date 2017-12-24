@@ -14,18 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by li on 17-8-9.
  */
 public class ComentUtils {
-    private final static List<SystemException> list = new ArrayList<>(50);
+    private final static List<SystemException> list = new CopyOnWriteArrayList<SystemException>();
 
     public final static String ICON_DIR="./src/main/resources/static/icon";
     public final static String HOST="http://localhost:8080";
     public final static String ARTICLE_PIC="./src/main/resources/static/articlepic";
-    public final static  String ARTICLE="articlepic";
-    public final static String ICON = "icon";
+    public final static String PICTURE_DIR="./src/main/resources/static/picture";
+
     public static Date getCurrentTime(){
         Calendar calendar=Calendar.getInstance(Locale.CHINESE);
 

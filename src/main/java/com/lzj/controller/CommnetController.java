@@ -26,11 +26,7 @@ public class CommnetController {
     private ArticleService articleService;
     @Autowired
     WebScoketService webScoketService;
-    @RequestMapping(value = "getComments")
-    @ResponseBody
-    public List<CommentMongo> getComments(@RequestParam("articleId")Integer articleId){
-        return commentService.getComments(articleId);
-    }
+
     @ResponseBody
     @RequestMapping(value = "insertComment",method = RequestMethod.POST)
     public void insertComment(@RequestBody Comment comment, HttpServletResponse response, HttpServletRequest request){

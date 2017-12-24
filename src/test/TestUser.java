@@ -1,10 +1,9 @@
 import com.lzj.Application;
+import com.lzj.dao.AccountDao;
 import com.lzj.dao.ArticleDao;
-import com.lzj.dao.UserDao;
-import com.lzj.domain.Article;
-import com.lzj.domain.User;
-import com.lzj.service.ArticleService;
-import com.lzj.service.UserService;
+import com.lzj.domain.Account;
+import com.lzj.domain.Page;
+import com.lzj.service.AccountService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by li on 17-8-6.
@@ -22,50 +21,44 @@ import java.util.Date;
 @WebAppConfiguration
 public class TestUser {
     @Autowired
-    private UserDao userDao;
+    private AccountDao userDao;
     @Autowired
     ArticleDao articleDao;
 
     @Test
     public void testInsert() {
-        User user = new User();
-        user.setUserName("李志坚");
-        user.setPassword("123");
-        user.setRole(User.Role.ROLE_ADMIN);
-        user.setEmail("121233@qq.com");
-        int id = userDao.insertUser(user);
-        System.out.println(id + ":-----------");
+        Account user = new Account();
+        user.setUserName("大屁孩");
+        user.setPassword("234");
+        user.setEmail("1234@qq.com");
+        userDao.insertAccount(user);
     }
     @Autowired
-    UserService userService;
-    @Test
+    AccountService userService;
+/*    @Test
     public void testUpdate() {
-        User user = userService.findById(1);
+        Account user = userService.findById(1);
         System.out.print(user + "-----------");
         user.setPassword("234");
         user.setUpdateTime(new Date());
         userService.updateUser(user);
         System.out.println(user.getUpdateTime());
-    }
-
+    }*/
     @Test
     public void testfindById() {
-        User user = userDao.findById(1);
-        User user1 = userDao.findById(2);
-
-        User user2=userService.findByEmailOrNameAndPassword("li","123");
-        User user3 = userService.findByEmailOrNameAndPassword("li", "123");
-        System.out.print(user2==user3);
-        System.out.println(user == user1);
-
+        Page page = new Page();
+        page.setPageSize(1);
+        page.setCurrentPage(1);
+        List<Account> list = userDao.findAll(page);
+        System.out.print(list.size());
     }
-    @Test
+ /*   @Test
     public void testFindByName(){
         User user =new User();
         user.setUserName("lzj");
         user.setPassword("lzj941005");
         User user1 = userDao.findByEmailOrNameAndPassword(user);
         System.out.print(user1);
-    }
+    }*/
 
 }

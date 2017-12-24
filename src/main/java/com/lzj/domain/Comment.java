@@ -25,7 +25,7 @@ public class Comment extends BaseEntity implements Cloneable,Serializable{
     private Integer replayComentId;//回复评论的id
     private Integer source;
     private Integer currentAccountId;
-    private Integer picrureGroupId;
+    private Integer pictureGroupId;
 
     public Integer getSource() {
         return source;
@@ -45,12 +45,12 @@ public class Comment extends BaseEntity implements Cloneable,Serializable{
         return this;
     }
 
-    public Integer getPicrureGroupId() {
-        return picrureGroupId;
+    public Integer getPictureGroupId() {
+        return pictureGroupId;
     }
 
-    public Comment setPicrureGroupId(Integer picrureGroupId) {
-        this.picrureGroupId = picrureGroupId;
+    public Comment setPictureGroupId(Integer pictureGroupId) {
+        this.pictureGroupId = pictureGroupId;
         return this;
     }
 

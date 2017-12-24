@@ -14,4 +14,6 @@ public interface CommentDao{
     public List<Comment> findAllByToUser_Id(Integer userId);
     void insertComment(Comment comment);
     List<Comment> findByArticleId(Integer articleId);
+
+    List<Comment> findByPictureGroupId(Integer pictureGroupId);
 }

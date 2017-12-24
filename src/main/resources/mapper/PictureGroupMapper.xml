@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.PictureGroupDao" >
+    <resultMap id="pictureGoupMap" type="com.lzj.domain.PictureGroup">
+        <id column="id" property="id"></id>
+        <result column="current_account_id" property="currentAccountId"/>
+        <result column="picture_group_name" property="pictureGroupName"/>
+        <result column="picture_describe" property="pictureDescribe"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+</mapper>
