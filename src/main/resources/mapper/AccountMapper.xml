@@ -41,7 +41,7 @@
         birth,
         user_name
     </sql>
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveAccount" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO tb_account
         (<include refid="userField"></include>,update_time)
         VALUES

@@ -26,8 +26,8 @@ public class AccountServiceImpl implements AccountService {
         dto.setHeadIcon(icon+"/default/default.jpg");
         Account account = new Account();
         BeanUtils.copyProperties(dto,account);
-        int count = accountDao.insertAccount(account);
-        if (count == 0) {
+         accountDao.saveAccount(account);
+        if (account.getId() == null) {
             return false;
         }
         if (session!=null){

@@ -31,7 +31,7 @@ public class TestUser {
         user.setUserName("大屁孩");
         user.setPassword("234");
         user.setEmail("1234@qq.com");
-        userDao.insertAccount(user);
+        userDao.saveAccount(user);
     }
     @Autowired
     AccountService userService;
