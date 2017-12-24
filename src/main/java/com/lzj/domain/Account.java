@@ -23,6 +23,15 @@ public class Account extends BaseEntity implements Serializable {
     private String userName;
     private String password;
     private String email;
+    private String school;
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
 
     public String getPassword() {
         return password;

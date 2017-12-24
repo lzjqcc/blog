@@ -45,7 +45,7 @@
       INSERT INTO tb_account
         (<include refid="userField"></include>,update_time)
         VALUES
-        (#{param.password},#{param.email},#{param.createTime},#{param.head_icon},#{param.gender},#{param.city},#{param.age},
+        (#{param.password},#{param.email},#{param.createTime},#{param.headIcon},#{param.gender},#{param.city},#{param.age},
         #{param.school},#{param.blogYear},#{param.mobile},#{param.occupation},#{param.personalSignature},#{param.sign},
         #{param.birth},#{param.userName},#{param.updateTime})
     </insert>
