@@ -1,9 +1,6 @@
 package com.lzj.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 插入数据时需要插入关联表 比如插入 插入 tb_friend记录 需要插入tb_friend_function
@@ -12,6 +9,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD,ElementType.FIELD})
+@Inherited
 public @interface EnableRelationTable {
     String relationTableName() ;
 

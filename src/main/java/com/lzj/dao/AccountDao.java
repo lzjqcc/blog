@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Repository("userDao")
 public interface AccountDao {
-    void saveAccount(Account accountDto);
+    void insertAccount(Account accountDto);
 
     void updateUser(@Param("param") AccountDto dto);
 

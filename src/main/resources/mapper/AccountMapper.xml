@@ -41,7 +41,7 @@
         birth,
         user_name
     </sql>
-    <insert id="saveAccount" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Account">
+    <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Account">
       INSERT INTO tb_account
         (<include refid="userField"></include>,update_time)
         VALUES

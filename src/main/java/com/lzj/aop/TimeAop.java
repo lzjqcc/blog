@@ -1,20 +1,13 @@
 package com.lzj.aop;
 
-import com.lzj.domain.BaseEntity;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,8 +15,8 @@ import java.util.*;
 
 @Aspect
 @Component
-public class CommentDataAop {
-    Log log = LogFactory.getLog(CommentDataAop.class);
+public class TimeAop {
+    Log log = LogFactory.getLog(TimeAop.class);
     /**
      * 保存数据自动插入时间
      *

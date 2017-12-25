@@ -4,13 +4,21 @@ import com.lzj.dao.ArticleDao;
 import com.lzj.domain.Account;
 import com.lzj.domain.Page;
 import com.lzj.service.AccountService;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.transaction.SpringManagedTransaction;
+import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,14 +32,18 @@ public class TestUser {
     private AccountDao userDao;
     @Autowired
     ArticleDao articleDao;
-
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
+    @Autowired
+    DataSource dataSource;
     @Test
     public void testInsert() {
         Account user = new Account();
-        user.setUserName("rens");
+        user.setUserName("rensdfdfd");
         user.setPassword("12344");
         user.setEmail("43234@qq.com");
-        userDao.saveAccount(user);
+       // userDao.insertAccount(user);
+        sqlSessionTemplate.insert("insertAccount", user);
     }
     @Autowired
     AccountService userService;
@@ -45,12 +57,15 @@ public class TestUser {
         System.out.println(user.getUpdateTime());
     }*/
     @Test
-    public void testfindById() {
+    public void testfindById() throws SQLException {
         Page page = new Page();
         page.setPageSize(1);
         page.setCurrentPage(1);
         List<Account> list = userDao.findAll(page);
         System.out.print(list.size());
+        SpringManagedTransaction transaction = new SpringManagedTransaction(dataSource);
+        Connection connection = transaction.getConnection();
+        System.out.println(connection+":"+dataSource);
     }
  /*   @Test
     public void testFindByName(){
