@@ -26,6 +26,14 @@ public class TestArticle {
        System.out.println(article);
     }
     @Test
+    public void testInsert(){
+        Article article = new Article();
+        article.setContent("dlfkj");
+        article.setTitle("任命");
+        articleDao.insertArticle(article);
+
+    }
+    @Test
     public void testUpdateByMap(){
         Map<String,Object> map=new HashMap<>();
         map.put("id",1);

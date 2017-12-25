@@ -41,13 +41,13 @@
         birth,
         user_name
     </sql>
-    <insert id="saveAccount" useGeneratedKeys="true" keyProperty="id">
+    <insert id="saveAccount" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Account">
       INSERT INTO tb_account
         (<include refid="userField"></include>,update_time)
         VALUES
-        (#{param.password},#{param.email},#{param.createTime},#{param.headIcon},#{param.gender},#{param.city},#{param.age},
-        #{param.school},#{param.blogYear},#{param.mobile},#{param.occupation},#{param.personalSignature},#{param.sign},
-        #{param.birth},#{param.userName},#{param.updateTime})
+        (#{password},#{email},#{createTime},#{headIcon},#{gender},#{city},#{age},
+        #{school},#{blogYear},#{mobile},#{occupation},#{personalSignature},#{sign},
+        #{birth},#{userName},#{updateTime})
     </insert>
     <update id="updateUser">
         UPDATE tb_account set

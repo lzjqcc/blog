@@ -6,6 +6,7 @@ import java.util.Date;
 
 
 public class Account extends BaseEntity implements Serializable {
+
     //
     private String headIcon;
     private Integer gender;

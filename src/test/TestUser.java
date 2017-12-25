@@ -28,9 +28,9 @@ public class TestUser {
     @Test
     public void testInsert() {
         Account user = new Account();
-        user.setUserName("大屁孩");
-        user.setPassword("234");
-        user.setEmail("1234@qq.com");
+        user.setUserName("rens");
+        user.setPassword("12344");
+        user.setEmail("43234@qq.com");
         userDao.saveAccount(user);
     }
     @Autowired
