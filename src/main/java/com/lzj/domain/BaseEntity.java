@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class BaseEntity implements Serializable {
 
-    private Integer id;
+    protected Integer id;
 
     private Date createTime;
 

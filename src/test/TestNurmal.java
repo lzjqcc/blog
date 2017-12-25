@@ -2,7 +2,9 @@
 import com.lzj.VO.ArticleMongo;
 import com.lzj.domain.Article;
 
+import com.lzj.domain.Friend;
 import com.lzj.utils.ComentUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
@@ -73,7 +75,11 @@ public class TestNurmal {
             System.out.println(a);
         }
     }
-
+    @Test
+    public void test() throws IntrospectionException {
+        Method idMethod = PropertyUtils.getReadMethod(new PropertyDescriptor("id", Friend.class));
+        System.out.print(idMethod);
+    }
     @Test
     public void testFile() throws IOException {
         String articlePic = ComentUtils.ARTICLE_PIC + "/3";

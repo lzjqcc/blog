@@ -1,42 +1,45 @@
 package com.lzj.aop;
 
 import com.lzj.domain.BaseEntity;
+import com.lzj.exception.SystemException;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.ibatis.executor.statement.PreparedStatementHandler;
-import org.apache.ibatis.executor.statement.RoutingStatementHandler;
-import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
-import org.mybatis.spring.SqlSessionTemplate;
+import org.hamcrest.beans.PropertyUtil;
 import org.mybatis.spring.transaction.SpringManagedTransaction;
-import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import com.lzj.annotation.EnableRelationTable;
+import org.apache.ibatis.transaction.Transaction;
 
+import javax.management.Descriptor;
 import javax.sql.DataSource;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Statement;
+import java.util.*;
 
-
+@Aspect
+@Component
 public class InsertAop {
+    private static final String TABLE_NAME = "tableName";
+    private static final String FIELD_VALUE = "fieldName";
     @Autowired
     private DataSource dataSource;
+
     @AfterReturning(value = "execution(* com.lzj.dao.*.insert*(*))")
     public void insertRelationTable(JoinPoint joinPoint) throws IllegalAccessException {
-        Signature signature = joinPoint.getSignature();
-        Field invocationField = ReflectionUtils.findField(joinPoint.getClass(),"methodInvocation");
+        Field invocationField = ReflectionUtils.findField(joinPoint.getClass(), "methodInvocation");
         invocationField.setAccessible(true);
         MethodInvocation invocation = (MethodInvocation) invocationField.get(joinPoint);
         Method method = invocation.getMethod();
@@ -46,30 +49,117 @@ public class InsertAop {
                 return;
             }
             BaseEntity entity = (BaseEntity) joinPoint.getArgs()[0];
-
+            execInsert(relationTable, entity);
         }
 
     }
-    private void execInsert(EnableRelationTable relationTable, BaseEntity entity) throws SQLException {
+
+    private void execInsert(EnableRelationTable relationTable, BaseEntity entity) {
         SpringManagedTransaction transactional = new SpringManagedTransaction(dataSource);
-        Connection connection = transactional.getConnection();
-        PreparedStatement statement = connection.prepareStatement("");
+        Connection connection = null;
+        PreparedStatement statement = null;
+        String SQL = null;
+        try {
+            connection = transactional.getConnection();
+            SQL = buildSQL(entity);
+            statement = connection.prepareStatement(SQL);
+            statement.executeUpdate();
+        } catch (IllegalAccessException e) {
+            rollback(transactional);
+            throw new SystemException(321, "插入关系表失败:SQL-->"+SQL );
+        } catch (SQLException e) {
+            rollback(transactional);
+            throw new SystemException(321, "插入关系表失败:SQL-->"+SQL );
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                transactional.commit();
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+
+                transactional.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
     }
-    private void parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException {
+
+    private void rollback(Transaction transaction) {
+        try {
+            transaction.rollback();
+        } catch (SQLException e) {
+            try {
+                transaction.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private Map<String, Object> parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
         Map<String, Object> tableInfo = new HashMap<>();
-        tableInfo.put("fieldName", new HashMap<>());
+        Map<String, Object> fieldMap = new LinkedHashMap<>();
+        fieldMap.put("create_time", new Date());
+        fieldMap.put("update_time", new Date());
         Class entityClass = entity.getClass();
-        Field[] fields = entityClass.getFields();
+        Method idMethod = PropertyUtils.getReadMethod(new PropertyDescriptor("id", entityClass));
+        EnableRelationTable idRelation = idMethod.getAnnotation(EnableRelationTable.class);
+        if (idRelation != null) {
+            fieldMap.put(idRelation.value()[0],entity.getId());
+        }
+        Field[] fields = entityClass.getDeclaredFields();
+
         for (Field field : fields) {
             field.setAccessible(true);
-            EnableRelationTable relationTable = field.getAnnotation(EnableRelationTable.class);
-            if (relationTable == null) {
-                continue;
+            Method method = PropertyUtils.getReadMethod(new PropertyDescriptor(field.getName(),entityClass));
+            EnableRelationTable relationTable = method.getAnnotation(EnableRelationTable.class);
+            buildTableFieldMap(fieldMap,relationTable,field,entityClass,entity);
+            if (tableInfo.get(TABLE_NAME) == null) {
+                tableInfo.put(TABLE_NAME, relationTable.relationTableName());
             }
-            ((HashMap)(tableInfo.get("fieldName"))).put(relationTable.value()[0], field.get(entity));
-            tableInfo.put("tableName", relationTable.relationTableName());
         }
+        tableInfo.put(FIELD_VALUE, fieldMap);
+        return tableInfo;
+    }
+    private void buildTableFieldMap(Map<String,Object> fieldMap,EnableRelationTable relationTable, Field field,Class entityClass,BaseEntity entity) throws IntrospectionException, IllegalAccessException {
 
+        if (relationTable == null) {
+            return;
+        }
+        fieldMap.put(relationTable.value()[0], field.get(entity));
+
+    }
+    private String buildSQL(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
+        Map<String, Object> map = parseFieldAnnotation(entity);
+        StringBuilder builder = new StringBuilder();
+        builder.append("insert into ")
+                .append(map.get(TABLE_NAME))
+                .append(" (create_time,update_time");
+        Set<Map.Entry<String, Object>> entries = map.entrySet();
+        for (Map.Entry<String, Object> entry : entries) {
+            builder.append("," + entry.getKey());
+        }
+        builder.append(") values (");
+        for (Map.Entry<String, Object> entry : entries) {
+            builder.append(entry.getValue() + ",");
+        }
+        builder.deleteCharAt(entries.size() - 1);
+        builder.append(")");
+        return builder.toString();
+    }
+    //todo single
+    private String buildValues(List list) {
+
+        return null;
     }
 
 }

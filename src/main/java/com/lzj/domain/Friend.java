@@ -7,18 +7,19 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Friend extends BaseEntity implements Serializable {
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "friend_id")
-    private Integer id;
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "current_account_id")
     private Integer currentAccountId;
     private Integer friendId;
     private Boolean specialAttention;
     private Boolean isDefriend;
-    private Boolean isDelete;
     private Boolean isAgree;
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "function_id",keyRow = true)
     private List<Function> list = null;
 
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "friend_id")
+    @Override
+    public Integer getId() {
+        return id;
+    }
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "function_id",keyRow = true)
     public List<Function> getList() {
         return list;
     }
@@ -26,7 +27,7 @@ public class Friend extends BaseEntity implements Serializable {
     public void setList(List<Function> list) {
         this.list = list;
     }
-
+    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "current_account_id")
     public Integer getCurrentAccountId() {
         return currentAccountId;
     }
@@ -51,27 +52,19 @@ public class Friend extends BaseEntity implements Serializable {
         this.specialAttention = specialAttention;
     }
 
-    public Boolean getDefriend() {
+    public Boolean getIsDefriend() {
         return isDefriend;
     }
 
-    public void setDefriend(Boolean defriend) {
+    public void setIsDefriend(Boolean defriend) {
         isDefriend = defriend;
     }
 
-    public Boolean getDelete() {
-        return isDelete;
-    }
-
-    public void setDelete(Boolean delete) {
-        isDelete = delete;
-    }
-
-    public Boolean getAgree() {
+    public Boolean getIsAgree() {
         return isAgree;
     }
 
-    public void setAgree(Boolean agree) {
+    public void setIsAgree(Boolean agree) {
         isAgree = agree;
     }
 }

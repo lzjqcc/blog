@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.FriendDao" >
+    <resultMap id="friendMap" type="com.lzj.domain.Friend">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="current_account_id" property="currentAccountId"/>
+        <result column="friend_id" property="friendId"/>
+        <result column="special_attention" property="specialAttention"/>
+        <result column="is_defriend" property="isDefriend"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="is_agree" property="isAgree"/>
+    </resultMap>
+    <sql id="friendField">
+        create_time,
+        update_time,
+        current_account_id,
+        friend_id,
+        special_attention,
+        is_defriend,
+        is_agree
+    </sql>
+    <insert id="insertFriend" keyProperty="id" useGeneratedKeys="true">
+        INSERT into tb_friend (<include refid="friendField"/>)
+        VALUES
+        (
+        #{createTime},
+        #{updateTime},
+        #{currentAccountId},
+        #{friendId},
+        #{specialAttention},
+        #{isDefriend},
+        #{isAgree})
+    </insert>
+</mapper>
