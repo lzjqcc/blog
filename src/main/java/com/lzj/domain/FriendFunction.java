@@ -2,6 +2,11 @@ package com.lzj.domain;
 
 import java.io.Serializable;
 
+/**
+ * 多对多 关联表   现在会自动插入
+ *
+ */
+@Deprecated
 public class FriendFunction extends BaseEntity implements Serializable {
     private Integer currentAccountId;
     private Integer friendId;

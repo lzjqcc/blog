@@ -2,6 +2,10 @@ package com.lzj.domain;
 
 import java.io.Serializable;
 
+/**
+ * 好友分组
+ */
+@Deprecated
 public class GroupFunction extends BaseEntity implements Serializable {
     private Integer groupId;
     private Integer functionId;

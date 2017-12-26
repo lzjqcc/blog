@@ -8,7 +8,7 @@ import java.lang.annotation.*;
     1，值的获取
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD,ElementType.FIELD})
+@Target({ElementType.METHOD})
 @Inherited
 public @interface EnableRelationTable {
     String relationTableName() ;

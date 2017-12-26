@@ -29,11 +29,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * 插入关联表
+ */
 @Aspect
 @Component
 public class InsertAop {
     private static final String TABLE_NAME = "tableName";
     private static final String FIELD_VALUE = "fieldName";
+    private static final String KEY_ROW = "keyRow";
     @Autowired
     private DataSource dataSource;
 
@@ -82,14 +86,12 @@ public class InsertAop {
                 if (connection != null) {
                     connection.close();
                 }
-
                 transactional.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
         }
-
 
     }
 
@@ -104,10 +106,11 @@ public class InsertAop {
             }
         }
     }
-
     private static Map<String, Object> parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
         Map<String, Object> tableInfo = new HashMap<>();
         Map<String, Object> fieldMap = new LinkedHashMap<>();
+        Map<String, List> keyRowMap = new HashMap<>();
+        tableInfo.put(KEY_ROW, keyRowMap);
         fieldMap.put("create_time", new Date());
         fieldMap.put("update_time", new Date());
         Class entityClass = entity.getClass();
@@ -122,21 +125,20 @@ public class InsertAop {
             field.setAccessible(true);
             Method method = PropertyUtils.getReadMethod(new PropertyDescriptor(field.getName(),entityClass));
             EnableRelationTable relationTable = method.getAnnotation(EnableRelationTable.class);
-            buildTableFieldMap(fieldMap,relationTable,field,entityClass,entity);
+            if (relationTable == null) {
+                continue;
+            }
+            if (!relationTable.keyRow()) {
+                fieldMap.put(relationTable.value()[0], field.get(entity));
+            }else {
+                keyRowMap.put(relationTable.value()[0], (List) field.get(entity));
+            }
             if (tableInfo.get(TABLE_NAME) == null) {
                 tableInfo.put(TABLE_NAME, relationTable.relationTableName());
             }
         }
         tableInfo.put(FIELD_VALUE, fieldMap);
         return tableInfo;
-    }
-    private static void buildTableFieldMap(Map<String,Object> fieldMap,EnableRelationTable relationTable, Field field,Class entityClass,BaseEntity entity) throws IntrospectionException, IllegalAccessException {
-
-        if (relationTable == null) {
-            return;
-        }
-        fieldMap.put(relationTable.value()[0], field.get(entity));
-
     }
     private static String buildSQL(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
         Map<String, Object> map = parseFieldAnnotation(entity);
@@ -146,20 +148,14 @@ public class InsertAop {
                 .append(map.get(TABLE_NAME))
                 .append(" (create_time,update_time");
         Set<Map.Entry<String, Object>> entries = fieldMap.entrySet();
-        List list = null;
-        String listName = null;
         for (Map.Entry<String, Object> entry : entries) {
             builder.append("," + entry.getKey());
-            if (entry.getValue().getClass().getSimpleName().endsWith("List")){
-                list = (List) entry.getValue();
-                listName = entry.getKey();
-            }
-        }
-        if (list == null) {
-            throw new SystemException(120,"关联"+listName+"为null;插入关联表信息"+fieldMap);
         }
         builder.append(") values ");
-        builder.append(buildValues(list, singleValue(fieldMap)));
+        Map keyRowMap = (Map) map.get(KEY_ROW);
+
+        builder.append(buildValues(keyRowMap, singleValue(fieldMap)));
+
         return builder.toString();
     }
 
@@ -179,7 +175,17 @@ public class InsertAop {
         return builder.toString();
     }
     //
-    private static String buildValues(List list, String singleValue) {
+    private static String buildValues(Map map, String singleValue) {
+        Set<Map.Entry<String,Object>> keyRowEntry = map.entrySet();
+        List list = null;
+        String fieldName = null;
+        for (Map.Entry<String,Object> entry : keyRowEntry) {
+            list = (List) entry.getValue();
+            fieldName = entry.getKey();
+        }
+        if (list == null) {
+            throw new SystemException(120,"关联"+fieldName+"为null;插入keyRow信息"+map);
+        }
         StringBuilder builder = new StringBuilder();
 
         for (Object o : list) {
