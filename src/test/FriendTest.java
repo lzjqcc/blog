@@ -1,3 +1,4 @@
+import com.google.common.collect.Lists;
 import com.lzj.Application;
 import com.lzj.dao.FriendDao;
 import com.lzj.domain.Friend;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -19,6 +22,7 @@ public class FriendTest {
         Friend friend = new Friend();
         friend.setCurrentAccountId(1);
         friend.setFriendId(2);
+        friend.setFunctionList(Lists.newArrayList(3, 4));
         friendDao.insertFriend(friend);
     }
 }

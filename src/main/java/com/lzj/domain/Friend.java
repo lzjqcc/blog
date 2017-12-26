@@ -13,12 +13,12 @@ public class Friend extends BaseEntity implements Serializable {
     private Boolean isAgree;
     private List<Integer> functionList = null;
 
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "friend_id")
+    @EnableRelationTable(relationTableName = "tb_friend_function",value = "friend_id")
     @Override
     public Integer getId() {
         return id;
     }
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "function_id",keyRow = true)
+    @EnableRelationTable(relationTableName = "tb_friend_function",value = "function_id",keyRow = true)
     public List<Integer> getFunctionList() {
         return functionList;
     }
@@ -26,7 +26,7 @@ public class Friend extends BaseEntity implements Serializable {
     public void setFunctionList(List<Integer> functionList) {
         this.functionList = functionList;
     }
-    @EnableRelationTable(relationTableName = "tb_friend_relation",value = "current_account_id")
+    @EnableRelationTable(relationTableName = "tb_friend_function",value = "current_account_id")
     public Integer getCurrentAccountId() {
         return currentAccountId;
     }

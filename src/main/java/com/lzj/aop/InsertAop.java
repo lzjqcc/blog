@@ -23,10 +23,9 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -111,8 +110,12 @@ public class InsertAop {
         Map<String, Object> fieldMap = new LinkedHashMap<>();
         Map<String, List> keyRowMap = new HashMap<>();
         tableInfo.put(KEY_ROW, keyRowMap);
-        fieldMap.put("create_time", new Date());
-        fieldMap.put("update_time", new Date());
+        java.util.Date nowDate = new java.util.Date();// 取当前时间
+        SimpleDateFormat format = new SimpleDateFormat(
+                "yyyy-MM-dd"); // 转换时间格式
+    ;
+        fieldMap.put("create_time","current_timestamp()");
+        fieldMap.put("update_time", "current_timestamp()");
         Class entityClass = entity.getClass();
         Method idMethod = PropertyUtils.getReadMethod(new PropertyDescriptor("id", entityClass));
         EnableRelationTable idRelation = idMethod.getAnnotation(EnableRelationTable.class);
@@ -145,13 +148,12 @@ public class InsertAop {
         Map fieldMap = (Map) map.get(FIELD_VALUE);
         StringBuilder builder = new StringBuilder();
         builder.append("insert into ")
-                .append(map.get(TABLE_NAME))
-                .append(" (create_time,update_time");
+                .append(map.get(TABLE_NAME) +" (");
         Set<Map.Entry<String, Object>> entries = fieldMap.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
-            builder.append("," + entry.getKey());
+            builder.append( entry.getKey() +",");
         }
-
+        builder.deleteCharAt(builder.length()-1);
         Map keyRowMap = (Map) map.get(KEY_ROW);
         Set set = keyRowMap.keySet();
         set.stream().forEach( key ->builder.append(","+key));

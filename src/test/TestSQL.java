@@ -55,13 +55,12 @@ public class TestSQL {
         Map fieldMap = (Map) map.get(FIELD_VALUE);
         StringBuilder builder = new StringBuilder();
         builder.append("insert into ")
-                .append(map.get(TABLE_NAME))
-                .append(" (create_time,update_time");
+                .append(map.get(TABLE_NAME) +"(");
         Set<Map.Entry<String, Object>> entries = fieldMap.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
-            builder.append("," + entry.getKey());
+            builder.append(  entry.getKey() +",");
         }
-
+        builder.deleteCharAt(builder.length()-1);
         Map keyRowMap = (Map) map.get(KEY_ROW);
         Set set = keyRowMap.keySet();
         set.stream().forEach( key ->builder.append(","+key));
