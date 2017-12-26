@@ -17,7 +17,7 @@ public class TestSQL {
     private static final String FIELD_VALUE = "fieldName";
     private static final String KEY_ROW = "keyRow";
     private static Map<String, Object> parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
-        Map<String, Object> tableInfo = new HashMap<>();
+        Map<String, Object> tableInfo = new LinkedHashMap<>();
         Map<String, Object> fieldMap = new LinkedHashMap<>();
         Map<String, List> keyRowMap = new HashMap<>();
         tableInfo.put(KEY_ROW, keyRowMap);
@@ -61,9 +61,11 @@ public class TestSQL {
         for (Map.Entry<String, Object> entry : entries) {
             builder.append("," + entry.getKey());
         }
-        builder.append(") values ");
-        Map keyRowMap = (Map) map.get(KEY_ROW);
 
+        Map keyRowMap = (Map) map.get(KEY_ROW);
+        Set set = keyRowMap.keySet();
+        set.stream().forEach( key ->builder.append(","+key));
+        builder.append(") values ");
         builder.append(buildValues(keyRowMap, singleValue(fieldMap)));
 
         return builder.toString();
@@ -78,9 +80,7 @@ public class TestSQL {
         builder.append(" (");
         Set<Map.Entry<String, Object>> entries = map.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
-            if (!entry.getValue().getClass().getSimpleName().endsWith("List")) {
-                builder.append(entry.getValue()+",");
-            }
+            builder.append(entry.getValue()+",");
         }
         return builder.toString();
     }
@@ -88,6 +88,7 @@ public class TestSQL {
     private static String buildValues(Map map, String singleValue) {
         Set<Map.Entry<String,Object>> keyRowEntry = map.entrySet();
         List list = null;
+        StringBuilder builder = new StringBuilder();
         String fieldName = null;
         for (Map.Entry<String,Object> entry : keyRowEntry) {
             list = (List) entry.getValue();
@@ -96,7 +97,7 @@ public class TestSQL {
         if (list == null) {
             throw new SystemException(120,"关联"+fieldName+"为null;插入keyRow信息"+map);
         }
-        StringBuilder builder = new StringBuilder();
+
 
         for (Object o : list) {
             builder.append(" "+singleValue);

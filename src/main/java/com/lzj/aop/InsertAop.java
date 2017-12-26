@@ -106,8 +106,8 @@ public class InsertAop {
             }
         }
     }
-    private static Map<String, Object> parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
-        Map<String, Object> tableInfo = new HashMap<>();
+    private  Map<String, Object> parseFieldAnnotation(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
+        Map<String, Object> tableInfo = new LinkedHashMap<>();
         Map<String, Object> fieldMap = new LinkedHashMap<>();
         Map<String, List> keyRowMap = new HashMap<>();
         tableInfo.put(KEY_ROW, keyRowMap);
@@ -140,7 +140,7 @@ public class InsertAop {
         tableInfo.put(FIELD_VALUE, fieldMap);
         return tableInfo;
     }
-    private static String buildSQL(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
+    private  String buildSQL(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
         Map<String, Object> map = parseFieldAnnotation(entity);
         Map fieldMap = (Map) map.get(FIELD_VALUE);
         StringBuilder builder = new StringBuilder();
@@ -151,9 +151,11 @@ public class InsertAop {
         for (Map.Entry<String, Object> entry : entries) {
             builder.append("," + entry.getKey());
         }
-        builder.append(") values ");
-        Map keyRowMap = (Map) map.get(KEY_ROW);
 
+        Map keyRowMap = (Map) map.get(KEY_ROW);
+        Set set = keyRowMap.keySet();
+        set.stream().forEach( key ->builder.append(","+key));
+        builder.append(") values ");
         builder.append(buildValues(keyRowMap, singleValue(fieldMap)));
 
         return builder.toString();
@@ -163,21 +165,20 @@ public class InsertAop {
      * (1,2,3,
      * @return
      */
-    private static String singleValue(Map<String, Object> map) {
+    private  String singleValue(Map<String, Object> map) {
         StringBuilder builder = new StringBuilder();
         builder.append(" (");
         Set<Map.Entry<String, Object>> entries = map.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
-            if (!entry.getValue().getClass().getSimpleName().endsWith("List")) {
-                builder.append(entry.getValue()+",");
-            }
+            builder.append(entry.getValue()+",");
         }
         return builder.toString();
     }
     //
-    private static String buildValues(Map map, String singleValue) {
+    private  String buildValues(Map map, String singleValue) {
         Set<Map.Entry<String,Object>> keyRowEntry = map.entrySet();
         List list = null;
+        StringBuilder builder = new StringBuilder();
         String fieldName = null;
         for (Map.Entry<String,Object> entry : keyRowEntry) {
             list = (List) entry.getValue();
@@ -186,7 +187,7 @@ public class InsertAop {
         if (list == null) {
             throw new SystemException(120,"关联"+fieldName+"为null;插入keyRow信息"+map);
         }
-        StringBuilder builder = new StringBuilder();
+
 
         for (Object o : list) {
             builder.append(" "+singleValue);
@@ -195,5 +196,4 @@ public class InsertAop {
         builder.deleteCharAt(builder.length()-1);
         return builder.toString();
     }
-
 }

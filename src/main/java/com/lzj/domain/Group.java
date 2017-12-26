@@ -17,6 +17,11 @@ public class Group extends BaseEntity implements Serializable{
     public void setFunctionList(List<Integer> functionList) {
         this.functionList = functionList;
     }
+    @EnableRelationTable(relationTableName = "tb_group_relation",value = "group_id")
+    @Override
+    public Integer getId() {
+        return super.getId();
+    }
 
     public String getGroupName() {
         return groupName;
@@ -26,6 +31,7 @@ public class Group extends BaseEntity implements Serializable{
         this.groupName = groupName;
     }
 
+    @EnableRelationTable(relationTableName = "tb_group_relation", value = "current_account_id")
     public String getCurrentAccountId() {
         return currentAccountId;
     }
