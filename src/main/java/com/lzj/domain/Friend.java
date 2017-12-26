@@ -1,7 +1,6 @@
 package com.lzj.domain;
 
 import com.lzj.annotation.EnableRelationTable;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +11,7 @@ public class Friend extends BaseEntity implements Serializable {
     private Boolean specialAttention;
     private Boolean isDefriend;
     private Boolean isAgree;
-    private List<Function> list = null;
+    private List<Integer> functionList = null;
 
     @EnableRelationTable(relationTableName = "tb_friend_relation",value = "friend_id")
     @Override
@@ -20,12 +19,12 @@ public class Friend extends BaseEntity implements Serializable {
         return id;
     }
     @EnableRelationTable(relationTableName = "tb_friend_relation",value = "function_id",keyRow = true)
-    public List<Function> getList() {
-        return list;
+    public List<Integer> getFunctionList() {
+        return functionList;
     }
 
-    public void setList(List<Function> list) {
-        this.list = list;
+    public void setFunctionList(List<Integer> functionList) {
+        this.functionList = functionList;
     }
     @EnableRelationTable(relationTableName = "tb_friend_relation",value = "current_account_id")
     public Integer getCurrentAccountId() {

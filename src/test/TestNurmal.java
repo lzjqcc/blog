@@ -76,6 +76,11 @@ public class TestNurmal {
         }
     }
     @Test
+    public void testList() {
+        List<String> list = new ArrayList<>();
+        System.out.println(list.getClass());
+    }
+    @Test
     public void test() throws IntrospectionException {
         Method idMethod = PropertyUtils.getReadMethod(new PropertyDescriptor("id", Friend.class));
         System.out.print(idMethod);
