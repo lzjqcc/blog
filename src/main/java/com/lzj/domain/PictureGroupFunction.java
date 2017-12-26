@@ -1,7 +1,6 @@
 package com.lzj.domain;
 
 import java.io.Serializable;
-@Deprecated
 public class PictureGroupFunction extends BaseEntity implements Serializable {
     private Integer currentAccountId;
     private Integer functionId;

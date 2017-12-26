@@ -1,5 +1,6 @@
 package com.lzj.dao;
 
+import com.lzj.annotation.EnableRelationTable;
 import com.lzj.domain.Function;
 import com.lzj.domain.Page;
 import com.lzj.domain.PictureGroup;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @Repository
 public interface PictureGroupDao {
+    @EnableRelationTable(relationTableName = "tb_picture_group_function",value = {"picture_group_id","function_id","current_account_id"})
     void insertPictureGroupDao(@Param("param") PictureGroup group);
 
     List<PictureGroup> findByCurrentAccountId(@Param("param") Integer currentAccountId, Page page);

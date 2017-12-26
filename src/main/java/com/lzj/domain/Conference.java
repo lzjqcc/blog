@@ -1,7 +1,10 @@
 package com.lzj.domain;
 
+import com.lzj.annotation.EnableRelationTable;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Conference extends BaseEntity implements Serializable {
     private Date beginTime;
@@ -15,6 +18,21 @@ public class Conference extends BaseEntity implements Serializable {
     //会议主题
     private String theme;
     private String place;
+    private List<Integer> functionList ;
+    @EnableRelationTable(relationTableName = "tb_conference_function",value = "function_id",keyRow = true)
+    public List<Integer> getFunctionList() {
+        return functionList;
+    }
+
+    public void setFunctionList(List<Integer> functionList) {
+        this.functionList = functionList;
+    }
+
+    @EnableRelationTable(relationTableName = "tb_conference_function",value = "conference_id")
+    @Override
+    public Integer getId() {
+        return super.getId();
+    }
 
     public Date getBeginTime() {
         return beginTime;
@@ -31,7 +49,7 @@ public class Conference extends BaseEntity implements Serializable {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-
+    @EnableRelationTable(relationTableName = "tb_conference_function",value = "memebr_id")
     public Integer getMemberId() {
         return memberId;
     }
@@ -39,7 +57,7 @@ public class Conference extends BaseEntity implements Serializable {
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
-
+    @EnableRelationTable(relationTableName = "tb_conference_function",value = "sponsor_id")
     public Integer getSponsorId() {
         return sponsorId;
     }
