@@ -69,7 +69,7 @@
     <select id="findGroupFriendsByDto" >
         select
         <include refid="base"/>
-        from tb_friend f left JOIN tb_group_friend g on f.friend_id = g.friend_id
+        from tb_friend f left JOIN tb_group_friend g on f.current_account_id = g.current_account_id
         WHERE f.current_account_id =#{currentAccountId}  and g.group_id = #{groupId}
     </select>
 </mapper>

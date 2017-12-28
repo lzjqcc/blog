@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.ChatDao" >
+    <resultMap id="groupMap" type="com.lzj.domain.Group">
+        <id column="id" property="id"></id>
+        <result column="current_account_id" property="currentAccountId"></result>
+        <result column="group_id" property="groupId"></result>
+        <result column="group_name" property="groupName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateCreate"/>
+    </resultMap>
+    <sql id="columns">
+        current_account_id,
+        create_time,
+        update_time,
+        group_name
+    </sql>
+    <insert id="insertGroup" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_group
+        (<include refid="columns"/>)
+        VALUES
+        (#{currentAccoutId},
+        #{createTime},
+        #{updateTime},
+        #{groupName})
+    </insert>
+    <update id="updateGroup">
+        UPDATE tb_group
+        SET group_name =#{groupName}
+        WHERE
+        id = #{id}
+    </update>
+    <select id="findGroupsByDto">
+        SELECT id,
+        <include refid="columns"/>
+        from tb_group
+        where current_account_id = #{currentAccountId}
+    </select>
+    <delete id="deleteGroup">
+        DELETE FROM tb_group where id =#{id}
+    </delete>
+</mapper>

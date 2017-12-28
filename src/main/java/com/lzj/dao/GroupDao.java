@@ -12,7 +12,23 @@ public interface GroupDao {
     @EnableRelationTable(relationTableName = "tb_group_relation",value = {"function_id","group_id","current_account_id"})
     void insertGroup(Group group);
 
+    /**
+     * 根据id 更新groupName
+     * @param dto
+     */
     void updateGroup(GroupDto dto);
-    List<Group> findGroupByDto(GroupDto dto);
+
+    /**
+     * currentAccountId
+     * @param dto
+     * @return
+     */
+    List<Group> findGroupsByDto(GroupDto dto);
+
+    /**
+     * id
+     * @param dto
+     */
+    void deleteGroup(GroupDto dto);
 
 }

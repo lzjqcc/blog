@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Group extends BaseEntity implements Serializable{
     private String groupName;
-    private String currentAccountId;
+    private Integer currentAccountId;
     private List<Integer> functionList;
     @EnableRelationTable(relationTableName = "tb_group_relation",value = "function_id",keyRow = true)
     public List<Integer> getFunctionList() {
@@ -32,11 +32,11 @@ public class Group extends BaseEntity implements Serializable{
     }
 
     @EnableRelationTable(relationTableName = "tb_group_relation", value = "current_account_id")
-    public String getCurrentAccountId() {
+    public Integer getCurrentAccountId() {
         return currentAccountId;
     }
 
-    public void setCurrentAccountId(String currentAccountId) {
+    public void setCurrentAccountId(Integer currentAccountId) {
         this.currentAccountId = currentAccountId;
     }
 }
