@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lzj.dao.FriendDao" >
+<mapper namespace="com.lzj.dao.FriendDao">
     <resultMap id="friendMap" type="com.lzj.domain.Friend">
         <id column="id" property="id"></id>
         <result column="create_time" property="createTime"/>
@@ -11,8 +11,8 @@
         <result column="friend_id" property="friendId"/>
         <result column="special_attention" property="specialAttention"/>
         <result column="is_defriend" property="isDefriend"/>
-        <result column="is_delete" property="isDelete"/>
         <result column="is_agree" property="isAgree"/>
+        <result column="friend_name" property="friendName"/>
     </resultMap>
     <sql id="friendField">
         create_time,
@@ -21,7 +21,19 @@
         friend_id,
         special_attention,
         is_defriend,
-        is_agree
+        is_agree,
+        friend_name
+    </sql>
+    <sql id="base">
+        f.id,
+        f.create_time,
+        f.update_time,
+        f.current_account_id,
+        f.friend_id,
+        f.special_attention,
+        f.is_defriend,
+        f.is_agree,
+        f.friend_name
     </sql>
     <insert id="insertFriend" keyProperty="id" useGeneratedKeys="true">
         INSERT into tb_friend (<include refid="friendField"/>)
@@ -33,6 +45,31 @@
         #{friendId},
         #{specialAttention},
         #{isDefriend},
-        #{isAgree})
+        #{isAgree},
+        #{friendName})
     </insert>
+    <delete id="deleteFriend">
+        DELETE from tb_friend WHERE friend_id =#{friendId} and current_account_id =#{currentAccountId}
+    </delete>
+    <update id="updateFriend" flushCache="true">
+        UPDATE tb_friend
+        <set>
+            <if test="isDefriend != null">
+                is_defriend = #{isDefriend},
+            </if>
+            <if test="isAgree != null">
+                is_agree=#{isAgree},
+            </if>
+            <if test="specialAttention != null">
+                special_attention=#{special_attention}
+            </if>
+        </set>
+        WHERE current_account_id =#{currentAccountId} and friend_id=#{friendId}
+    </update>
+    <select id="findGroupFriendsByDto" >
+        select
+        <include refid="base"/>
+        from tb_friend f left JOIN tb_group_friend g on f.friend_id = g.friend_id
+        WHERE f.current_account_id =#{currentAccountId}  and g.group_id = #{groupId}
+    </select>
 </mapper>

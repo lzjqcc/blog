@@ -3,10 +3,11 @@ package com.lzj.domain;
 import java.io.Serializable;
 
 public class MessageInfo extends BaseEntity implements Serializable{
-    private String content;
+    private String pushMessage;
     //发送系统广播消息时，toAccountId=-1 代表所有人，fromAccountId 表示admin
     private Integer fromAccountId;
     private Integer toAccountId;
+    // 是否查看 false 没有查看 true查看
     private Boolean type;
     //1,系统消息
     //2,评论消息
@@ -21,12 +22,12 @@ public class MessageInfo extends BaseEntity implements Serializable{
         this.flag = flag;
     }
 
-    public String getContent() {
-        return content;
+    public String getPushMessage() {
+        return pushMessage;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPushMessage(String pushMessage) {
+        this.pushMessage = pushMessage;
     }
 
     public Integer getFromAccountId() {
@@ -58,7 +59,7 @@ public class MessageInfo extends BaseEntity implements Serializable{
     @Override
     public String toString() {
         return "MessageInfo{" +
-                "content='" + content + '\'' +
+                "pushMessage='" + pushMessage + '\'' +
                 ", fromAccountId=" + fromAccountId +
                 ", toAccountId=" + toAccountId +
                 ", type=" + type +

@@ -5,34 +5,34 @@
 <mapper namespace="com.lzj.dao.MessageDao" >
     <resultMap id="messageMap" type="com.lzj.domain.MessageInfo">
         <id column="id" property="id"></id>
-        <result column="content" property="content"></result>
-        <result column="from_user_id" property="fromAccountId"/>
-        <result column="to_user_id" property="toAccountId"/>
+        <result column="push_message" property="pushMessage"></result>
+        <result column="from_account_id" property="fromAccountId"/>
+        <result column="to_account_id" property="toAccountId"/>
         <result column="create_time" property="createTime"/>
         <result column="type" property="type"/>
         <result column="flag" property="flag"/>
     </resultMap>
     <sql id="columns">
-        content,
-        from_user_id,
-        to_user_id,
+        push_message,
+        from_account_id,
+        to_account_id,
         create_time,
         type,
         flag
     </sql>
     <insert id="insertMessage" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO message
+        INSERT INTO tb_message_info
         (<include refid="columns" ></include>)
-        VALUES (#{content},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag})
+        VALUES (#{pushessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag})
     </insert>
     <select id="getMessageByToUserIdAndType" resultMap="messageMap" >
         SELECT id ,<include refid="columns"></include>
-        FROM message
-        WHERE to_user_id=#{toAccountId} AND type=#{type}
+        FROM tb_message_info
+        WHERE to_account_id=#{toAccountId} AND type=#{type}
     </select>
     <select id="getMessages" resultMap="messageMap">
         select id,<include refid="columns"></include>
-        FROM message
+        FROM tb_message_info
         WHERE
         <foreach collection="map" index="key" item="value" separator="and">
             <if test="key!=null">
@@ -41,6 +41,21 @@
         </foreach>
     </select>
     <update id="updateType">
-        update message SET type=#{type} where id=#{id}
+        update tb_message_info SET type=#{type} where id=#{id}
     </update>
+    <select id="findMessagesByDto" resultMap="messageMap">
+        SELECT  id,<include refid="columns"></include>
+        FROM  tb_message_info
+        WHERE
+        1=1
+        <if test="param.toAccountId != null">
+            and to_account_id = #{param.toAccountId}
+        </if>
+        <if test="param.type != null">
+            and type = #{param.type}
+        </if>
+        <if test="param.flag != null">
+            and flag = #{param.flag}
+        </if>
+    </select>
 </mapper>

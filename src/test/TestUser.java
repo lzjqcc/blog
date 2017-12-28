@@ -12,7 +12,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.transaction.SpringManagedTransaction;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -47,6 +50,15 @@ public class TestUser {
     }
     @Autowired
     AccountService userService;
+
+    RedisTemplate redisTemplate;
+    // 3 个 redisTemplate  sessionRedisTemplate
+    @Autowired
+    @Qualifier(value = "sessionRedisTemplate")
+    public void setRedisTemplate(RedisTemplate template) {
+        System.out.println(template);
+
+    }
 /*    @Test
     public void testUpdate() {
         Account user = userService.findById(1);

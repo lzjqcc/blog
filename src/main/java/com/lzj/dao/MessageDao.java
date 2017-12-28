@@ -1,5 +1,6 @@
 package com.lzj.dao;
 
+import com.lzj.dao.dto.MessageDto;
 import com.lzj.domain.MessageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,11 +13,6 @@ import java.util.Map;
 public interface MessageDao {
     void insertMessage(MessageInfo info);
 
-    /**
-     * key为表message的列名
-     * @param map
-     * @return
-     */
-    List<MessageInfo> getMessages(@Param("map") Map<String,Object> map);
+    List<MessageInfo> findMessagesByDto(@Param("param") MessageDto dto);
     void updateType(@Param("type") Boolean type,@Param("id")Integer id);
 }

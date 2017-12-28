@@ -11,5 +11,18 @@
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
+    <sql id="pictureGroupField">
+        current_account_id,
+        picture_group_name,
+        picture_describe,
+        update_time,
+        create_time
+    </sql>
+    <insert id="insertPictureGroup" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_picture_group
+        (<include refid="pictureGroupField"/>)
+        VALUES
+        (#{currentAccountId},#{pictureGroupName},#{pictureDescribe},#{updateTime},#{createTime})
+    </insert>
 
 </mapper>

@@ -234,7 +234,7 @@ CREATE TABLE `tb_email` (
   `current_account_id` int(11) DEFAULT NULL,
   `receive_account_id` int(11) DEFAULT NULL,
   `is_delete` tinyint(255) NOT NULL DEFAULT '0' COMMENT '0 否 1是',
-  `content` text,
+  `pushMessage` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

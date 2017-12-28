@@ -2,6 +2,7 @@ package com.lzj.controller;
 
 import com.lzj.dao.MessageDao;
 import com.lzj.dao.dto.AccountDto;
+import com.lzj.dao.dto.MessageDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.EmailObject;
 import com.lzj.domain.MessageInfo;
@@ -47,21 +48,35 @@ public class LoginController {
      */
     @RequestMapping(value = "/loginAct",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> loginAct(@RequestBody AccountDto dto,
+    public Map<String,Object> loginAct(@RequestBody AccountDto dto,
                            HttpSession session){
         Account account= accountService.findByDto(dto);
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         if (account!=null){
             session.setAttribute("user",account);
-            List<MessageInfo> list=messageDao.getMessages(ComentUtils.buildMessageCondition(account.getId(),false,null));
-            webScoketService.sendNotReadMessageToUser(list);
+            sendMessage(account);
             result.put("result", "success");
+            result.put("currentUser", account);
             return result;
         }
         result.put("result", "fail");
         return result;
     }
+    private void sendMessage(Account account) {
+        MessageDto messageDto = new MessageDto();
+        messageDto.setToAccountId(account.getId());
+        messageDto.setType(false);
+        List<MessageInfo> list=messageDao.findMessagesByDto(messageDto);
+        if (list != null && list.size() > 0){
+            webScoketService.sendNotReadMessageToUser(list);
+        }
+    }
 
+    @ResponseBody
+    @GetMapping("/get")
+    public Account get(HttpSession session) {
+        return (Account) session.getAttribute("user");
+    }
     /**
      * 用户注册成功后将用户名密码发送给用户邮箱
      * @return

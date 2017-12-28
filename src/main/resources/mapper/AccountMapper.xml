@@ -91,16 +91,17 @@
         WHERE id=#{id}
     </update>
 
-    <select id="findByUserDto" resultMap="userResultMap" useCache="true">
+    <select id="findByDto" resultMap="userResultMap" useCache="true">
         SELECT id,<include refid="userField"></include> from tb_account WHERE
+        1=1
         <if test="param.email != null" >
-            email = #{param.email} and
+           and email = #{param.email}
         </if>
         <if test="param.password != null ">
-            password = #{param.password} and
+            and password = #{param.password}
         </if>
         <if test="param.id != null">
-            id = #{param.id}
+            and id = #{param.id}
         </if>
     </select>
     <select id="findAll" resultMap="userResultMap" useCache="true">

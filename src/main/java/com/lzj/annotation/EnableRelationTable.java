@@ -17,7 +17,7 @@ public @interface EnableRelationTable {
      * 需要插入的字段
      * @return
      */
-    String [] value();
+    String [] value() default "";
 
     /**
      * 关键列，用来是否判断插入关系表多行

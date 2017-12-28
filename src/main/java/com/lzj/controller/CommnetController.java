@@ -1,18 +1,18 @@
 package com.lzj.controller;
 
-import com.lzj.VO.CommentMongo;
 import com.lzj.domain.Comment;
 import com.lzj.domain.MessageInfo;
 import com.lzj.service.ArticleService;
 import com.lzj.service.impl.CommentService;
 import com.lzj.service.impl.WebScoketService;
 import com.lzj.utils.ComentUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * Created by li on 17-8-7.
@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("comment")
 public class CommnetController {
+    private final static Logger log = LoggerFactory.getLogger(CommnetController.class);
     @Autowired
     private CommentService commentService;
     @Autowired
@@ -40,7 +41,7 @@ public class CommnetController {
         info.setType(false);
         info.setToAccountId(comment.getToAccountId());
         info.setFromAccountId(comment.getFromAccountId());
-        info.setContent(comment.getComment());
+        info.setPushMessage(comment.getComment());
         info.setFlag(MessageInfo.FLAG.COMMENT_FLAG);
         webScoketService.sendSingleMessageToUser(info);
     }

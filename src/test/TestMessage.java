@@ -1,5 +1,6 @@
 import com.lzj.Application;
 import com.lzj.dao.MessageDao;
+import com.lzj.dao.dto.MessageDto;
 import com.lzj.domain.MessageInfo;
 import com.lzj.utils.ComentUtils;
 import org.junit.Test;
@@ -29,8 +30,9 @@ public class TestMessage {
     }*/
     @Test
     public void testSelect(){
-
-       List<MessageInfo> list = messageDao.getMessages(ComentUtils.buildMessageCondition(1,true,null));
+        MessageDto dto = new MessageDto();
+        dto.setToAccountId(1);
+       List<MessageInfo> list = messageDao.findMessagesByDto(dto);
        System.out.println(list);
     }
 }

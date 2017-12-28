@@ -62,7 +62,7 @@ public class TestArticle {
     public void testInsert(){
         Article article=new Article();
         article.setTitle("真实");
-        article.setContent("真实男上来看打飞机");
+        article.setPushMessage("真实男上来看打飞机");
         User user=new User();
         user.setId(1);
         article.setUserId(1);
