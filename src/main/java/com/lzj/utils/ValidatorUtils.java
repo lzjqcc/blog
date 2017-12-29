@@ -1,5 +1,6 @@
 package com.lzj.utils;
 
+import com.google.common.collect.Lists;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.exception.SystemException;
@@ -17,7 +18,13 @@ public class ValidatorUtils {
 
     private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     public static ValidatorResponse validatorObj(Object object) {
+
         ValidatorResponse response = new ValidatorResponse();
+        if (object == null) {
+            response.setSuccess(false);
+            response.setErrorList(Lists.newArrayList("验证对象为空"));
+        }
+
         Set<ConstraintViolation<Object>> violationSet = validator.validate(object);
         if (violationSet.size() == 0) {
             response.setSuccess(true);
