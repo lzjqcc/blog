@@ -53,7 +53,7 @@ public class GroupController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "findGroups")
-    public List<Group> findGroups(HttpSession session) {
+    public ResponseVO<List<Group>> findGroups(HttpSession session) {
         Account account = (Account) session.getAttribute("user");
         GroupDto dto = new GroupDto();
         dto.setCurrentAccountId(account.getId());

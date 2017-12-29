@@ -37,8 +37,8 @@ public class ValidatorUtils {
         response.setErrorList(errorList);
         return response;
     }
-    public static ResponseVO validatorData(Object o) {
-        ResponseVO responseVO = new ResponseVO();
+    public static  <T> ResponseVO<T> validatorData(Object o) {
+        ResponseVO<T> responseVO = new ResponseVO();
         ValidatorUtils.ValidatorResponse response = ValidatorUtils.validatorObj(o);
         if (!response.getSuccess()) {
             log.error("数据校验失败" + response.getErrorList());

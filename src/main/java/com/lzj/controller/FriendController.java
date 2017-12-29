@@ -58,7 +58,7 @@ public class FriendController {
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/groupFriends")
-    public List<Friend> findGroupFriends(@RequestBody FriendDto dto,HttpSession session) {
+    public ResponseVO<List<Friend>> findGroupFriends(@RequestBody FriendDto dto,HttpSession session) {
         Account account = (Account) session.getAttribute("user");
         dto.setCurrentAccountId(account.getId());
         return friendService.findGroupFriends(dto);

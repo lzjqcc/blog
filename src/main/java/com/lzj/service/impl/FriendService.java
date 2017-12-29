@@ -37,12 +37,13 @@ public class FriendService {
     private GroupFriendDao groupFriendDao;
     @Autowired
     private GroupDao groupDao;
-    public List<Friend> findGroupFriends(FriendDto dto) {
-        ResponseVO responseVO = ValidatorUtils.validatorData(dto);
+    public ResponseVO<List<Friend>> findGroupFriends(FriendDto dto) {
+        ResponseVO<List<Friend>> responseVO = ValidatorUtils.validatorData(dto);
         if (!responseVO.getSuccess()) {
             return null;
         }
-        return friendDao.findGroupFriendsByDto(dto);
+        responseVO.setResult(friendDao.findGroupFriendsByDto(dto));
+        return responseVO;
     }
     public ResponseVO deleteFriend(FriendDto dto) {
         ResponseVO responseVO = ValidatorUtils.validatorData(dto);

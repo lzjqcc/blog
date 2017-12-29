@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzj.dao.AccountDao">
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-    </cache>
+   <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+    </cache>-->
     <resultMap id="userResultMap" type="com.lzj.domain.Account">
         <id column="id" property="id"></id>
         <result column="password" property="password"></result>

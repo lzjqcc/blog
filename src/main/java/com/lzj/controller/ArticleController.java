@@ -1,5 +1,6 @@
 package com.lzj.controller;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.constant.CommentTypeEnum;
 import com.lzj.dao.AssortmentDao;
 import com.lzj.dao.dto.AccountDto;
@@ -46,7 +47,8 @@ public class ArticleController {
      */
     @RequestMapping(value = "findById/{id}",method = RequestMethod.GET)
     @ResponseBody
-    public Article findById(@PathVariable("id")Integer id){
+    public ResponseVO<Map<String, Object>> findById(@PathVariable("id")Integer id){
+        ResponseVO<Map<String, Object>> responseVO = new ResponseVO<>();
         Article article= articleService.findById(id);
         Map<String,Object> map=new HashMap<>();
         map.put("id", id);
@@ -55,7 +57,9 @@ public class ArticleController {
         Map<String, Object> entityMap = new HashMap<>();
         entityMap.put("article", article);
         entityMap.put("comment", commentService.getComments(article.getId(), CommentTypeEnum.ARTICLE.code));
-        return article;
+        responseVO.setSuccess(true);
+        responseVO.setResult(entityMap);
+        return responseVO;
     }
 
     /**

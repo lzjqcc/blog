@@ -5,6 +5,7 @@ import com.lzj.VO.ResponseVO;
 import com.lzj.constant.AuthorityEnum;
 import com.lzj.dao.GroupDao;
 import com.lzj.dao.dto.GroupDto;
+import com.lzj.domain.Friend;
 import com.lzj.domain.Group;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,12 @@ public class GroupService {
      * @param dto
      * @return
      */
-    public List<Group> findGroups(GroupDto dto) {
-        return groupDao.findGroupsByDto(dto);
+    public ResponseVO<List<Group>> findGroups(GroupDto dto) {
+        ResponseVO<List<Group>> responseVO = new ResponseVO<>();
+        responseVO.setSuccess(true);
+        responseVO.setMessage("操作成功");
+        responseVO.setResult(groupDao.findGroupsByDto(dto));
+        return responseVO;
     }
     public ResponseVO deleteGroup(GroupDto dto) {
         ResponseVO responseVO = new ResponseVO();
