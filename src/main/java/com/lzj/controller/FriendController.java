@@ -8,6 +8,8 @@ import com.lzj.service.impl.FriendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,9 @@ public class FriendController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST,value = "/applyFriend")
     public  ResponseVO addFriend(@RequestBody FriendDto friendDto, HttpSession session) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        System.out.print(context.getAuthentication());
+
         Account account = (Account) session.getAttribute("user");
         friendDto.setCurrentAccountId(account.getId());
         return friendService.friendApply(friendDto);

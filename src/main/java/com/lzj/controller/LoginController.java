@@ -12,6 +12,9 @@ import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +57,7 @@ public class LoginController {
         Map<String, Object> result = new HashMap<>();
         if (account!=null){
             session.setAttribute("user",account);
-            sendMessage(account);
+            //sendMessage(account);
             result.put("result", "success");
             result.put("currentUser", account);
             return result;
@@ -75,6 +78,8 @@ public class LoginController {
     @ResponseBody
     @GetMapping("/get")
     public Account get(HttpSession session) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
         return (Account) session.getAttribute("user");
     }
     /**
