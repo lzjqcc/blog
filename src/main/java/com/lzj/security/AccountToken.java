@@ -29,6 +29,11 @@ public class AccountToken extends AbstractAuthenticationToken {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    public Account getAccount() {
+        return account;
+    }
+
     @Override
     public Object getCredentials() {
         return this.credentials;

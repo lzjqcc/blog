@@ -34,6 +34,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
     public CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter() throws Exception {
        AuthenticationManager authenticationManager = this.authenticationManager();
         CustomAuthenticationProcessingFilter filter = new CustomAuthenticationProcessingFilter(authenticationManager);
+        filter.setAuthenticationSuccessHandler(new SuccessHandler());
         return filter;
     }
     @Bean
