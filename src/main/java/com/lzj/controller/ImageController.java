@@ -60,9 +60,9 @@ public class ImageController {
         }
     }
     /**
-     * /pictureDir/userId/pictureGroupId/pictureName
+     * /picture/pictureDir/userId/pictureGroupId/pictureName
      */
-    @RequestMapping(method =  RequestMethod.GET,value = "/{userId}/{pictureGroupId}/{pictureName:.+}")
+    @RequestMapping(method =  RequestMethod.GET,value = "/picture/{userId}/{pictureGroupId}/{pictureName:.+}")
     public ResponseEntity<?> getPicture(@PathVariable("userId") String userId,
                                         @PathVariable("pictureGroupId") String pictureGroupId,@PathVariable("pictureName") String pictureName) {
         String dir = getPictureDir(userId, pictureGroupId);

@@ -8,6 +8,7 @@ import com.lzj.service.impl.FriendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -67,5 +68,14 @@ public class FriendController {
         Account account = (Account) session.getAttribute("user");
         dto.setCurrentAccountId(account.getId());
         return friendService.findGroupFriends(dto);
+    }
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET,value = "/get")
+    public ResponseVO<Authentication> get() {
+        ResponseVO<Authentication> responseVO = new ResponseVO<>();
+        responseVO.setResult(SecurityContextHolder.getContext().getAuthentication());
+        responseVO.setSuccess(true);
+        responseVO.setMessage("lk");
+        return responseVO;
     }
 }

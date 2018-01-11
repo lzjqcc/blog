@@ -33,7 +33,7 @@ public class GroupService {
     }
     private void buildGroup(Group group, GroupDto dto) {
         group.setCurrentAccountId(dto.getCurrentAccountId());
-        group.setFunctionList(Lists.newArrayList(AuthorityEnum.PICTURE_GROUP_SEE.id, AuthorityEnum.PICTURE_GROUP_COMMENT.id));
+        group.setFunctionList(Lists.newArrayList(AuthorityEnum.GROUP_PICTURE_GROUP_SEE.id, AuthorityEnum.GROUP_PICTURE_GROUP_COMMENT.id));
         group.setGroupName(dto.getGroupName());
     }
 

@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class CustomSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
     @Override
-    public Class<?> getSecureObjectClass() {
+    public Class<?> getSecureObjectClass()
+    {
         return null;
     }
 

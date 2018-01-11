@@ -127,7 +127,7 @@ public class FriendService {
         Friend friend = new Friend();
         friend.setCurrentAccountId(dto.getCurrentAccountId());
         friend.setFriendId(dto.getFriendId());
-        friend.setFunctionList(Lists.newArrayList(AuthorityEnum.PICTURE_GROUP_SEE.id, AuthorityEnum.PICTURE_GROUP_COMMENT.id));
+        friend.setFunctionList(Lists.newArrayList(AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.id, AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.id));
         friend.setStatus(FriendStatusEnum.APPLE.code);
         friendDao.insertFriend(friend);
         friend.setFriendName(dto.getFriendName());
