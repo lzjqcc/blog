@@ -3,7 +3,6 @@ package com.lzj.dao.dto;
 import javax.validation.constraints.NotNull;
 
 public class FriendDto {
-    @NotNull
     private Integer currentAccountId;
     @NotNull
     private Integer friendId;

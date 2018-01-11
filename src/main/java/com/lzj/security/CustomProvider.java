@@ -16,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public class CustomProvider implements AuthenticationProvider {
     private UserDetailsService userDetailsService;
-
     public UserDetailsService getUserDetailsService() {
         return userDetailsService;
     }

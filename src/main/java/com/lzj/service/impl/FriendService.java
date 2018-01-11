@@ -11,10 +11,7 @@ import com.lzj.dao.GroupDao;
 import com.lzj.dao.GroupFriendDao;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
-import com.lzj.domain.Account;
-import com.lzj.domain.Friend;
-import com.lzj.domain.Group;
-import com.lzj.domain.GroupFriend;
+import com.lzj.domain.*;
 import com.lzj.exception.SystemException;
 import com.lzj.utils.ValidatorUtils;
 import org.slf4j.Logger;
@@ -78,7 +75,9 @@ public class FriendService {
 
     }
 
-
+    public ResponseVO<List<Function>> findFriendFunction(Integer friendId, Integer ownerId) {
+        return null;
+    }
     /**
      * currentAccountId friendId 确定一条记录
      *

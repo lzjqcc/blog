@@ -1,6 +1,12 @@
 package com.lzj.security;
 
 import com.google.common.collect.Lists;
+import com.lzj.VO.ResponseVO;
+import com.lzj.dao.FriendDao;
+import com.lzj.dao.dto.FriendDto;
+import com.lzj.domain.Function;
+import com.lzj.service.impl.FriendService;
+import com.lzj.utils.JsonUtils;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -33,12 +39,16 @@ import java.util.stream.Collectors;
 /**
  * 自定AcessDecisionManager就可以实现自定义角色名称
  */
-public class CustomAccessDecisionManager implements AccessDecisionManager {
+public class ImageAccessDecisionManager implements AccessDecisionManager {
     private WebExpressionVoter voter = new WebExpressionVoter();
     private SecurityExpressionHandler<FilterInvocation> expressionHandler = new DefaultWebSecurityExpressionHandler();
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    private FriendDao friendDao;
+    public ImageAccessDecisionManager(FriendDao friendDao) {
+        this.friendDao = friendDao;
+    }
     /**
-     *
+     *权限认证完成后清除权限
      * @param authentication
      * @param object  访问url
      * @param configAttributes 角色
@@ -59,10 +69,11 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         }else if (authentication instanceof AnonymousAuthenticationToken) {
 
         }*/
-        int flag = voter.vote(authentication, (FilterInvocation) object, configAttributes);
-        if (flag != AccessDecisionVoter.ACCESS_GRANTED) {
-            throw new AccessDeniedException("没有访问权限");
-        }
+        AccountToken token = (AccountToken) authentication;
+        FilterInvocation invocation = (FilterInvocation) object;
+        FriendDto dto = JsonUtils.requestToObject(invocation.getRequest(), FriendDto.class);
+        List<Function> list = friendDao.findFriendFunction(dto.getFriendId(), token.getAccount().getId());
+        AccessDecisionManagerUtils.decide(voter,authentication,object,configAttributes,list);
     }
 
 

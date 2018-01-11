@@ -1,25 +1,21 @@
 package com.lzj.config;
 
 import com.lzj.VO.ResponseVO;
+import com.lzj.dao.ConferenceDao;
+import com.lzj.dao.FriendDao;
 import com.lzj.security.*;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
@@ -27,13 +23,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 
 /**
  * EnableWebSecurity 已经包含Configuration
  */
 @EnableWebSecurity
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
+    @Autowired
+    private FriendDao friendDao;
+    @Autowired
+    private ConferenceDao conferenceDao;
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.cors().disable();
@@ -44,7 +43,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/picture/*","/picture/**").
                 // 使用SpringEl解析
                 access("hasAuthority('group_picture_group_see') or hasAuthority('friend_picture_group_see')")
-                .accessDecisionManager(new CustomAccessDecisionManager());
+                .accessDecisionManager(new ImageAccessDecisionManager(friendDao));
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override
@@ -53,8 +52,10 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
                 return object;
             }
         });*/
-
-
+        // 会议控制权限
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/conference/update")
+                .access("hasAuthority('conference_group_see') and hasAuthority('conference_group_update')")
+                .accessDecisionManager(new ConferenceAccessDecisionManager(conferenceDao));
     }
 
     /**
@@ -88,11 +89,6 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
             }
         });
         return filter;
-    }
-    @Bean
-    public CustomAccessDecisionManager customAccessDecisionManager() {
-        CustomAccessDecisionManager customAccessDecisionManager = new CustomAccessDecisionManager();
-        return customAccessDecisionManager;
     }
 
     @Override
