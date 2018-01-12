@@ -2,7 +2,11 @@ package com.lzj.security;
 
 import com.google.common.collect.Lists;
 import com.lzj.VO.ResponseVO;
+import com.lzj.constant.URLMatchers;
+import com.lzj.dao.ConferenceDao;
 import com.lzj.dao.FriendDao;
+import com.lzj.dao.FunctionDao;
+import com.lzj.dao.dto.ConferenceDto;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Function;
 import com.lzj.service.impl.FriendService;
@@ -11,6 +15,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
@@ -39,14 +45,14 @@ import java.util.stream.Collectors;
 /**
  * 自定AcessDecisionManager就可以实现自定义角色名称
  */
-public class ImageAccessDecisionManager implements AccessDecisionManager {
-    private WebExpressionVoter voter = new WebExpressionVoter();
+public class CustomAccessDecisionManager implements AccessDecisionManager {
     private SecurityExpressionHandler<FilterInvocation> expressionHandler = new DefaultWebSecurityExpressionHandler();
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    private FriendDao friendDao;
-    public ImageAccessDecisionManager(FriendDao friendDao) {
-        this.friendDao = friendDao;
+    private List<AccessDecisionVoter<FilterInvocation>> voters = null;
+    public void setVoters(List<AccessDecisionVoter<FilterInvocation>> voters) {
+        this.voters = voters;
     }
+
     /**
      *权限认证完成后清除权限
      * @param authentication
@@ -57,27 +63,20 @@ public class ImageAccessDecisionManager implements AccessDecisionManager {
      */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-        int i =0;
-    /*    Iterator<ConfigAttribute> iterable = configAttributes.iterator();
-        while (iterable.hasNext()) {
-
-
-             i =0;
+        boolean flag = false;
+        for (AccessDecisionVoter<FilterInvocation> decisionVoter : voters) {
+            int i = decisionVoter.vote(authentication, (FilterInvocation) object, configAttributes);
+            switch (i) {
+                case AccessDecisionVoter.ACCESS_GRANTED:
+                    flag = true;
+                    break;
+            }
+            if (!flag) {
+                throw new AccessDeniedException("没有权限访问");
+            }
         }
-        if (authentication instanceof AccountToken) {
-            AccountToken token = (AccountToken) authentication;
-        }else if (authentication instanceof AnonymousAuthenticationToken) {
 
-        }*/
-        AccountToken token = (AccountToken) authentication;
-        FilterInvocation invocation = (FilterInvocation) object;
-        FriendDto dto = JsonUtils.requestToObject(invocation.getRequest(), FriendDto.class);
-        List<Function> list = friendDao.findFriendFunction(dto.getFriendId(), token.getAccount().getId());
-        AccessDecisionManagerUtils.decide(voter,authentication,object,configAttributes,list);
     }
-
-
-
 
     @Override
     public boolean supports(ConfigAttribute attribute) {

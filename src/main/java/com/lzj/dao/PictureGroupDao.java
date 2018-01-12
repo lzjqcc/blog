@@ -14,16 +14,9 @@ import java.util.List;
  */
 @Repository
 public interface PictureGroupDao {
-    @EnableRelationTable(relationTableName = "tb_picture_group_function",value = {"picture_group_id","function_id","current_account_id"})
+
     void insertPictureGroupDao(@Param("param") PictureGroup group);
 
     List<PictureGroup> findByCurrentAccountId(@Param("param") Integer currentAccountId, Page page);
 
-    /**
-     * 查询对这个照片组要执行的操作需要的权限
-     * @param accountId
-     * @param pictureGroupId
-     * @return
-     */
-    List<Function> findPictureGroupFunction(Integer ownerId,Integer pictureGroupId);
 }

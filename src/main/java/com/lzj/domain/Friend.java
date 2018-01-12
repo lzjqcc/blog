@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 好友关系是相互的：A添加B为好友    在tb_friend ,tb_friend_function中插入两条数据
+ */
 public class Friend extends BaseEntity implements Serializable {
     private Integer currentAccountId;
     private Integer friendId;

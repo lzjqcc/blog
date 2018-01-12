@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface FriendDao{
+public interface FriendDao extends BaseDao{
     @EnableRelationTable(relationTableName = "tb_friend_function",value = {"current_account_id","friend_id","function_id"})
     void insertFriend(Friend friend);
     void updateFriend(FriendDto dto);

@@ -43,7 +43,9 @@ public class CustomProvider implements AuthenticationProvider {
         token.setAccount(userDetails.getAccount());
         return authentication;
     }
+    public void setGrantedAuthority(AccountToken token) {
 
+    }
     @Override
     public boolean supports(Class<?> authentication) {
         return true;

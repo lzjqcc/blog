@@ -1,8 +1,8 @@
 package com.lzj.config;
 
+import com.google.common.collect.Lists;
 import com.lzj.VO.ResponseVO;
-import com.lzj.dao.ConferenceDao;
-import com.lzj.dao.FriendDao;
+import com.lzj.dao.FunctionDao;
 import com.lzj.security.*;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.JsonUtils;
@@ -23,27 +23,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * EnableWebSecurity 已经包含Configuration
  */
 @EnableWebSecurity
 public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
-    @Autowired
-    private FriendDao friendDao;
-    @Autowired
-    private ConferenceDao conferenceDao;
+   @Autowired
+   FunctionDao functionDao;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.cors().disable();
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/friend/","/friend/*","/friend/**").authenticated();
-        http.authorizeRequests().antMatchers("/login").permitAll();
+        http.authorizeRequests().antMatchers("/loginBlog").permitAll();
         http.authenticationProvider(new CustomProvider());
-        http.authorizeRequests().antMatchers(HttpMethod.GET,"/picture/*","/picture/**").
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/pictureGroup/*","/pictureGroup/**").
                 // 使用SpringEl解析
-                access("hasAuthority('group_picture_group_see') or hasAuthority('friend_picture_group_see')")
-                .accessDecisionManager(new ImageAccessDecisionManager(friendDao));
+                access("hasAuthority('group_picture_group_see') or hasAuthority('friend_picture_group_see')");
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override
@@ -53,11 +52,21 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
             }
         });*/
         // 会议控制权限
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/conference/update")
+       /* http.authorizeRequests().antMatchers(HttpMethod.POST, "/conference/update")
                 .access("hasAuthority('conference_group_see') and hasAuthority('conference_group_update')")
-                .accessDecisionManager(new ConferenceAccessDecisionManager(conferenceDao));
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public FilterSecurityInterceptor postProcess(FilterSecurityInterceptor object) {
+                        object.setAccessDecisionManager(new ConferenceAccessDecisionManager(conferenceDao));
+                        return object;
+                    }
+                });*/
     }
-
+    public CustomAccessDecisionManager imageAccessDecisionManager() {
+        CustomAccessDecisionManager manager = new CustomAccessDecisionManager();
+        manager.setVoters(Lists.newArrayList(new ImageVoter(functionDao),new ConferenceVoter(functionDao)));
+        return manager;
+    }
     /**
      * 添加自定义的AuthenticationProcessingFilter
      * @return

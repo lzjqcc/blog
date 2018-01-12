@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.FunctionDao" >
+    <resultMap id="functionMap" type="com.lzj.domain.Function">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="authority" property="authority"/>
+        <result column="describe" property="describe"/>
+    </resultMap>
+    <sql id="base">
+      create_time,
+      update_time,
+      authority,
+      describe
+    </sql>
+    <insert id="insertFunction" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Exception" >
+      INSERT INTO tb_function t
+      (<include refid="base"></include>)
+      VALUES
+      (#{createTime},#{updateTime},#{authority},#{describe})
+    </insert>
+    <select id="findFriendFunction">
+        SELECT id,
+        <include refid="base"/>
+        FROM tb_function f left join tb_friend_function ff on f.id = ff.function_id
+        where ff.current_account_id = #{friendId} and ff.friend_id = #{currentAccountId}
+        WHERE
+    </select>
+    <select id="findGroupFunction">
+        SELECT id,
+        <include refid="base"/>
+        from tb_function f left join tb_group_function gf on f.id= gf.function_id left tb_group_friend tgf on tgf.group_id = gf.group_id
+        WHERE gf.current_account_id = #{friendId} and tgf.friend_id = #{curentAccountId}
+    </select>
+    <select id="findConferenceFunction">
+        SELECT id,
+        <include refid="base"/>
+        from tb_function f left join tb_conference_function cf on f.id = cf.function_id
+        WHERE cf.conference_id = #{conferenceId} and cf.sponsor_id = #{sponsorId} and cf.member_id = {memberId}
+    </select>
+</mapper>

@@ -38,19 +38,6 @@ public class PictureGroupService implements FunctionService{
 
     }
 
-    /**
-     * 查看好友图片
-     * @param friendId
-     * @param page
-     * @param currentAccount
-     * @param pictureGroupId
-     * @return
-     */
-    public List<Picture> findFriendPicture(Page page, Account currentAccount, FunctionDto dto) {
-        List<Function> functions = pictureGroupDao.findPictureGroupFunction(currentAccount.getId(), dto.getPictureGroupId());
-        return null;
-    }
-
 
     @Override
     public boolean hasFunctions(Account currentAccount, FunctionDto dto, Function function) {
