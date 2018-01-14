@@ -13,10 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -50,7 +47,7 @@ public class FriendController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/operatorFriend")
+    @RequestMapping(method = RequestMethod.POST, value = "/operatorFriend")
     public ResponseVO operatorFriend(@RequestBody FriendDto friendDto) {
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
@@ -58,17 +55,21 @@ public class FriendController {
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/deleteFriend")
-    public ResponseVO deleteFriend(@RequestBody FriendDto friendDto) {
+    public ResponseVO deleteFriend(@RequestParam("friendId") Integer friendId) {
         Account account = ComentUtils.getCurrentAccount();
+        FriendDto friendDto = new FriendDto();
         friendDto.setCurrentAccountId(account.getId());
+        friendDto.setFriendId(friendId);
         return friendService.deleteFriend(friendDto);
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/groupFriends")
-    public ResponseVO<List<Friend>> findGroupFriends(@RequestBody FriendDto dto) {
+    public ResponseVO<List<Friend>> findGroupFriends(@RequestParam("groupId") Integer groupId) {
+        FriendDto friendDto = new FriendDto();
         Account account = ComentUtils.getCurrentAccount();
-        dto.setCurrentAccountId(account.getId());
-        return friendService.findGroupFriends(dto);
+        friendDto.setCurrentAccountId(account.getId());
+        friendDto.setGroupId(groupId);
+        return friendService.findGroupFriends(friendDto);
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/get")
@@ -80,9 +81,14 @@ public class FriendController {
         return responseVO;
     }
     @ResponseBody
-    @RequestMapping
-    public ResponseVO findSameStatusFriend(@RequestBody FriendDto dto) {
+    @RequestMapping(method = RequestMethod.GET, value = "findSameStatusFriend")
+    public ResponseVO findSameStatusFriend(@RequestParam("status") Integer status,
+                                            @RequestParam("friendId") Integer friendId) {
         Account account = ComentUtils.getCurrentAccount();
+        FriendDto dto = new FriendDto();
+        dto.setCurrentAccountId(account.getId());
+        dto.setFriendId(friendId);
+        dto.setStatus(status);
        return friendService.findSameStatusFriend(dto);
     }
 }

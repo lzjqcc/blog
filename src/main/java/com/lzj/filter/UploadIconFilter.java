@@ -42,6 +42,10 @@ public class UploadIconFilter implements Filter {
             response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token,withCredentials");
 
             response.setHeader("Access-Control-Allow-Credentials", "true");
+
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+            System.out.println(servletRequest.getParameter("groupId")+"***************"+request.getQueryString());
             filterChain.doFilter(servletRequest, response);
         } catch (MultipartException e) {
             HttpServletResponse response= (HttpServletResponse) servletResponse;

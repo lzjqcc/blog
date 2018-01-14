@@ -8,6 +8,9 @@
   SessionFactory sessionFactory=entityManager.getEntityManagerFactory().unwrap(SessionFactory.class);
   
    Session session= sessionFactory.getCurrentSession();
-   session.update(obj);
+   session.update(obj)
   ```
+  ### RequestParam
+  如果前端传递的url中含有空格如，空格将会转义，SpringMVC将获取不到
+  http://localhost:8080/friend/groupFriends?groupId = 1
  

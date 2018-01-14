@@ -12,7 +12,7 @@
         <result column="special_attention" property="specialAttention"/>
         <result column="is_defriend" property="isDefriend"/>
         <result column="friend_name" property="friendName"/>
-        <result column="status" property="status"/>
+        <result column="friend_status" property="status"/>
     </resultMap>
     <sql id="friendField">
         create_time,
@@ -22,7 +22,7 @@
         special_attention,
         is_defriend,
         friend_name,
-        status
+        friend_status
     </sql>
     <sql id="base">
         f.id,
@@ -33,7 +33,7 @@
         f.special_attention,
         f.is_defriend,
         f.friend_name
-        f.status
+        f.friend_status
     </sql>
     <insert id="insertFriend" keyProperty="id" useGeneratedKeys="true">
         INSERT into tb_friend (<include refid="friendField"/>)
@@ -65,13 +65,13 @@
         </set>
         WHERE current_account_id =#{currentAccountId} and friend_id=#{friendId}
     </update>
-    <select id="findGroupFriendsByDto" >
+    <select id="findGroupFriendsByDto" resultMap="friendMap">
         select
         <include refid="base"/>
         from tb_friend f left JOIN tb_group_friend g on f.current_account_id = g.current_account_id
         WHERE f.current_account_id =#{currentAccountId}  and g.group_id = #{groupId}
     </select>
-    <select id="findFriends">
+    <select id="findFriends" resultMap="friendMap">
         SELECT
         <include refid="friendField"/>, id from tb_friend
         where
@@ -83,7 +83,7 @@
             current_account_id = #{currentAccountId} AND
         </if>
         <if test="status != null">
-            status = #{status}
+            friend_status = #{status}
         </if>
 
     </select>
