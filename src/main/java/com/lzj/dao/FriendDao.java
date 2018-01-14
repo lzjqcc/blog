@@ -14,13 +14,7 @@ public interface FriendDao extends BaseDao{
     void updateFriend(FriendDto dto);
 
     void deleteFriend(FriendDto friendDto);
-    /**
-     * 查询好友权限
-     * @param friendId
-     * @param ownerId
-     * @return
-     */
-    List<Function> findFriendFunction(Integer friendId, Integer ownerId);
+
 
     /**
      * 查询分组好友
@@ -28,4 +22,6 @@ public interface FriendDao extends BaseDao{
      * @return
      */
     List<Friend> findGroupFriendsByDto(FriendDto friendDto);
+
+    List<Friend> findFriends(FriendDto friendDto);
 }

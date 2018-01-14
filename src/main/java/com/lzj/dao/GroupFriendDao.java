@@ -23,4 +23,6 @@ public interface GroupFriendDao {
      * @param dto
      */
     void updateGroupFriend(FriendDto dto);
+
+    public void delete(GroupFriend friend);
 }

@@ -8,8 +8,10 @@ import java.util.List;
 
 @Repository
 public interface FunctionDao {
+    void insertFunctions(List<Function> functions);
     void insertFunction(Function function);
 
+    List<Function> findAll();
     /**
      *
      * @param currentAccountId 当前登录人

@@ -3,15 +3,24 @@ package com.lzj.domain;
 import java.io.Serializable;
 
 public class Function extends BaseEntity implements Serializable {
-    private String describe;
+    private String describtion;
     private String authority;
 
-    public String getDescribe() {
-        return describe;
+    public Function() {
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public Function(Integer id,String describe, String authority) {
+        setId(id);
+        this.describtion = describe;
+        this.authority = authority;
+    }
+
+    public String getDescribtion() {
+        return describtion;
+    }
+
+    public void setDescribtion(String describtion) {
+        this.describtion = describtion;
     }
 
     public String getAuthority() {

@@ -1,13 +1,17 @@
 package com.lzj.utils;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.domain.Account;
 import com.lzj.domain.EmailObject;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
+import com.lzj.security.AccountToken;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +30,23 @@ public class ComentUtils {
     public final static String HOST="http://localhost:8080";
     public final static String ARTICLE_PIC="./src/main/resources/static/articlepic";
     public final static String PICTURE_DIR="./src/main/resources/static/picture";
-
+    public static Account getCurrentAccount() {
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       if (authentication != null) {
+           if (authentication instanceof AccountToken) {
+               AccountToken token = (AccountToken) authentication;
+               return token.getAccount();
+           }
+       }
+       return null;
+    }
+    public static <T> ResponseVO<T> buildResponseVO(boolean success, String message, T t) {
+        ResponseVO<T> responseVO = new ResponseVO<>();
+        responseVO.setSuccess(success);
+        responseVO.setMessage(message);
+        responseVO.setResult(t);
+        return responseVO;
+    }
     public static Date getCurrentTime(){
         Calendar calendar=Calendar.getInstance(Locale.CHINESE);
 

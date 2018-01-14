@@ -11,8 +11,8 @@
         <result column="friend_id" property="friendId"/>
         <result column="special_attention" property="specialAttention"/>
         <result column="is_defriend" property="isDefriend"/>
-        <result column="is_agree" property="isAgree"/>
         <result column="friend_name" property="friendName"/>
+        <result column="status" property="status"/>
     </resultMap>
     <sql id="friendField">
         create_time,
@@ -21,8 +21,8 @@
         friend_id,
         special_attention,
         is_defriend,
-        is_agree,
-        friend_name
+        friend_name,
+        status
     </sql>
     <sql id="base">
         f.id,
@@ -32,8 +32,8 @@
         f.friend_id,
         f.special_attention,
         f.is_defriend,
-        f.is_agree,
         f.friend_name
+        f.status
     </sql>
     <insert id="insertFriend" keyProperty="id" useGeneratedKeys="true">
         INSERT into tb_friend (<include refid="friendField"/>)
@@ -45,8 +45,7 @@
         #{friendId},
         #{specialAttention},
         #{isDefriend},
-        #{isAgree},
-        #{friendName})
+        #{friendName},#{status})
     </insert>
     <delete id="deleteFriend">
         DELETE from tb_friend WHERE friend_id =#{friendId} and current_account_id =#{currentAccountId}
@@ -57,8 +56,8 @@
             <if test="isDefriend != null">
                 is_defriend = #{isDefriend},
             </if>
-            <if test="isAgree != null">
-                is_agree=#{isAgree},
+            <if test="status != null">
+                status=#{status},
             </if>
             <if test="specialAttention != null">
                 special_attention=#{special_attention}
@@ -72,5 +71,20 @@
         from tb_friend f left JOIN tb_group_friend g on f.current_account_id = g.current_account_id
         WHERE f.current_account_id =#{currentAccountId}  and g.group_id = #{groupId}
     </select>
+    <select id="findFriends">
+        SELECT
+        <include refid="friendField"/>, id from tb_friend
+        where
+        1=1 AND
+        <if test="friendId != null">
+            friend_id = #{friendId} and
+        </if>
+        <if test="currentAccountId != null">
+            current_account_id = #{currentAccountId} AND
+        </if>
+        <if test="status != null">
+            status = #{status}
+        </if>
 
+    </select>
 </mapper>

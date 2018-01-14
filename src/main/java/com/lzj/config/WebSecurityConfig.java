@@ -42,7 +42,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
         http.authenticationProvider(new CustomProvider());
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/pictureGroup/*","/pictureGroup/**").
                 // 使用SpringEl解析
-                access("hasAuthority('group_picture_group_see') or hasAuthority('friend_picture_group_see')");
+                access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')");
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override

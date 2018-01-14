@@ -1,8 +1,11 @@
 package com.lzj.service.impl;
 
+import com.lzj.constant.AuthorityEnum;
 import com.lzj.dao.AccountDao;
+import com.lzj.dao.FunctionDao;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
+import com.lzj.domain.Function;
 import com.lzj.service.AccountService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -17,6 +21,8 @@ import javax.servlet.http.HttpSession;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     AccountDao accountDao;
+    @Autowired
+    FunctionDao functionDao;
 
 
     @Override

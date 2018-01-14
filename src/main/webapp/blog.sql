@@ -195,7 +195,7 @@ CREATE TABLE `tb_conference_flow` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `conference_id` int(11) DEFAULT NULL COMMENT '会议id',
-  `describe` varchar(255) DEFAULT NULL,
+  `describtion` varchar(255) DEFAULT NULL,
   `record` varchar(255) DEFAULT NULL COMMENT '会议记录',
   `recorder_id` int(11) DEFAULT NULL COMMENT '会议记录人 tb_account',
   `is_delete` varchar(255) DEFAULT '0' COMMENT '0 否 1 是',
@@ -369,7 +369,7 @@ CREATE TABLE `tb_function` (
   `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `authority` varchar(255) DEFAULT NULL COMMENT '权限',
-  `describe` varchar(255) DEFAULT NULL COMMENT '权限描述',
+  `describtion` varchar(255) DEFAULT NULL COMMENT '权限描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

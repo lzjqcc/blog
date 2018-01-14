@@ -11,6 +11,19 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateCreate"/>
     </resultMap>
+    <delete id="delete">
+        DELETE from tb_group_friend WHEN
+        1=1
+        <if test="currentAccountId != null">
+            and  current_account_id = #{currentAccountId}
+        </if>
+        <if test="friendId != null">
+            and  friend_id = #{friendId}
+        </if>
+        <if test="groupId != null">
+            and group_id = #{groupId}
+        </if>
+    </delete>
     <sql id="groupFriedColumns">
         current_account_id,
         group_id,

@@ -5,6 +5,7 @@ import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
 import com.lzj.service.impl.FriendService;
+import com.lzj.utils.ComentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ public class FriendController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST,value = "/applyFriend")
-    public  ResponseVO addFriend(@RequestBody FriendDto friendDto, HttpSession session) {
+    public  ResponseVO addFriend(@RequestBody FriendDto friendDto) {
         SecurityContext context = SecurityContextHolder.getContext();
         System.out.print(context.getAuthentication());
 
-        Account account = (Account) session.getAttribute("user");
+        Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         return friendService.friendApply(friendDto);
     }
@@ -50,22 +51,22 @@ public class FriendController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/operatorFriend")
-    public ResponseVO operatorFriend(@RequestBody FriendDto friendDto, HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public ResponseVO operatorFriend(@RequestBody FriendDto friendDto) {
+        Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         return friendService.operatorFriend(friendDto);
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/deleteFriend")
-    public ResponseVO deleteFriend(@RequestBody FriendDto friendDto, HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public ResponseVO deleteFriend(@RequestBody FriendDto friendDto) {
+        Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         return friendService.deleteFriend(friendDto);
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/groupFriends")
-    public ResponseVO<List<Friend>> findGroupFriends(@RequestBody FriendDto dto,HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public ResponseVO<List<Friend>> findGroupFriends(@RequestBody FriendDto dto) {
+        Account account = ComentUtils.getCurrentAccount();
         dto.setCurrentAccountId(account.getId());
         return friendService.findGroupFriends(dto);
     }
@@ -77,5 +78,11 @@ public class FriendController {
         responseVO.setSuccess(true);
         responseVO.setMessage("lk");
         return responseVO;
+    }
+    @ResponseBody
+    @RequestMapping
+    public ResponseVO findSameStatusFriend(@RequestBody FriendDto dto) {
+        Account account = ComentUtils.getCurrentAccount();
+       return friendService.findSameStatusFriend(dto);
     }
 }

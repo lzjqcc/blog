@@ -4,7 +4,6 @@ import javax.validation.constraints.NotNull;
 
 public class FriendDto {
     private Integer currentAccountId;
-    @NotNull
     private Integer friendId;
     private Integer groupId;
     private Integer status;
