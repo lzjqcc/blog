@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-12-29 17:19:28
+Date: 2018-01-15 13:01:12
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -38,29 +38,17 @@ CREATE TABLE `tb_account` (
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_account
 -- ----------------------------
-INSERT INTO `tb_account` VALUES ('1', null, null, null, null, null, null, null, null, null, null, null, null, null, '大屁孩', '1234@qq.com', '234');
 INSERT INTO `tb_account` VALUES ('2', null, null, null, null, null, null, null, null, null, null, null, null, null, '大屁孩', '1234@qq.com', '234');
 INSERT INTO `tb_account` VALUES ('3', null, null, null, null, null, null, null, null, null, null, null, null, null, '李志坚', '21234@qq.com', '1234');
 INSERT INTO `tb_account` VALUES ('4', null, null, null, null, null, null, null, null, null, null, null, null, null, 'quchao', '43234@qq.com', '123445');
-INSERT INTO `tb_account` VALUES ('5', null, null, null, null, null, null, null, null, null, null, null, null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('6', null, null, null, null, null, null, null, null, null, null, null, null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('7', null, null, null, null, null, null, null, null, null, null, null, null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('8', null, null, null, null, null, null, null, null, null, '2017-12-25 10:13:01', '2017-12-25 10:13:01', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('9', null, null, null, null, null, null, null, null, null, '2017-12-25 10:16:41', '2017-12-25 10:16:41', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('10', null, null, null, null, null, null, null, null, null, '2017-12-25 10:19:06', '2017-12-25 10:19:06', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('11', null, null, null, null, null, null, null, null, null, '2017-12-25 10:20:13', '2017-12-25 10:20:13', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('12', null, null, null, null, null, null, null, null, null, '2017-12-25 10:20:38', '2017-12-25 10:20:38', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('13', null, null, null, null, null, null, null, null, null, '2017-12-25 10:22:04', '2017-12-25 10:22:04', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('14', null, null, null, null, null, null, null, null, null, '2017-12-25 10:26:04', '2017-12-25 10:26:04', null, null, 'rens', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('15', null, null, null, null, null, null, null, null, null, null, null, null, null, 'rensdfdfd', '43234@qq.com', '12344');
-INSERT INTO `tb_account` VALUES ('16', null, null, null, null, null, null, null, null, null, null, null, null, null, 'li', null, null);
-INSERT INTO `tb_account` VALUES ('17', null, null, null, null, null, null, null, null, null, null, null, null, null, 'zhi', null, null);
-INSERT INTO `tb_account` VALUES ('18', null, null, null, null, null, null, null, null, null, null, null, null, null, 'jian', null, null);
+INSERT INTO `tb_account` VALUES ('5', null, null, null, null, null, null, null, null, null, null, null, null, null, 'li', null, null);
+INSERT INTO `tb_account` VALUES ('6', null, null, null, null, null, null, null, null, null, null, null, null, null, 'zhi', null, null);
+INSERT INTO `tb_account` VALUES ('7', null, null, null, null, null, null, null, null, null, null, null, null, null, 'jian', null, null);
 
 -- ----------------------------
 -- Table structure for tb_article
@@ -195,7 +183,7 @@ CREATE TABLE `tb_conference_flow` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `conference_id` int(11) DEFAULT NULL COMMENT '会议id',
-  `describtion` varchar(255) DEFAULT NULL,
+  `describe` varchar(255) DEFAULT NULL,
   `record` varchar(255) DEFAULT NULL COMMENT '会议记录',
   `recorder_id` int(11) DEFAULT NULL COMMENT '会议记录人 tb_account',
   `is_delete` varchar(255) DEFAULT '0' COMMENT '0 否 1 是',
@@ -311,31 +299,18 @@ CREATE TABLE `tb_friend` (
   `friend_id` int(11) DEFAULT NULL COMMENT '对应 tb_account',
   `special_attention` varchar(255) DEFAULT NULL COMMENT '特别关注',
   `is_defriend` tinyint(255) DEFAULT '0' COMMENT '是否拉黑 0：否，1是',
-  `status` tinyint(255) DEFAULT '0' COMMENT '是否同意申请：0 申请 1同意，2拒绝',
+  `friend_status` tinyint(255) DEFAULT '0' COMMENT '是否同意申请：0 申请 1同意，2拒绝',
   `friend_name` varchar(255) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_friend
 -- ----------------------------
-INSERT INTO `tb_friend` VALUES ('1', '2017-12-26 13:43:09', '2017-12-26 13:43:09', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('2', '2017-12-26 13:48:03', '2017-12-26 13:48:03', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('3', '2017-12-26 13:50:13', '2017-12-26 13:50:13', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('4', '2017-12-26 13:54:02', '2017-12-26 13:54:02', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('5', '2017-12-26 13:54:36', '2017-12-26 13:54:36', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('6', '2017-12-26 13:55:46', '2017-12-26 13:55:46', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('7', '2017-12-26 13:59:25', '2017-12-26 13:59:25', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('8', '2017-12-26 14:01:09', '2017-12-26 14:01:09', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('9', '2017-12-26 14:02:22', '2017-12-26 14:02:22', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('10', '2017-12-26 14:03:19', '2017-12-26 14:03:19', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('11', '2017-12-26 14:05:31', '2017-12-26 14:05:31', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('12', '2017-12-26 14:06:50', '2017-12-26 14:06:50', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('13', '2017-12-26 14:07:49', '2017-12-26 14:07:49', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('14', '2017-12-26 14:11:27', '2017-12-26 14:11:27', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('15', '2017-12-26 14:12:18', '2017-12-26 14:12:18', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('16', '2017-12-26 14:13:37', '2017-12-26 14:13:37', '1', '2', null, null, null, null);
-INSERT INTO `tb_friend` VALUES ('17', '2017-12-26 14:17:50', '2017-12-26 14:17:50', '1', '2', null, null, null, null);
+INSERT INTO `tb_friend` VALUES ('18', null, null, '2', '3', null, '0', '0', null, '1');
+INSERT INTO `tb_friend` VALUES ('19', null, null, '2', '4', null, '0', '0', null, '2');
+INSERT INTO `tb_friend` VALUES ('20', null, null, '3', '2', null, '0', '0', null, null);
 
 -- ----------------------------
 -- Table structure for tb_friend_function
@@ -349,16 +324,15 @@ CREATE TABLE `tb_friend_function` (
   `friend_id` int(11) DEFAULT NULL,
   `function_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_friend_function
 -- ----------------------------
-INSERT INTO `tb_friend_function` VALUES ('1', null, null, '2', '1', null);
-INSERT INTO `tb_friend_function` VALUES ('2', '2017-12-26 00:00:00', '2017-12-26 00:00:00', '1', '16', '3');
-INSERT INTO `tb_friend_function` VALUES ('3', '2017-12-26 14:17:03', '2017-12-26 14:17:03', '1', '16', '3');
-INSERT INTO `tb_friend_function` VALUES ('4', '2017-12-26 14:17:50', '2017-12-26 14:17:50', '1', '17', '3');
-INSERT INTO `tb_friend_function` VALUES ('5', '2017-12-26 14:17:50', '2017-12-26 14:17:50', '1', '17', '4');
+INSERT INTO `tb_friend_function` VALUES ('1', '2018-01-12 15:57:54', '2018-01-12 15:57:54', '2', '3', '1');
+INSERT INTO `tb_friend_function` VALUES ('2', '2018-01-12 15:57:33', '2018-01-12 15:57:33', '2', '4', '3');
+INSERT INTO `tb_friend_function` VALUES ('6', null, null, '2', '3', '3');
+INSERT INTO `tb_friend_function` VALUES ('7', null, null, '3', null, null);
 
 -- ----------------------------
 -- Table structure for tb_function
@@ -371,11 +345,15 @@ CREATE TABLE `tb_function` (
   `authority` varchar(255) DEFAULT NULL COMMENT '权限',
   `describtion` varchar(255) DEFAULT NULL COMMENT '权限描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_function
 -- ----------------------------
+INSERT INTO `tb_function` VALUES ('1', '2018-01-15 09:22:58', '2018-01-15 09:22:58', 'group_picture_group_see', '好友组查看相册权限');
+INSERT INTO `tb_function` VALUES ('2', '2018-01-15 09:22:58', '2018-01-15 09:22:58', 'group_picture_group_comment', '好友组相册评论权限');
+INSERT INTO `tb_function` VALUES ('3', '2018-01-15 09:22:58', '2018-01-15 09:22:58', 'friend_picture_group_see', '好友查看相册权限');
+INSERT INTO `tb_function` VALUES ('4', '2018-01-15 09:22:58', '2018-01-15 09:22:58', 'friend_picture_group_comment', '好友评论相册权限');
 
 -- ----------------------------
 -- Table structure for tb_group
@@ -388,11 +366,15 @@ CREATE TABLE `tb_group` (
   `group_name` varchar(255) DEFAULT NULL,
   `current_account_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_group
 -- ----------------------------
+INSERT INTO `tb_group` VALUES ('1', null, null, '我的家人', '2');
+INSERT INTO `tb_group` VALUES ('2', null, null, '我的朋友', '2');
+INSERT INTO `tb_group` VALUES ('3', null, null, '陌生人', '2');
+INSERT INTO `tb_group` VALUES ('4', null, null, '人生', '3');
 
 -- ----------------------------
 -- Table structure for tb_group_chat
@@ -419,17 +401,20 @@ CREATE TABLE `tb_group_chat` (
 DROP TABLE IF EXISTS `tb_group_friend`;
 CREATE TABLE `tb_group_friend` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `current_account_id` int(11) DEFAULT NULL,
+  `current_account_id` int(11) DEFAULT NULL COMMENT '组的拥有人',
   `group_id` int(11) DEFAULT NULL COMMENT '对应表tb_group',
   `friend_id` int(11) DEFAULT NULL COMMENT '对应account_id',
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_group_friend
 -- ----------------------------
+INSERT INTO `tb_group_friend` VALUES ('1', '2', '1', '3', null, null);
+INSERT INTO `tb_group_friend` VALUES ('3', '3', '4', '2', null, null);
+INSERT INTO `tb_group_friend` VALUES ('4', '2', '2', '4', null, null);
 
 -- ----------------------------
 -- Table structure for tb_group_function
@@ -439,7 +424,7 @@ CREATE TABLE `tb_group_function` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `current_account_id` int(11) DEFAULT NULL,
+  `current_account_id` int(11) DEFAULT NULL COMMENT '组的拥有人',
   `group_id` int(11) DEFAULT NULL,
   `function_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -504,22 +489,4 @@ CREATE TABLE `tb_picture_group` (
 
 -- ----------------------------
 -- Records of tb_picture_group
--- ----------------------------
-
--- ----------------------------
--- Table structure for tb_picture_group_function
--- ----------------------------
-DROP TABLE IF EXISTS `tb_picture_group_function`;
-CREATE TABLE `tb_picture_group_function` (
-  `id` int(11) NOT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `current_account_id` int(11) DEFAULT NULL,
-  `function_id` int(11) DEFAULT NULL,
-  `picture_group_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of tb_picture_group_function
 -- ----------------------------
