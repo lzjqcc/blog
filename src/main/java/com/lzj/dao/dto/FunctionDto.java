@@ -6,7 +6,7 @@ public class FunctionDto {
     // 相册分组id
     private Integer pictureGroupId;
     //好友分组id
-    private Integer groupFriendId;
+    private Integer groupId;
     // 会议id
     private Integer conferenceId;
 
@@ -34,11 +34,11 @@ public class FunctionDto {
         this.pictureGroupId = pictureGroupId;
     }
 
-    public Integer getGroupFriendId() {
-        return groupFriendId;
+    public Integer getGroupId() {
+        return groupId;
     }
 
-    public void setGroupFriendId(Integer groupFriendId) {
-        this.groupFriendId = groupFriendId;
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

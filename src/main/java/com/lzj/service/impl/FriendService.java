@@ -8,7 +8,6 @@ import com.lzj.controller.FriendController;
 import com.lzj.dao.FriendDao;
 import com.lzj.dao.FunctionDao;
 import com.lzj.dao.GroupDao;
-import com.lzj.dao.GroupFriendDao;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
 import com.lzj.domain.*;
@@ -32,8 +31,7 @@ public class FriendService {
     private FriendDao friendDao;
     @Autowired
     private FunctionDao functionDao;
-    @Autowired
-    private GroupFriendDao groupFriendDao;
+
     @Autowired
     private GroupDao groupDao;
 
@@ -48,7 +46,7 @@ public class FriendService {
         if (!responseVO.getSuccess()) {
             return null;
         }
-        responseVO.setResult(friendDao.findGroupFriendsByDto(dto));
+        responseVO.setResult(friendDao.findFriends(dto));
         return responseVO;
     }
 
@@ -69,14 +67,6 @@ public class FriendService {
         s.setFriendId(dto.getCurrentAccountId());
         s.setCurrentAccountId(dto.getFriendId());
         friendDao.deleteFriend(s);
-        // 删除tb_group_friend 中两条对应的记录
-        GroupFriend groupFriend = new GroupFriend();
-        groupFriend.setCurrentAccountId(dto.getCurrentAccountId());
-        groupFriend.setFriendId(dto.getFriendId());
-        groupFriendDao.delete(groupFriend);
-        groupFriend.setCurrentAccountId(dto.getFriendId());
-        groupFriend.setFriendId(dto.getCurrentAccountId());
-        groupFriendDao.delete(groupFriend);
         responseVO.setSuccess(true);
         responseVO.setMessage("删除成功");
         return responseVO;
@@ -97,7 +87,6 @@ public class FriendService {
         }
         try {
             insertFriend(dto);
-            insertGroupFriend(dto);
             responseVO.setSuccess(true);
             responseVO.setMessage("好友申请成功");
             return responseVO;
@@ -153,7 +142,6 @@ public class FriendService {
             friendDto.setFriendId(dto.getCurrentAccountId());
             friendDao.updateFriend(friendDto);
             insertFriend(dto);
-            insertGroupFriend(dto);
         }
         //拒绝,拉黑,关注
         if (dto.getStatus().intValue() == FriendStatusEnum.REFUSE.code.intValue() ||
@@ -162,10 +150,10 @@ public class FriendService {
         }
         //更新好友在哪个分组
         if (dto.getStatus() == null && dto.getGroupId() != null) {
-            groupFriendDao.updateGroupFriend(dto);
+            friendDao.updateFriend(dto);
         }
         if (dto.getFriendName() != null) {
-            groupFriendDao.updateGroupFriend(dto);
+            friendDao.updateFriend(dto);
         }
         vo.setSuccess(true);
         vo.setMessage("操作成功");
@@ -184,11 +172,4 @@ public class FriendService {
         log.info("添加成功");
     }
 
-    private void insertGroupFriend(FriendDto dto) {
-        GroupFriend groupFriend = new GroupFriend();
-        groupFriend.setCurrentAccountId(dto.getCurrentAccountId());
-        groupFriend.setFriendId(dto.getFriendId());
-        groupFriend.setGroupId(dto.getGroupId());
-        groupFriendDao.insertGroupFriend(groupFriend);
-    }
 }

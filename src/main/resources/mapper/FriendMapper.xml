@@ -13,6 +13,7 @@
         <result column="is_defriend" property="isDefriend"/>
         <result column="friend_name" property="friendName"/>
         <result column="friend_status" property="status"/>
+        <result column="group_id" property="groupId"/>
     </resultMap>
     <sql id="friendField">
         create_time,
@@ -22,7 +23,8 @@
         special_attention,
         is_defriend,
         friend_name,
-        friend_status
+        friend_status,
+        group_id
     </sql>
     <sql id="base">
         f.id,
@@ -32,8 +34,9 @@
         f.friend_id,
         f.special_attention,
         f.is_defriend,
-        f.friend_name
-        f.friend_status
+        f.friend_name,
+        f.friend_status,
+        f.group_id
     </sql>
     <insert id="insertFriend" keyProperty="id" useGeneratedKeys="true">
         INSERT into tb_friend (<include refid="friendField"/>)
@@ -45,7 +48,7 @@
         #{friendId},
         #{specialAttention},
         #{isDefriend},
-        #{friendName},#{status})
+        #{friendName},#{status},#{groupId})
     </insert>
     <delete id="deleteFriend">
         DELETE from tb_friend WHERE friend_id =#{friendId} and current_account_id =#{currentAccountId}
@@ -60,31 +63,30 @@
                 status=#{status},
             </if>
             <if test="specialAttention != null">
-                special_attention=#{special_attention}
+                special_attention=#{special_attention},
+            </if>
+            <if test="groupId != null">
+                group_id = #{groupId}
             </if>
         </set>
         WHERE current_account_id =#{currentAccountId} and friend_id=#{friendId}
     </update>
-    <select id="findGroupFriendsByDto" resultMap="friendMap">
-        select
-        <include refid="base"/>
-        from tb_friend f left JOIN tb_group_friend g on f.current_account_id = g.current_account_id
-        WHERE f.current_account_id =#{currentAccountId}  and g.group_id = #{groupId}
-    </select>
     <select id="findFriends" resultMap="friendMap">
         SELECT
         <include refid="friendField"/>, id from tb_friend
         where
-        1=1 AND
+        1=1
         <if test="friendId != null">
-            friend_id = #{friendId} and
+            and friend_id = #{friendId}
         </if>
         <if test="currentAccountId != null">
-            current_account_id = #{currentAccountId} AND
+            AND current_account_id = #{currentAccountId}
         </if>
         <if test="status != null">
-            friend_status = #{status}
+          and  friend_status = #{status}
         </if>
-
+        <if test="groupId != null">
+            and group_id = #{groupId}
+        </if>
     </select>
 </mapper>

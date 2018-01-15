@@ -15,13 +15,5 @@ public interface FriendDao extends BaseDao{
 
     void deleteFriend(FriendDto friendDto);
 
-
-    /**
-     * 查询分组好友
-     * @param friendDto
-     * @return
-     */
-    List<Friend> findGroupFriendsByDto(FriendDto friendDto);
-
     List<Friend> findFriends(FriendDto friendDto);
 }

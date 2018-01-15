@@ -1,7 +1,6 @@
 package com.lzj.service.impl;
 
 import com.lzj.dao.FriendDao;
-import com.lzj.dao.GroupFriendDao;
 import com.lzj.dao.PictureGroupDao;
 import com.lzj.dao.dto.FunctionDto;
 import com.lzj.domain.*;
@@ -20,14 +19,12 @@ public class PictureGroupService implements FunctionService{
     @Autowired
     PictureGroupDao pictureGroupDao;
     @Autowired
-    GroupFriendDao groupFriendDao;
-    @Autowired
     FriendDao friendDao;
     /**
      *
      * @param friendId
      * @param page
-     * @param currentAccountId
+     * @param
      * @return
      */
     public List<PictureGroup> findFriendPictureGroup(Integer friendId, Page page, Account currentAccount) {

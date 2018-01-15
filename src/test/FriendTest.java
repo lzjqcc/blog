@@ -1,6 +1,7 @@
 import com.google.common.collect.Lists;
 import com.lzj.Application;
 import com.lzj.dao.FriendDao;
+import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Friend;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,5 +25,15 @@ public class FriendTest {
         friend.setFriendId(2);
         friend.setFunctionList(Lists.newArrayList(3, 4));
         friendDao.insertFriend(friend);
+    }
+    @Test
+    public void testFindGroupFriend() {
+        FriendDto dto = new FriendDto();
+        dto.setCurrentAccountId(2);
+        dto.setGroupId(1);
+
+        List<Friend> list = friendDao.findFriends(dto);
+        System.out.println(list);
+
     }
 }

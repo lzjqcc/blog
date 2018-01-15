@@ -21,7 +21,7 @@ public class Friend extends BaseEntity implements Serializable {
     private String friendName;
     @NotNull
     private List<Integer> functionList = null;
-
+    private Integer groupId;
     @EnableRelationTable(relationTableName = "tb_friend_function",value = "friend_id")
     @Override
     public Integer getId() {
@@ -46,6 +46,14 @@ public class Friend extends BaseEntity implements Serializable {
 
     public Integer getFriendId() {
         return friendId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     public void setFriendId(Integer friendId) {
