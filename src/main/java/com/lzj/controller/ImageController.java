@@ -1,5 +1,6 @@
 package com.lzj.controller;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.constant.ImageTypeEnum;
 import com.lzj.domain.Account;
 import com.lzj.domain.Page;
@@ -58,6 +59,11 @@ public class ImageController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/pictureGroup")
+    public ResponseVO gropFile() {
+        return ComentUtils.buildResponseVO(true, "可以访问", null);
     }
     /**
      * /picture/pictureDir/userId/pictureGroupId/pictureName

@@ -16,6 +16,13 @@
       authority,
       describtion
     </sql>
+    <sql id="aliasBase">
+      f.id ,
+      f.create_time,
+      f.update_time,
+      f.authority,
+      f.describtion
+    </sql>
     <insert id="insertFunctions">
         INSERT into tb_function
         (<include refid="base"></include>,id)
@@ -31,21 +38,20 @@
       (#{createTime},#{updateTime},#{authority},#{describtion})
     </insert>
     <select id="findFriendFunction" resultMap="functionMap">
-        SELECT id,
-        <include refid="base"/>
+        SELECT
+        <include refid="aliasBase"></include>
         FROM tb_function f left join tb_friend_function ff on f.id = ff.function_id
         where ff.current_account_id = #{friendId} and ff.friend_id = #{currentAccountId}
-        WHERE
     </select>
     <select id="findGroupFunction" resultMap="functionMap">
-        SELECT id,
-        <include refid="base"/>
+        SELECT
+        <include refid="aliasBase"></include>
         from tb_function f left join tb_group_function gf on f.id= gf.function_id left tb_group_friend tgf on tgf.group_id = gf.group_id
         WHERE gf.current_account_id = #{friendId} and tgf.friend_id = #{curentAccountId}
     </select>
     <select id="findConferenceFunction" resultMap="functionMap">
         SELECT id,
-        <include refid="base"/>
+        <include refid="aliasBase"></include>
         from tb_function f left join tb_conference_function cf on f.id = cf.function_id
         WHERE cf.conference_id = #{conferenceId} and cf.sponsor_id = #{sponsorId} and cf.member_id = {memberId}
     </select>

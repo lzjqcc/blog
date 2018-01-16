@@ -30,4 +30,13 @@ public class Function extends BaseEntity implements Serializable {
     public void setAuthority(String authority) {
         this.authority = authority;
     }
+
+    @Override
+    public String toString() {
+        return "Function{" +
+                "describtion='" + describtion + '\'' +
+                ", authority='" + authority + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
