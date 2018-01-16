@@ -9,13 +9,16 @@ import com.lzj.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import javax.servlet.ServletException;
@@ -35,6 +38,24 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
+            @Override
+            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                ResponseVO responseVO = ComentUtils.buildResponseVO(false, "没有权限访问", null);
+                PrintWriter writer = null;
+                try { response.setContentType("application/json");
+                   writer = response.getWriter();
+                   writer.write(JsonUtils.toJson(responseVO));
+                   writer.flush();
+                }finally {
+                    if (writer != null) {
+
+                    }
+                }
+
+
+            }
+        });
         http.cors().disable();
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/friend/","/friend/*","/friend/**").authenticated();
@@ -42,7 +63,8 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
         http.authenticationProvider(new CustomProvider());
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/pictureGroup/*","/pictureGroup/**").
                 // 使用SpringEl解析
-                access("hasAuthority('group_picture_group_see') or hasAuthority('friend_picture_group_see')");
+                access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager())
+        ;
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override
@@ -91,9 +113,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
                     writer.write(JsonUtils.toJson(responseVO));
                     writer.flush();
                 }finally {
-                    if (writer != null) {
-                        ComentUtils.closeStream(writer);
-                    }
+                    ComentUtils.closeStream(writer);
                 }
             }
         });
@@ -119,7 +139,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
         CustomProvider provider = new CustomProvider();
         provider.setUserDetailsService(customUserDetailServce());
         auth.authenticationProvider(provider);
+
     }
 
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        super.configure(web);
+    }
 }

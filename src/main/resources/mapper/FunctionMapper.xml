@@ -46,8 +46,9 @@
     <select id="findGroupFunction" resultMap="functionMap">
         SELECT
         <include refid="aliasBase"></include>
-        from tb_function f left join tb_group_function gf on f.id= gf.function_id left tb_group_friend tgf on tgf.group_id = gf.group_id
-        WHERE gf.current_account_id = #{friendId} and tgf.friend_id = #{curentAccountId}
+         from tb_function f left join tb_group_function gf on f.id= gf.function_id
+        left join tb_friend tf on tf.group_id = gf.group_id
+        WHERE gf.current_account_id = #{friendId} and tf.friend_id = #{currentAccountId}
     </select>
     <select id="findConferenceFunction" resultMap="functionMap">
         SELECT id,

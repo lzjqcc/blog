@@ -19,11 +19,11 @@ public class FunctionTest {
     FunctionDao functionDao;
     @Test
     public void testFunction(){
-      /*  List<Function> groupFunctions = functionDao.findGroupFunction(accountToken.getAccount().getId(),friendId);
-        List<Function> friendFunctions = functionDao.findFriendFunction(accountToken.getAccount().getId(),friendId);
+        List<Function> groupFunctions = functionDao.findGroupFunction(2,3);
+        List<Function> friendFunctions = functionDao.findFriendFunction(2,3);
         List<Function> list = Lists.newArrayList();
         list.addAll(groupFunctions);
-        list.addAll(friendFunctions);*/
+        list.addAll(friendFunctions);
     }
 
 }
