@@ -5,6 +5,7 @@ import com.lzj.dao.dto.GroupDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Group;
 import com.lzj.service.impl.GroupService;
+import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,13 +25,13 @@ public class GroupController {
     /**
      * 添加分组
      * @param dto
-     * @param session
+     * @param
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/addGroup")
-    public ResponseVO addGroup(@RequestBody GroupDto dto, HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public ResponseVO addGroup(@RequestBody GroupDto dto) {
+        Account account = ComentUtils.getCurrentAccount();
         dto.setCurrentAccountId(account.getId());
         return groupService.insertGroup(dto);
     }
@@ -48,19 +49,19 @@ public class GroupController {
 
     /**
      * 获取好友分组
-     * @param session
+     * @param
      * @return
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "findGroups")
-    public ResponseVO<List<Group>> findGroups(HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public ResponseVO<List<Group>> findGroups() {
+        Account account = ComentUtils.getCurrentAccount();
         GroupDto dto = new GroupDto();
         dto.setCurrentAccountId(account.getId());
         return groupService.findGroups(dto);
     }
     @ResponseBody
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET, value = "deleteGroup")
     public ResponseVO deleteGroup(@RequestBody GroupDto dto) {
         return groupService.deleteGroup(dto);
     }

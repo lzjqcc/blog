@@ -66,7 +66,7 @@ public class ArticleController {
      * 需要登录
      * 文章保存成功后跳转到显示文章那一页
      *
-     * @param session
+     * @param
      * @param content
      * @param title
      * @param assortment
@@ -76,7 +76,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "insertArticle", method = RequestMethod.POST)
     @ResponseBody
-    public void insertArticle(HttpSession session,
+    public void insertArticle(
                               @RequestParam(name = "content") String content,
                               @RequestParam(name = "title") String title,
                               @RequestParam(name = "assortment", required = false) String assortment,
@@ -87,16 +87,17 @@ public class ArticleController {
         if (!isAccess){
             return;
         }
+        Account account = ComentUtils.getCurrentAccount();
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
         article.setTop(top);
         article.setToTop(toTop);
-        article.setCurrentAccountId(((Account) session.getAttribute("user")).getId());
+        article.setCurrentAccountId(account.getId());
         AccountDto dto = new AccountDto();
-        BeanUtils.copyProperties(session.getAttribute("user"),dto);
-        articleService.insertArticle(article, dto, assortment, picMap.get(((Account) session.getAttribute("user")).getId()));
-        picMap.remove(((Account) session.getAttribute("user")).getId());
+        BeanUtils.copyProperties(account,dto);
+        articleService.insertArticle(article, dto, assortment, picMap.get(account.getId()));
+        picMap.remove(account.getId());
        // return "forward:/articles/articlePage";
     }
     /**不需要登录
@@ -180,13 +181,13 @@ public class ArticleController {
     }
     @RequestMapping(value = "/uploadArticlePic",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> uploadArticlePic(@RequestParam(value = "image", required = true) MultipartFile uploadFile, HttpSession session) throws IOException {
+    public Map<String,String> uploadArticlePic(@RequestParam(value = "image", required = true) MultipartFile uploadFile) throws IOException {
             BufferedInputStream inputStream = null;
             File file = null;
             try {
                 inputStream = new BufferedInputStream(uploadFile.getInputStream());
 
-                Account user = (Account) session.getAttribute("user");
+                Account user = ComentUtils.getCurrentAccount();
                 ComentUtils.sureLogin(user);
                 String articlePic = ComentUtils.ARTICLE_PIC + File.separator+ user.getId().toString();
                 File parent=new File(articlePic);
@@ -222,8 +223,8 @@ public class ArticleController {
      * 不保存文章,转到文章管理页面
      */
     @RequestMapping(value = "abandonArticle")
-    public String abandonArticle(HttpSession session){
-        Account user= (Account) session.getAttribute("user");
+    public String abandonArticle(){
+        Account user= ComentUtils.getCurrentAccount();
         List<String> list=picMap.get(user.getId());
         if (list!=null && list.size()>0){
             for (String picURL:list){

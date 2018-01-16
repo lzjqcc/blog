@@ -59,12 +59,22 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
         http.cors().disable();
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/friend/","/friend/*","/friend/**").authenticated();
+        http.authorizeRequests().antMatchers("/articles/insertArticles",
+                "/articles/uploadArticlePic",
+                "/articles/abandonArticle",
+                "/articles/deleteArticle",
+                "/comment/insertComment",
+                "/uploadPicture",
+                "/user/getUserDetail",
+                "/user/updateUser",
+                "/user/uploadHeadPortrait",
+                "/group","/group/*").authenticated();
         http.authorizeRequests().antMatchers("/loginBlog").permitAll();
         http.authenticationProvider(new CustomProvider());
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/pictureGroup/*","/pictureGroup/**").
-                // 使用SpringEl解析
-                access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager())
-        ;
+                // 内部使用SpringEl解析
+                access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager());
+
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override

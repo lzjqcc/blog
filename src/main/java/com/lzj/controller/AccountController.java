@@ -31,8 +31,8 @@ public class AccountController {
     AccountService accountService;
     @RequestMapping(value = "getUserDetail", method = RequestMethod.GET)
     @ResponseBody
-    public AccountDto getUser(HttpSession session) {
-        Account account = (Account) session.getAttribute("user");
+    public AccountDto getUser() {
+        Account account = ComentUtils.getCurrentAccount();
         AccountDto dto = new AccountDto();
         BeanUtils.copyProperties(account,dto);
         dto.setHeadIconURL(ComentUtils.getImageURL(account.getHeadIcon()));
@@ -41,8 +41,8 @@ public class AccountController {
 
     @RequestMapping(value = "updateUser", method = RequestMethod.POST)
     @ResponseBody
-    public void updateUser(@RequestBody AccountDto dto, HttpSession session) {
-        Account user = (Account) session.getAttribute("user");
+    public void updateUser(@RequestBody AccountDto dto) {
+        Account user = ComentUtils.getCurrentAccount();
         BeanUtils.copyProperties(user, dto, ReflectUtils.findNullFieldName(dto));
         dto.setId(user.getId());
         accountService.updateUser(dto);
@@ -51,18 +51,18 @@ public class AccountController {
      * 头像上传
      *
      * @param uploadFile
-     * @param session
+     * @param
      * @throws IOException
      */
     @RequestMapping(value = "/uploadHeadPortrait", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,String> uploadHeadPortrait(@RequestParam(value = "headPortrait", required = true) MultipartFile uploadFile, HttpSession session) throws IOException {
+    public Map<String,String> uploadHeadPortrait(@RequestParam(value = "headPortrait", required = true) MultipartFile uploadFile) throws IOException {
         if (uploadFile != null) {
             BufferedInputStream inputStream = null;
             BufferedOutputStream outputStream = null;
             try {
                 inputStream = new BufferedInputStream(uploadFile.getInputStream());
-                Account user = (Account) session.getAttribute("user");
+                Account user = ComentUtils.getCurrentAccount();
                 setAccountHeadIcon(user,uploadFile.getOriginalFilename());
                 File file = new File(user.getHeadIcon());
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));

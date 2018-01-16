@@ -6,11 +6,13 @@ import com.lzj.dao.FunctionDao;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Function;
+import com.lzj.security.AccountToken;
 import com.lzj.service.AccountService;
 import com.lzj.utils.ComentUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +28,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public Boolean insertUser(AccountDto dto, HttpSession session) {
+    public Boolean insertUser(AccountDto dto) {
 
         String icon=ComentUtils.ICON_DIR.substring(ComentUtils.ICON_DIR.indexOf("static"));
         dto.setHeadIcon(icon+"/default/default.jpg");
@@ -36,9 +38,8 @@ public class AccountServiceImpl implements AccountService {
         if (account.getId() == null) {
             return false;
         }
-        if (session!=null){
-            session.setAttribute("user",dto);
-        }
+        AccountToken token = new AccountToken(dto.getUserName(),dto.getPassword(), null);
+        SecurityContextHolder.getContext().setAuthentication(token);
         return true;
     }
     @Override

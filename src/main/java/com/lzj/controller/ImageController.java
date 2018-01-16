@@ -78,12 +78,11 @@ public class ImageController {
     @RequestMapping(value = "/uploadPicture",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,String> uploadArticlePic(@RequestParam(value = "image") MultipartFile uploadFile,
-                                               @RequestParam(value = "groupId")Integer groupId,
-                                               HttpSession session) throws IOException {
+                                               @RequestParam(value = "groupId")Integer groupId) throws IOException {
         BufferedInputStream inputStream = null;
         File file =null;
         try {
-            Account account = (Account) session.getAttribute("user");
+            Account account = ComentUtils.getCurrentAccount();
             inputStream = new BufferedInputStream(uploadFile.getInputStream());
             File dir = new File(getPictureDir(account.getId()+"", groupId+""));
             if (!dir.exists()) {
@@ -108,8 +107,7 @@ public class ImageController {
     @RequestMapping(method = RequestMethod.POST,value = "/pictureGroup")
     @ResponseBody
     public Map<String, Object> getPictureGroup(@RequestParam("accountId")Integer accoutId,
-                                               @RequestBody Page page,
-                                               HttpSession session) {
+                                               @RequestBody Page page) {
         return null;
     }
     private String getPictureDir(String userId,String groupId) {

@@ -10,7 +10,7 @@ public interface AccountService {
      * 用户注册用户名，邮箱要唯一
      * @return 1表示用户名存在，2表示邮箱已存在，3表示注册成功
      */
-    Boolean insertUser(AccountDto dto, HttpSession session);
+    Boolean insertUser(AccountDto dto);
     void updateUser(AccountDto user );
 
     Account findByDto(AccountDto dto);

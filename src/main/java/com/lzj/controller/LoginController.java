@@ -45,10 +45,11 @@ public class LoginController {
     WebScoketService webScoketService;
     /**
      * 登录成功后发送未读信息
-
+        备注：登录操作已经整合到SpringSecurity中
      * @param session
      * @return
      */
+    @Deprecated
     @RequestMapping(value = "/loginAct",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> loginAct(@RequestBody AccountDto dto,
@@ -88,13 +89,13 @@ public class LoginController {
      */
     @RequestMapping("/registerAct")
     @ResponseBody
-    public Map<String,String> registerAct(@RequestBody AccountDto user, HttpSession session){
+    public Map<String,String> registerAct(@RequestBody AccountDto user){
         Map<String, String> result = new HashMap<>();
         if (user.getEmail()!=null && !user.getEmail().contains("@") && user.getEmail().lastIndexOf(".com")==-1){
             result.put("result", "邮箱格式错误");
             return result;
         }
-        if (!accountService.insertUser(user,session)){
+        if (!accountService.insertUser(user)){
             result.put("result", "用户名存在");
             return result;
         }
