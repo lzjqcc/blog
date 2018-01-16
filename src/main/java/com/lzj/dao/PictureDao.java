@@ -7,4 +7,5 @@ import javax.validation.constraints.Max;
 import java.util.List;
 @Repository
 public interface PictureDao {
+
 }

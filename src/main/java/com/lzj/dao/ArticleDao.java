@@ -4,6 +4,7 @@ import com.lzj.annotation.EnableRelationTable;
 import com.lzj.domain.Article;
 
 import com.lzj.domain.LimitCondition;
+import com.lzj.domain.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ public interface ArticleDao {
     @EnableRelationTable(relationTableName = "tb_friend_function",value = {"current_account_id","friend_id","function_id"})
     void insertArticle(Article article);
     Article findById(Integer id);
-    List<Article> findByUserId(@Param("userId") Integer userId,@Param("condition") LimitCondition condition);
+    List<Article> findByUserId(@Param("userId") Integer userId, @Param("condition") LimitCondition condition, Page page);
     void deleteById(Integer id);
     void updateArticle(Article article);
     void updateByMap(@Param("map") Map map);
@@ -37,6 +38,6 @@ public interface ArticleDao {
      * @param userId
      * @return
      */
-    List<Article>   findHistoryMax(@Param("userId")Integer userId,@Param("condition")LimitCondition condition);
+    List<Article>   findHistoryMax(@Param("userId")Integer userId,@Param("condition")LimitCondition condition, Page page);
 
 }
