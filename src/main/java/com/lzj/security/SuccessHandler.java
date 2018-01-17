@@ -35,9 +35,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
                 }
             }
         } finally {
-            if (writer != null) {
-                ComentUtils.closeStream(writer);
-            }
+           ComentUtils.closeStream(writer);
         }
     }
 }
