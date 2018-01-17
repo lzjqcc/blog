@@ -45,7 +45,6 @@ public class UploadIconFilter implements Filter {
 
             HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-            System.out.println(servletRequest.getParameter("groupId")+"***************"+request.getQueryString());
             filterChain.doFilter(servletRequest, response);
         } catch (MultipartException e) {
             HttpServletResponse response= (HttpServletResponse) servletResponse;

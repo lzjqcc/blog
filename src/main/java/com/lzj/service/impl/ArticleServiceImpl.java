@@ -4,10 +4,7 @@ import com.lzj.VO.ArticleMongo;
 import com.lzj.dao.ArticleDao;
 import com.lzj.dao.AssortmentDao;
 import com.lzj.dao.dto.AccountDto;
-import com.lzj.domain.Account;
-import com.lzj.domain.Article;
-import com.lzj.domain.Assortment;
-import com.lzj.domain.LimitCondition;
+import com.lzj.domain.*;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import com.lzj.service.ArticleService;
@@ -40,6 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
     String mongoDB;
     public static final String ARTICLE_DIR = "./src/main/resources/article/username/assortment/title";
     @Transactional
+    @Override
     public void insertArticle(Article article, AccountDto user, String assortment, List<String> picURLs) {
         if (assortment==null){
             throw new BusinessException(232,"文章分类不能为空");
@@ -93,8 +91,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAllByUserId(Integer userId, LimitCondition condition) {
-        List<Article> list = articleDao.findByUserId(userId, condition);
+    public List<Article> findAllByUserId(Integer userId, LimitCondition condition, Page page) {
+        List<Article> list = articleDao.findByUserId(userId, condition, page);
         return list;
     }
     @Override
@@ -111,8 +109,8 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDao.findByUserIdAndAssortment(userId, assortmentEntity.getId(), condition);
     }
     @Override
-    public List<Article> findHistoryMax(Integer userId, LimitCondition condition) {
-        return articleDao.findHistoryMax(userId, condition);
+    public List<Article> findHistoryMax(Integer userId, LimitCondition condition, Page page) {
+        return articleDao.findHistoryMax(userId, condition, page);
     }
     @Override
     public void deleteArticle(Integer id) {
@@ -131,8 +129,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
     @Override
-    public Map<String, List<Article>> findDateNum(Integer userId) {
-        List<Article> list = articleDao.findByUserId(userId, null);
+    public Map<String, List<Article>> findDateNum(Integer userId, Page page) {
+        List<Article> list = articleDao.findByUserId(userId, null, page);
         System.out.println(list.size());
         Map<String, List<Article>> map = new LinkedHashMap<>();
         for (Article article : list) {

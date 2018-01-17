@@ -28,6 +28,7 @@ import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -71,9 +72,13 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
                     flag = true;
                     break;
             }
-            if (!flag) {
-                throw new AccessDeniedException("没有权限访问");
-            }
+
+        }
+        if (!flag && authentication instanceof AnonymousAuthenticationToken) {
+            throw new InsufficientAuthenticationException("匿名用户无法访问");
+        }
+        if (!flag && authentication instanceof AccountToken) {
+            throw new AccessDeniedException("没有权限访问");
         }
 
     }

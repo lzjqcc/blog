@@ -52,7 +52,7 @@ public class TestArticle {
     ArticleService articleService;
     @Test
     public void testFindDateNum(){
-        Map<String,List<Article>> map=articleService.findDateNum(1);
+        Map<String,List<Article>> map=articleService.findDateNum(1, null);
         Set<Map.Entry<String,List<Article>>> set=map.entrySet();
         for (Map.Entry<String,List<Article>> entry:set){
             System.out.println(entry.getKey()+":"+entry.getValue().size());

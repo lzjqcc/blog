@@ -6,6 +6,7 @@ import com.lzj.domain.EmailObject;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import com.lzj.security.AccountToken;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -114,6 +115,9 @@ public class ComentUtils {
         }
     }
     public static String getImageURL(String local) {
+        if (StringUtils.isEmpty(local)) {
+            return "";
+        }
         return ComentUtils.HOST+local.split("static")[1];
     }
     /**
