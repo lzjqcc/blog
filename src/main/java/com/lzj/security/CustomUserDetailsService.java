@@ -10,20 +10,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private AccountService accountService;
-    public Account findAccount(String username) {
-        AccountDto dto = new AccountDto();
-        dto.setEmail(username);
-        return  accountService.findByDto(dto);
+        @Autowired
+        private AccountService accountService;
+        public Account findAccount(String username) {
+            AccountDto dto = new AccountDto();
+            dto.setEmail(username);
+            return  accountService.findByDto(dto);
 
-    }
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = findAccount(username);
-        AccountDetails accountDetails = new AccountDetails();
-        accountDetails.setAccount(account);
-        //AccountDetails accountDetails = null;
-        return accountDetails;
-    }
+        }
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            Account account = findAccount(username);
+            AccountDetails accountDetails = new AccountDetails();
+            accountDetails.setAccount(account);
+            //AccountDetails accountDetails = null;
+            return accountDetails;
+        }
 }

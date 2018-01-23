@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.ConferenceDao" >
+    <resultMap id="conferenceMap" type="com.lzj.domain.Conference">
+        <id column="id" property="id"></id>
+        <result column="begin_time" property="beginTime"></result>
+        <result column="end_time" property="endTime"/>
+        <result column="sponsor_id" property="sponsorId"></result>
+        <result column="theme" property="theme"/>
+        <result column="place" property="place"/>
+        <result column="details" property="details"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_email" property="email"/>
+    </resultMap>
+    <sql id="base">
+        begin_time,
+        sponsor_id,
+        theme,
+        place,
+        create_time,
+        update_time,
+        details,
+        end_time,
+        email
+    </sql>
+    <insert id="insertConference" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_conference (
+        <include refid="base"/>
+        ) VALUE
+        (#{beginTime},#{sponsorId},#{theme},#{place},#{createTime},#{updateTime},#{details},#{endTime},#{email})
+
+    </insert>
+</mapper>

@@ -32,4 +32,7 @@ public interface AccountDao {
     List<Function> findFriendFunction(Integer accountId, Integer friendId);
 
     List<Account> findAll(Page page);
+
+    List<Account> findAccountsByIds(@Param("param") List<Integer> ids);
+
 }

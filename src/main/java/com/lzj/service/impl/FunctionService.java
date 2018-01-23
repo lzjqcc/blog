@@ -16,7 +16,7 @@ public class FunctionService {
     private FunctionDao functionDao;
     @PostConstruct
     public void inject() {
-        List<Function> functions = functionDao.findAll();
+ /*       List<Function> functions = functionDao.findAll();
         if (functions.size() != 0) {
             return;
         }
@@ -25,6 +25,6 @@ public class FunctionService {
         list.add(new Function(AuthorityEnum.GROUP_PICTURE_GROUP_COMMENT.id, AuthorityEnum.GROUP_PICTURE_GROUP_COMMENT.describe, AuthorityEnum.GROUP_PICTURE_GROUP_COMMENT.authority));
         list.add(new Function(AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.id, AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.describe, AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.authority));
         list.add(new Function(AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.id, AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.describe, AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.authority));
-       functionDao.insertFunctions(list);
+       functionDao.insertFunctions(list);*/
     }
 }

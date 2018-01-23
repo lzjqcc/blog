@@ -1,9 +1,9 @@
 package com.lzj.domain;
 
 public  class EmailObject{
-    String userName;//邮箱用户名
-    String password;//用户密码
-    String host;//邮箱地址
+    String userName = "lzjqcc@163.com";//邮箱用户名
+    String password = "LZJ941005";//用户密码
+    String host = "smtp.163.com";//邮箱地址
     String sendTo;//发给谁
     String defaultEncoding;//默认编码
     String content;//内容

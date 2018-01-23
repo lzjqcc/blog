@@ -1,5 +1,6 @@
 package com.lzj.aop;
 
+import com.lzj.constant.TYPEEnum;
 import com.lzj.domain.BaseEntity;
 import com.lzj.exception.SystemException;
 import org.aopalliance.intercept.MethodInvocation;
@@ -9,6 +10,8 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.hamcrest.beans.PropertyUtil;
 import org.mybatis.spring.transaction.SpringManagedTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import java.util.*;
 @Aspect
 @Component
 public class InsertAop {
+    private final Logger logger = LoggerFactory.getLogger(InsertAop.class);
     private static final String TABLE_NAME = "tableName";
     private static final String FIELD_VALUE = "fieldName";
     private static final String KEY_ROW = "keyRow";
@@ -65,8 +69,10 @@ public class InsertAop {
         try {
             connection = transactional.getConnection();
             SQL = buildSQL(entity);
+            logger.info("插入关联表sql --->{}",SQL);
             statement = connection.prepareStatement(SQL);
             statement.executeUpdate();
+            logger.info("插入关联表成功sql --->{}",SQL);
         } catch (IllegalAccessException e) {
             rollback(transactional);
             throw new SystemException(321, "插入关系表失败:SQL-->"+SQL,e );
@@ -132,7 +138,13 @@ public class InsertAop {
                 continue;
             }
             if (!relationTable.keyRow()) {
-                fieldMap.put(relationTable.value()[0], field.get(entity));
+                if (relationTable.type().name().equals(TYPEEnum.INTEGER.name())) {
+                    fieldMap.put(relationTable.value()[0], field.get(entity));
+                }
+                if (relationTable.type().name().equals(TYPEEnum.STRING.name())) {
+                    fieldMap.put(relationTable.value()[0], "'"+field.get(entity).toString()+"'");
+                }
+
             }else {
                 keyRowMap.put(relationTable.value()[0], (List) field.get(entity));
             }
@@ -144,6 +156,7 @@ public class InsertAop {
         return tableInfo;
     }
     private  String buildSQL(BaseEntity entity) throws IllegalAccessException, IntrospectionException {
+        logger.info("开始构建sql -->{}",entity);
         Map<String, Object> map = parseFieldAnnotation(entity);
         Map fieldMap = (Map) map.get(FIELD_VALUE);
         StringBuilder builder = new StringBuilder();

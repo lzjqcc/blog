@@ -47,10 +47,6 @@
         <include refid="userColumns"><property name="alias" value="a"/></include>
         FROM tb_article a
         WHERE a.current_account_id=#{currentAccountId}
-
-        <if test="condition!=null">
-            and a.id BETWEEN #{condition.first} and #{condition.second}
-        </if>
     </select>
     <delete id="deleteById" flushCache="true">
         DELETE FROM tb_article WHERE id=#{id}
@@ -71,17 +67,10 @@
         <include refid="userColumns"><property name="alias" value="a"/></include>
         FROM tb_article a
         WHERE a.current_account_id=#{currentAccountId} and a.assortment_id=#{assortmentId}
-        <if test="condition!=null">
-            and a.id BETWEEN #{condition.first} and #{condition.second}
-        </if>
 
     </select>
     <select id="findHistoryMax" resultMap="articleResultMap" useCache="true">
         SELECT id,title,visit_times from tb_article WHERE
-        <if test="condition!=null">
-            id BETWEEN #{condition.first} and #{condition.second} and
-        </if>
-
         current_account_id=#{currentAccountId} ORDER BY visit_times DESC
     </select>
 </mapper>

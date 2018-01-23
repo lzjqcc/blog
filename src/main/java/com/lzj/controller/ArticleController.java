@@ -145,8 +145,12 @@ public class ArticleController {
     @ResponseBody
     public List<Article> specificChildrend(@RequestParam("userId")Integer userId,
                                                    @RequestParam("assortment")String assortment,
-                                           @RequestParam("first") Integer first,@RequestParam("second")Integer second){
-        return articleService.specificChildren(userId, assortment,new LimitCondition(first,second));
+                                           @RequestParam("currentPage") Integer currentPage,
+                                           @RequestParam("pageSize")Integer pageSize){
+        Page page = new Page();
+        page.setCurrentPage(currentPage);
+        page.setPageSize(pageSize);
+        return articleService.specificChildren(userId, assortment,page);
     }
 
     /**不需要登录
@@ -156,8 +160,13 @@ public class ArticleController {
      */
     @RequestMapping(value = "findHistoryMax",method = RequestMethod.GET)
     @ResponseBody
-    public List<Article> findHistoryMax(@RequestParam("userId") Integer userId,@RequestParam("first") Integer first,@RequestParam("second")Integer second){
-        return articleService.findHistoryMax(userId,new LimitCondition(first,second), null);
+    public List<Article> findHistoryMax(@RequestParam("userId") Integer userId,
+                                        @RequestParam("currentPage") Integer currentPage,
+                                        @RequestParam("pageSize")Integer pageSize){
+        Page page = new Page();
+        page.setCurrentPage(currentPage);
+        page.setPageSize(pageSize);
+        return articleService.findHistoryMax(userId, page);
     }
 
     /**不需要登录
@@ -165,8 +174,13 @@ public class ArticleController {
      */
     @RequestMapping(value = "findDateNum")
     @ResponseBody
-    public Map<String, List<Article>> findDateNum(@RequestParam("userId")Integer userId) {
-        return articleService.findDateNum(userId, null);
+    public Map<String, List<Article>> findDateNum(@RequestParam("userId")Integer userId,
+                                                  @RequestParam("currentPage") Integer currentPage,
+                                                  @RequestParam("pageSize")Integer pageSize) {
+        Page page = new Page();
+        page.setCurrentPage(currentPage);
+        page.setPageSize(pageSize);
+        return articleService.findDateNum(userId, page);
     }
     /**
      * 不需要登录
@@ -175,8 +189,13 @@ public class ArticleController {
      */
     @RequestMapping(value = "findSingleDateNum")
     @ResponseBody
-    public List<Article> findSingleDateNum(@RequestParam("userId")Integer userId,@RequestParam("singleDate")String singleDate){
-        Map<String,List<Article>> listMap=articleService.findDateNum(userId,null);
+    public List<Article> findSingleDateNum(@RequestParam("userId")Integer userId,@RequestParam("singleDate")String singleDate,
+                                           @RequestParam("currentPage") Integer currentPage,
+                                           @RequestParam("pageSize")Integer pageSize){
+        Page page = new Page();
+        page.setCurrentPage(currentPage);
+        page.setPageSize(pageSize);
+        Map<String,List<Article>> listMap=articleService.findDateNum(userId,page);
         return listMap.get(singleDate);
     }
     @RequestMapping(value = "/uploadArticlePic",method = RequestMethod.POST)

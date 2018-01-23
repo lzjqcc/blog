@@ -12,11 +12,11 @@ public interface ArticleService {
     
     void insertArticle(Article article, AccountDto user, String assortment, List<String> picURL);
     Article findById(Integer id);
-    List<Article> findAllByUserId(Integer userId, LimitCondition condition, Page page);
+    List<Article> findAllByUserId(Integer userId,Page page);
     void updateByMap(Map map);
     List<Assortment> findAssortmentByUserId(Integer userId);
-    List<Article> specificChildren(Integer userId,String assortment,LimitCondition condition);
-    List<Article>   findHistoryMax(Integer userId,LimitCondition condition, Page page);
+    List<Article> specificChildren(Integer userId,String assortment,Page page);
+    List<Article>   findHistoryMax(Integer userId, Page page);
     void deleteArticle(Integer id);
     /**
      * 描述：这个月写了几篇博客

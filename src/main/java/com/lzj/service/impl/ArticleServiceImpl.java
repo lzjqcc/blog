@@ -91,8 +91,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAllByUserId(Integer userId, LimitCondition condition, Page page) {
-        List<Article> list = articleDao.findByUserId(userId, condition, page);
+    public List<Article> findAllByUserId(Integer userId, Page page) {
+        List<Article> list = articleDao.findByUserId(userId,  page);
         return list;
     }
     @Override
@@ -104,13 +104,13 @@ public class ArticleServiceImpl implements ArticleService {
         return assortmentDao.findAssortmentByUserId(userId);
     }
     @Override
-    public List<Article> specificChildren(Integer userId, String assortment, LimitCondition condition) {
+    public List<Article> specificChildren(Integer userId, String assortment,Page page) {
         Assortment assortmentEntity = assortmentDao.findByUserIdAndName(userId, assortment);
-        return articleDao.findByUserIdAndAssortment(userId, assortmentEntity.getId(), condition);
+        return articleDao.findBycurrentAccountIdAndAssortment(userId, assortmentEntity.getId(), page);
     }
     @Override
-    public List<Article> findHistoryMax(Integer userId, LimitCondition condition, Page page) {
-        return articleDao.findHistoryMax(userId, condition, page);
+    public List<Article> findHistoryMax(Integer userId, Page page) {
+        return articleDao.findHistoryMax(userId, page);
     }
     @Override
     public void deleteArticle(Integer id) {
@@ -130,7 +130,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
     @Override
     public Map<String, List<Article>> findDateNum(Integer userId, Page page) {
-        List<Article> list = articleDao.findByUserId(userId, null, page);
+        List<Article> list = articleDao.findByUserId(userId,  page);
         System.out.println(list.size());
         Map<String, List<Article>> map = new LinkedHashMap<>();
         for (Article article : list) {

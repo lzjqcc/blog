@@ -100,9 +100,6 @@ public class LoginController {
             return result;
         }
         EmailObject object=new EmailObject();
-        object.setUserName(userName);
-        object.setHost(host);
-        object.setPassword(password);
         object.setSendTo(user.getEmail());
         object.setDefaultEncoding("UTF-8");
         object.setSubject("用户注册");

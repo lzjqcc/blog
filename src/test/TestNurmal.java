@@ -5,6 +5,7 @@ import com.lzj.domain.Article;
 import com.lzj.domain.Friend;
 import com.lzj.utils.ComentUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,12 @@ import java.util.*;
 
 
 public class TestNurmal {
+    @Test
+    public void testStringTOList() {
+        Date date=new Date();
+        //c的使用
+        System.out.printf("全部日期和时间信息：%tF %tT %n",date,date);
+    }
 
 /*
     @Test
