@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class Page implements Serializable{
+    private static final long serialVersionUID = 8964663773098554965L;
     @NotNull
     private Integer currentPage;
     @NotNull
@@ -45,5 +46,15 @@ public class Page implements Serializable{
     public Page setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                ", startIndex=" + startIndex +
+                ", count=" + count +
+                '}';
     }
 }

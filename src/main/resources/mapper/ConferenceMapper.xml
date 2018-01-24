@@ -24,7 +24,18 @@
         update_time,
         details,
         end_time,
-        email
+        is_email
+    </sql>
+    <sql id="alias">
+        ${a}.begin_time,
+        ${a}.sponsor_id,
+        ${a}.theme,
+        ${a}.place,
+        ${a}.create_time,
+        ${a}.update_time,
+        ${a}.details,
+        ${a}.end_time,
+        ${a}.is_email
     </sql>
     <insert id="insertConference" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO tb_conference (
@@ -33,4 +44,20 @@
         (#{beginTime},#{sponsorId},#{theme},#{place},#{createTime},#{updateTime},#{details},#{endTime},#{email})
 
     </insert>
+    <select id="findConferencesBySponsorId" resultMap="conferenceMap">
+        SELECT id,
+        <include refid="base"/>
+        FROM tb_conference
+        WHERE 1=1
+        sponsor_id = #{sponsorId}
+        ORDER by id desc
+    </select>
+    <select id="findConferencesByMemberId" resultMap="conferenceMap">
+        SELECT tc.id ,
+        <include refid="alias"><property name="a" value="tc"/></include>
+        FROM tb_conference tc left join tb_conference_function cf on tc.id = cf.conference_id
+        WHERE
+        cf.member_id = #{memeberId}
+
+    </select>
 </mapper>

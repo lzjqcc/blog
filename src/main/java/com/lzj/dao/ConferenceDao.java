@@ -4,6 +4,8 @@ import com.lzj.annotation.EnableRelationTable;
 import com.lzj.dao.dto.ConferenceDto;
 import com.lzj.domain.Conference;
 import com.lzj.domain.Function;
+import com.lzj.domain.Page;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,5 +13,13 @@ import java.util.List;
 public interface ConferenceDao{
     @EnableRelationTable(relationTableName = "tb_conference_function")
     void insertConference(Conference conference);
+    List<Conference> findConferencesBySponsorId(@Param("sponsorId") Integer sponsor, Page page);
 
+    /**
+     *
+     * @param memeberId
+     * @param page
+     * @return
+     */
+    List<Conference> findConferencesByMemberId(@Param("memeberId") Integer memeberId, Page page);
 }

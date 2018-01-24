@@ -3,6 +3,7 @@ import com.lzj.VO.ArticleMongo;
 import com.lzj.domain.Article;
 
 import com.lzj.domain.Friend;
+import com.lzj.interceptor.PaginationInterceptor;
 import com.lzj.utils.ComentUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -35,6 +36,12 @@ public class TestNurmal {
         Date date=new Date();
         //c的使用
         System.out.printf("全部日期和时间信息：%tF %tT %n",date,date);
+    }
+    @Test
+    public void remove(){
+       String s=  PaginationInterceptor.removeIgnoreCase("fro FROM abc", "from");
+       System.out.println(s);
+
     }
 
 /*

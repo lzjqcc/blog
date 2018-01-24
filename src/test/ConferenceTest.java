@@ -1,6 +1,7 @@
 import com.lzj.Application;
 import com.lzj.dao.ConferenceDao;
 import com.lzj.domain.Conference;
+import com.lzj.domain.Page;
 import com.lzj.service.impl.ConferenceServiceImpl;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -42,5 +43,14 @@ public class ConferenceTest {
         conference.setEndTime(new Date());
 
         conferenceService.send(Lists.newArrayList(3),conference);
+    }
+    @Test
+    public void findConference() {
+        Page page = new Page();
+        page.setPageSize(1);
+        page.setCurrentPage(1);
+        List<Conference> list =conferenceDao.findConferencesByMemberId(2, page);
+        System.out.println(list.size());
+        System.out.println(page);
     }
 }

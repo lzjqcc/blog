@@ -2,9 +2,11 @@ package com.lzj.interceptor;
 
 import com.lzj.domain.Page;
 import com.lzj.exception.SystemException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -13,6 +15,9 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.codehaus.groovy.util.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -33,6 +38,7 @@ import java.util.Set;
 @Intercepts({@Signature(type = StatementHandler.class,method = "prepare",args = {Connection.class,Integer.class})})
 @Component
 public class PaginationInterceptor implements Interceptor{
+    private static Logger logger = LoggerFactory.getLogger(PaginationInterceptor.class);
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         if (invocation.getTarget() instanceof RoutingStatementHandler) {
@@ -40,6 +46,7 @@ public class PaginationInterceptor implements Interceptor{
             Field delegateField = ReflectionUtils.findField(handler.getClass(), "delegate");
             delegateField.setAccessible(true);
             StatementHandler delegate = (StatementHandler) delegateField.get(handler);
+            ParameterHandler parameterHandler = delegate.getParameterHandler();
             BoundSql boundSql = delegate.getBoundSql();
             if (boundSql.getParameterObject() instanceof MapperMethod.ParamMap) {
                 MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) boundSql.getParameterObject();
@@ -48,14 +55,14 @@ public class PaginationInterceptor implements Interceptor{
                     for (Map.Entry entry : entries) {
                         if (entry.getValue() instanceof Page) {
                             Page page = (Page) entry.getValue();
-                            setPageSql(page, boundSql, invocation);
+                            setPageSql(page, boundSql, invocation, parameterHandler);
                         }
                     }
 
                 }
             }else if (boundSql.getParameterObject() instanceof Page) {
                 Page page = (Page) boundSql.getParameterObject();
-                setPageSql(page,boundSql,invocation);
+                setPageSql(page,boundSql,invocation,  parameterHandler);
             }
         }
     /*    if (invocation.getTarget() instanceof CachingExecutor) {
@@ -83,13 +90,13 @@ public class PaginationInterceptor implements Interceptor{
         }*/
         return invocation.proceed();
     }
-    private void setPageSql(Page page,BoundSql boundSql, Invocation invocation) throws IllegalAccessException, SQLException {
+    private void setPageSql(Page page,BoundSql boundSql, Invocation invocation, ParameterHandler handler) throws IllegalAccessException, SQLException {
         if (boundSql != null && !boundSql.getSql().contains("limit")) {
             Connection connection = (Connection) invocation.getArgs()[0];
             Field sqlField = ReflectionUtils.findField(BoundSql.class, "sql");
             sqlField.setAccessible(true);
             String sql = (String) sqlField.get(boundSql);
-            count(sql,connection,page);
+            count(sql,connection,page, handler);
             sql = getPageSql(sql,page);
             sqlField.set(boundSql,sql);
 
@@ -110,28 +117,30 @@ public class PaginationInterceptor implements Interceptor{
         page.setStartIndex(startIndex);
         String pageSql = null;
         if (sql !=null && page !=null) {
-            if (!sql.contains("and") && !sql.contains("join")) {
+
+            if (!StringUtils.containsIgnoreCase(sql,"and") && !StringUtils.containsIgnoreCase(sql,"join")) {
                 // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
                 pageSql = sql + " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
-            }else if (!sql.contains("join")) {
+            }else if (!StringUtils.containsIgnoreCase(sql,"join")) {
                 pageSql = sql + " and id >=" +getSubSql(page,sql) + " limit " +page.getPageSize();
-            }else if (sql.contains("join")) {
+            }else if (StringUtils.containsIgnoreCase(sql,"join")) {
                 pageSql=sql + " and "+getTableAlias(sql)+".id >=" +getSubSql(page,sql)+" limit "+page.getPageSize();
             }
 
         }
+        logger.info("分页sql ===》{}",pageSql);
         return pageSql;
     }
     private String getSubSql(Page page, String sql) {
         return " (select id from " + getTableName(sql) +" order by id limit " + page.getStartIndex() +",1) ";
     }
     private String getTableName(String sql) {
-        String [] splitFrom = sql.split("from");
+        String [] splitFrom = spiltIgnoreCase(sql,"from");
         String tableName = splitFrom[splitFrom.length-1].split(" ")[1];
         return tableName;
     }
     private String getTableAlias(String sql){
-        String [] splitsFrom = sql.split("from");
+        String[] splitsFrom = spiltIgnoreCase(sql,"from");
         return splitsFrom[splitsFrom.length-1].split(" ")[2];
     }
     @Override
@@ -149,18 +158,23 @@ public class PaginationInterceptor implements Interceptor{
         }
     }
     private String getCountSql(String sql) {
-        return "select count(1) from" +sql.split("from")[1];
+
+        return "select count(1) from " +removeIgnoreCase(sql,"from");
     }
-    private void count(String sql, Connection connection, Page page) throws SQLException {
+    private void count(String sql, Connection connection, Page page, ParameterHandler handler) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;
+
         try {
-            statement = connection.prepareStatement(getCountSql(sql));
-             set = statement.executeQuery();
-            set.next();
+            String countSQL = getCountSql(sql);
+            logger.info("countrysql  sql --->{}", countSQL);
+            statement = connection.prepareStatement(countSQL);
+             handler.setParameters(statement);
+             set =statement.executeQuery();
+             set.next();
             page.setCount(set.getInt("count(1)"));
         } catch (SQLException e) {
-            throw e;
+            logger.error("执行count sql 失败 sql --->{}, exception--->{}",sql,e);
         }finally {
             if (statement != null){
                 statement.close();
@@ -169,5 +183,20 @@ public class PaginationInterceptor implements Interceptor{
                 set.close();
             }
         }
+    }
+
+    /**
+     * from abc
+     *  abc
+     * @param source
+     * @param removeString
+     * @return
+     */
+    public  static   String removeIgnoreCase(String source, String removeString){
+
+        return source.replaceAll("(?i)"+removeString,"&&").split("&&")[1];
+    }
+    private String [] spiltIgnoreCase(String source, String splitString) {
+        return source.replaceAll("(?i)"+splitString,"&&").split("&&");
     }
 }
