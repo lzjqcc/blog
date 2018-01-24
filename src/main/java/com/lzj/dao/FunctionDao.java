@@ -39,6 +39,6 @@ public interface FunctionDao {
      * @param conferences
      * @return
      */
-    List<ConferenceFunction> findConferenceFunctions(@Param("list") List<Conference> conferences);
+    List<ConferenceFunction> findConferenceFunctions(@Param("param") List<Conference> conferences);
 
 }

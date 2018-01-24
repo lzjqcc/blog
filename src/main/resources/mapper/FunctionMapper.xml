@@ -12,7 +12,7 @@
     </resultMap>
     <resultMap id="conferenceFunctionMap" type="com.lzj.domain.ConferenceFunction">
         <id column="id" property="id"/>
-        <result column="function_id" property="functionIds" javaType="java.util.ArrayList" jdbcType="VARCHAR"/>
+        <result column="function_id" property="functionIds" javaType="java.util.ArrayList" jdbcType="VARCHAR" typeHandler="com.lzj.utils.handler.ListTypeHandler"/>
         <result column="conference_id" property="conferenceId" />
         <result column="member_id" property="memberId"/>
         <result column="sponsor_id" property="sponsorId"/>
@@ -61,13 +61,13 @@
         SELECT function_id,conference_id,member_id,sponsor_id from tb_conference_function
         WHERE member_id = #{memberId} and conference_id = #{conferenceId}
     </select>
-    <select id="findConferenceFunction" resultMap="conferenceFunctionMap">
+    <select id="findConferenceFunctions" resultMap="conferenceFunctionMap">
         SELECT function_id,conference_id,member_id,sponsor_id
         FROM tb_conference_function
         WHERE
         1=1 AND
         conference_id in
-        <foreach collection="list != null and list.size > 0" open="(" close=")" separator="," item="item">
+        <foreach collection="param" open="(" close=")" separator="," item="item">
             #{item.id}
         </foreach>
     </select>
