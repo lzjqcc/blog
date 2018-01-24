@@ -4,25 +4,15 @@ import com.lzj.domain.Page;
 import com.lzj.exception.SystemException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.binding.MapperMethod;
-import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.*;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.codehaus.groovy.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -78,7 +68,7 @@ public class PaginationInterceptor implements Interceptor{
                         Field sqlField = ReflectionUtils.findField(BoundSql.class,"sql");
                         sqlField.setAccessible(true);
                         String sql = (String) sqlField.get(boundSql);
-                        sql = getPageSql(sql,page);
+                        sql = buildPageSQL(sql,page);
                         sqlField.set(boundSql,sql);
                         Field fieldSqlSource = ReflectionUtils.findField(MappedStatement.class, "sqlSource");
                         fieldSqlSource.setAccessible(true);
@@ -97,7 +87,7 @@ public class PaginationInterceptor implements Interceptor{
             sqlField.setAccessible(true);
             String sql = (String) sqlField.get(boundSql);
             count(sql,connection,page, handler);
-            sql = getPageSql(sql,page);
+            sql = buildPageSQL(sql,page);
             sqlField.set(boundSql,sql);
 
 
@@ -107,7 +97,7 @@ public class PaginationInterceptor implements Interceptor{
     public Object plugin(Object target) {
         return   Plugin.wrap(target, this);
     }
-    private String getPageSql(String sql, Page page) {
+    private String buildPageSQL(String sql, Page page) {
         // 1，单表查询分页
        // 2，关联查询分页
         Integer startIndex = (page.getCurrentPage()-1)* page.getPageSize();
@@ -116,19 +106,41 @@ public class PaginationInterceptor implements Interceptor{
         }
         page.setStartIndex(startIndex);
         String pageSql = null;
-        if (sql !=null && page !=null) {
-
-            if (!StringUtils.containsIgnoreCase(sql,"and") && !StringUtils.containsIgnoreCase(sql,"join")) {
-                // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
-                pageSql = sql + " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
-            }else if (!StringUtils.containsIgnoreCase(sql,"join")) {
-                pageSql = sql + " and id >=" +getSubSql(page,sql) + " limit " +page.getPageSize();
-            }else if (StringUtils.containsIgnoreCase(sql,"join")) {
-                pageSql=sql + " and "+getTableAlias(sql)+".id >=" +getSubSql(page,sql)+" limit "+page.getPageSize();
+        if (sql !=null && page !=null ) {
+            // 没有排序
+            if (!StringUtils.containsIgnoreCase(sql,"order")) {
+                pageSql =sql + getPageSQL(sql, page,false);
+            }else {
+                int i = StringUtils.indexOfIgnoreCase(sql, "order");
+                pageSql = sql.substring(0, i) + getPageSQL(sql, page,true) + sql.substring(i) +  " limit "+ page.getPageSize();
             }
-
         }
         logger.info("分页sql ===》{}",pageSql);
+        return pageSql;
+    }
+    private String getPageSQL(String sql, Page page, boolean hasOrder) {
+
+        String pageSql = "";
+        if (!hasOrder) {
+            if (!StringUtils.containsIgnoreCase(sql,"and") && !StringUtils.containsIgnoreCase(sql,"join")) {
+                // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
+                pageSql =  " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
+            }else if (!StringUtils.containsIgnoreCase(sql,"join")) {
+                pageSql =  " and id >=" +getSubSql(page,sql) + " limit " +page.getPageSize();
+            }else if (StringUtils.containsIgnoreCase(sql,"join")) {
+                pageSql=" and "+getTableAlias(sql)+".id >=" +getSubSql(page,sql)+" limit "+page.getPageSize();
+            }
+        }else {
+            if (!StringUtils.containsIgnoreCase(sql,"and") && !StringUtils.containsIgnoreCase(sql,"join")) {
+                // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
+                pageSql =  " where id >= " +getSubSql(page,sql);
+            }else if (!StringUtils.containsIgnoreCase(sql,"join")) {
+                pageSql =  " and id >=" +getSubSql(page,sql) ;
+            }else if (StringUtils.containsIgnoreCase(sql,"join")) {
+                pageSql=" and "+getTableAlias(sql)+".id >=" +getSubSql(page,sql);
+            }
+        }
+
         return pageSql;
     }
     private String getSubSql(Page page, String sql) {
@@ -161,6 +173,15 @@ public class PaginationInterceptor implements Interceptor{
 
         return "select count(1) from " +removeIgnoreCase(sql,"from");
     }
+
+    /**
+     * 参数处理  使用mybatis 自带的DefaultParameterHandler
+     * @param sql
+     * @param connection
+     * @param page
+     * @param handler
+     * @throws SQLException
+     */
     private void count(String sql, Connection connection, Page page, ParameterHandler handler) throws SQLException {
         PreparedStatement statement = null;
         ResultSet set = null;

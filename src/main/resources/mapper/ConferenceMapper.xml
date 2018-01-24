@@ -58,6 +58,6 @@
         FROM tb_conference tc left join tb_conference_function cf on tc.id = cf.conference_id
         WHERE
         cf.member_id = #{memeberId}
-
+        order by tc.id desc
     </select>
 </mapper>
