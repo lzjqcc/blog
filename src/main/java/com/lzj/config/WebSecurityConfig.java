@@ -117,7 +117,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public CustomAccessDecisionManager imageAccessDecisionManager() {
         CustomAccessDecisionManager manager = new CustomAccessDecisionManager();
-        manager.setVoters(Lists.newArrayList(new ImageVoter(functionDao), new ConferenceVoter(functionDao)));
+        manager.setVoters(Lists.newArrayList(new ImageVoter(functionDao)));
         return manager;
     }
 

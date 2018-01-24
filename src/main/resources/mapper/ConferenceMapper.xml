@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lzj.dao.ConferenceDao" >
+<mapper namespace="com.lzj.dao.ConferenceDao">
     <resultMap id="conferenceMap" type="com.lzj.domain.Conference">
         <id column="id" property="id"></id>
         <result column="begin_time" property="beginTime"></result>
@@ -49,15 +49,39 @@
         <include refid="base"/>
         FROM tb_conference
         WHERE 1=1
+        and
         sponsor_id = #{sponsorId}
         ORDER by id desc
     </select>
     <select id="findConferencesByMemberId" resultMap="conferenceMap">
         SELECT tc.id ,
-        <include refid="alias"><property name="a" value="tc"/></include>
+        <include refid="alias">
+            <property name="a" value="tc"/>
+        </include>
         FROM tb_conference tc left join tb_conference_function cf on tc.id = cf.conference_id
         WHERE
         cf.member_id = #{memeberId}
         order by tc.id desc
     </select>
+    <update id="updateConference">
+        update tb_conference
+        <set>
+            <if test="param.details != null">
+                details = #{param.details},
+            </if>
+            <if test="param.theme != null">
+                theme = #{param.theme} ,
+            </if>
+            <if test="param.place != null" >
+                place = #{param.place},
+            </if>
+            <if test="param.beginTime != null">
+                begin_time = #{param.beginTime},
+            </if>
+            <if test="param.endTime != null">
+                end_time = #{param.endTime}
+            </if>
+        </set>
+        WHERE id = #{param.id}
+    </update>
 </mapper>

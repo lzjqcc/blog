@@ -1,6 +1,8 @@
 import com.google.common.collect.Lists;
 import com.lzj.Application;
 import com.lzj.dao.FunctionDao;
+import com.lzj.domain.Conference;
+import com.lzj.domain.ConferenceFunction;
 import com.lzj.domain.Function;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,5 +27,12 @@ public class FunctionTest {
         list.addAll(groupFunctions);
         list.addAll(friendFunctions);
     }
+    @Test
+    public void list () {
+        Conference conference = new Conference();
+        conference.setId(6);
 
+        List<ConferenceFunction> functions =functionDao.findConferenceFunctions(Lists.newArrayList(conference));
+        System.out.println(functions);
+    }
 }

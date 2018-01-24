@@ -22,4 +22,10 @@ public interface ConferenceDao{
      * @return
      */
     List<Conference> findConferencesByMemberId(@Param("memeberId") Integer memeberId, Page page);
+
+    /**
+     * 根据id 更新
+     * @param conferenceDto
+     */
+    void updateConference(@Param("param") ConferenceDto conferenceDto);
 }

@@ -1,5 +1,7 @@
 package com.lzj.dao;
 
+import com.lzj.domain.Conference;
+import com.lzj.domain.ConferenceFunction;
 import com.lzj.domain.Function;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,5 +32,13 @@ public interface FunctionDao {
     List<Function> findGroupFunction(@Param("currentAccountId") Integer currentAccountId,
                                      @Param("friendId") Integer friendId);
 
-    List<Function> findConferenceFunction(@Param("conferenceId") Integer conferenceId, @Param("sponsorId") Integer sponsorId, @Param("memberId") Integer memberId);
+    ConferenceFunction findConferenceFunction(@Param("conferenceId") Integer conferenceId, @Param("memberId") Integer memberId);
+
+    /**
+     *
+     * @param conferences
+     * @return
+     */
+    List<ConferenceFunction> findConferenceFunctions(@Param("list") List<Conference> conferences);
+
 }

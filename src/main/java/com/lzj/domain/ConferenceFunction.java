@@ -1,22 +1,23 @@
 package com.lzj.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 默认这次会议成员都有查看权限
  */
 public class ConferenceFunction extends BaseEntity implements Serializable {
-    private Integer functionId;
+    private List<Integer> functionIds;
     private Integer conferenceId;
     private Integer sponsorId;
     private Integer memberId;
 
-    public Integer getFunctionId() {
-        return functionId;
+    public List<Integer> getFunctionIds() {
+        return functionIds;
     }
 
-    public void setFunctionId(Integer functionId) {
-        this.functionId = functionId;
+    public void setFunctionIds(List<Integer> functionIds) {
+        this.functionIds = functionIds;
     }
 
     public Integer getConferenceId() {
@@ -41,5 +42,16 @@ public class ConferenceFunction extends BaseEntity implements Serializable {
 
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
+    }
+
+    @Override
+    public String toString() {
+        return "ConferenceFunction{" +
+                "functionIds=" + functionIds +
+                ", conferenceId=" + conferenceId +
+                ", sponsorId=" + sponsorId +
+                ", memberId=" + memberId +
+                ", id=" + id +
+                '}';
     }
 }

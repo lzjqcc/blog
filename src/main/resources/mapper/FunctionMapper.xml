@@ -10,6 +10,13 @@
         <result column="authority" property="authority"/>
         <result column="describtion" property="describtion"/>
     </resultMap>
+    <resultMap id="conferenceFunctionMap" type="com.lzj.domain.ConferenceFunction">
+        <id column="id" property="id"/>
+        <result column="function_id" property="functionIds" javaType="java.util.ArrayList" jdbcType="VARCHAR"/>
+        <result column="conference_id" property="conferenceId" />
+        <result column="member_id" property="memberId"/>
+        <result column="sponsor_id" property="sponsorId"/>
+    </resultMap>
     <sql id="base">
       create_time,
       update_time,
@@ -50,11 +57,19 @@
         left join tb_friend tf on tf.group_id = gf.group_id
         WHERE gf.current_account_id = #{friendId} and tf.friend_id = #{currentAccountId}
     </select>
-    <select id="findConferenceFunction" resultMap="functionMap">
-        SELECT id,
-        <include refid="aliasBase"></include>
-        from tb_function f left join tb_conference_function cf on f.id = cf.function_id
-        WHERE cf.conference_id = #{conferenceId} and cf.sponsor_id = #{sponsorId} and cf.member_id = {memberId}
+    <select id="findConferenceFunction" resultMap="conferenceFunctionMap">
+        SELECT function_id,conference_id,member_id,sponsor_id from tb_conference_function
+        WHERE member_id = #{memberId} and conference_id = #{conferenceId}
+    </select>
+    <select id="findConferenceFunction" resultMap="conferenceFunctionMap">
+        SELECT function_id,conference_id,member_id,sponsor_id
+        FROM tb_conference_function
+        WHERE
+        1=1 AND
+        conference_id in
+        <foreach collection="list != null and list.size > 0" open="(" close=")" separator="," item="item">
+            #{item.id}
+        </foreach>
     </select>
     <select id="findAll" resultMap="functionMap">
          SELECT id,
