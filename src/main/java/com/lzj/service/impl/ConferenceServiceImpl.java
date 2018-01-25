@@ -5,6 +5,7 @@ import com.lzj.VO.ResponseVO;
 import com.lzj.constant.AuthorityEnum;
 import com.lzj.dao.AccountDao;
 import com.lzj.dao.ConferenceDao;
+import com.lzj.dao.ConferenceFlowDao;
 import com.lzj.dao.FunctionDao;
 import com.lzj.dao.dto.ConferenceDto;
 import com.lzj.domain.*;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ConferenceServiceImpl {
@@ -27,6 +30,8 @@ public class ConferenceServiceImpl {
     AccountDao accountDao;
     @Autowired
     FunctionDao functionDao;
+    @Autowired
+    ConferenceFlowDao conferenceFlowDao;
     /**
      * 查看自己参加的会议
      * @param memberId
@@ -34,12 +39,17 @@ public class ConferenceServiceImpl {
      * @return
      */
     public ResponseVO<List<ConferenceDto>> findConferenceBymemberId(Integer memberId, Page page) {
-        List<Conference> list = conferenceDao.findConferencesByMemberId(memberId, page);
-        List<ConferenceFunction> functions = functionDao.findConferenceFunctions(list);
-
         List<ConferenceDto> conferenceDtos = new ArrayList<>(64);
-        for (Conference conference : list) {
-            conferenceDtos.add(buildDto(conference));
+        List<Conference> list = conferenceDao.findConferencesByMemberId(memberId, page);
+        List<ConferenceFunction> functions = functionDao.findConferenceFunctions(list, memberId);
+        Map<Integer, Conference> map = list.stream().collect(Collectors.toMap(Conference::getId, t -> t));
+        for (ConferenceFunction function : functions) {
+            List<Integer> integers = function.getFunctionIds();
+            for (Integer id : integers) {
+                if (id.equals(AuthorityEnum.CONFERENCE_SEE.id)) {
+                    conferenceDtos.add(buildDto(map.get(function.getConferenceId())));
+                }
+            }
         }
         return ComentUtils.buildResponseVO(true, "操做成功", conferenceDtos);
     }
@@ -61,6 +71,14 @@ public class ConferenceServiceImpl {
         if (dto.getId() == null) {
             return ComentUtils.buildResponseVO(false, "操作失败", null);
         }
+        Conference conference = conferenceDao.findConferenceById(dto.getId());
+        //
+        if (!conference.getSponsorId().equals(dto.getSponsorId())) {
+            List<ConferenceFunction> functions =functionDao.findConferenceFunctions(Lists.newArrayList(conference), dto.getSponsorId());
+            if (!functions.contains(AuthorityEnum.CONFERENCE_UPDATE)) {
+                return ComentUtils.buildResponseVO(false, "没有权限操作", null);
+            }
+        }
         conferenceDao.updateConference(dto);
         return ComentUtils.buildResponseVO(true, "操做成功", null);
     }
@@ -70,7 +88,13 @@ public class ConferenceServiceImpl {
         return dto;
     }
 
-    public ResponseVO insertConference(Conference conference) {
+    /**
+     * 创建会议是要创建会议流程
+     * @param conference
+     * @param conferenceFlows
+     * @return
+     */
+    public ResponseVO insertConference(Conference conference, List<ConferenceFlow> conferenceFlows) {
         conference.setFunctionList(Lists.newArrayList(
                 AuthorityEnum.CONFERENCE_SEE.id,
                 AuthorityEnum.CONFERENCE_UPDATE.id
@@ -86,6 +110,10 @@ public class ConferenceServiceImpl {
         }
         conferenceDao.insertConference(conference);
         if (conference.getId() != null) {
+            for (ConferenceFlow flow : conferenceFlows) {
+                flow.setConferenceId(conference.getId());
+            }
+            conferenceFlowDao.insertConferenceFlows(conferenceFlows);
             if (conference.getEmail()) {
                 send(conference.getMemberIds(), conference);
             }

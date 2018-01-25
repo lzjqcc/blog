@@ -14,7 +14,7 @@ public class ListTypeHandler<E extends List> extends BaseTypeHandler<E> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-
+        ps.setString(i,parameter.toString());
     }
 
     @Override

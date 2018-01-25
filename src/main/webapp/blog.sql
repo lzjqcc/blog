@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2018-01-15 13:01:12
+Date: 2018-01-24 16:37:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `tb_account`;
 CREATE TABLE `tb_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `head_icon` varchar(255) DEFAULT NULL COMMENT 't头像地址',
+  `head_icon` varchar(500) DEFAULT NULL COMMENT 't头像地址',
   `gender` tinyint(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
   `age` smallint(6) DEFAULT NULL,
@@ -43,8 +43,8 @@ CREATE TABLE `tb_account` (
 -- ----------------------------
 -- Records of tb_account
 -- ----------------------------
-INSERT INTO `tb_account` VALUES ('2', null, null, null, null, null, null, null, null, null, null, null, null, null, '大屁孩', '1234@qq.com', '234');
-INSERT INTO `tb_account` VALUES ('3', null, null, null, null, null, null, null, null, null, null, null, null, null, '李志坚', '21234@qq.com', '1234');
+INSERT INTO `tb_account` VALUES ('2', null, null, '{\"age\":32,\"birthYear\":1985,\"gender\":1,\"id\":34309,\"idCard\":\"330102198508021242\",\"idType\":1,\"marriageStatus\":1,\"mobile\":\"15869101410\",\"name\":\"潘洁\",\"status\":0kldsjflksfjklslksdksdflksdfjklsdfjreiujklgjdklsfjdklsfjdklsfjdsklfsdklfdjs}klsdfjdkslfjdsklfjsdfkljsd', null, null, null, null, null, null, null, null, null, null, '大屁孩', '1234@qq.com', '234');
+INSERT INTO `tb_account` VALUES ('3', null, null, null, null, null, null, null, null, null, null, null, null, null, '李志坚', '1161889163@qq.com', '1234');
 INSERT INTO `tb_account` VALUES ('4', null, null, null, null, null, null, null, null, null, null, null, null, null, 'quchao', '43234@qq.com', '123445');
 INSERT INTO `tb_account` VALUES ('5', null, null, null, null, null, null, null, null, null, null, null, null, null, 'li', null, null);
 INSERT INTO `tb_account` VALUES ('6', null, null, null, null, null, null, null, null, null, null, null, null, null, 'zhi', null, null);
@@ -161,18 +161,19 @@ CREATE TABLE `tb_conference` (
   `update_time` datetime DEFAULT NULL,
   `begin_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `member_id` int(11) DEFAULT NULL COMMENT '会议成员 tb_account',
   `sponsor_id` int(11) DEFAULT NULL COMMENT '会议发起人 tb_account',
   `theme` text COMMENT '会议主题',
   `details` text,
   `is_email` tinyint(255) DEFAULT '0' COMMENT '是否发送邮件 0：不发送，1发松',
   `place` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_conference
 -- ----------------------------
+INSERT INTO `tb_conference` VALUES ('6', '2018-01-23 10:09:53', '2018-01-23 10:09:53', '2018-01-23 10:09:53', null, '5', '讨论明天吃什么', null, '0', null);
+INSERT INTO `tb_conference` VALUES ('7', '2018-01-23 10:21:04', '2018-01-23 10:21:04', '2018-01-23 10:21:04', null, '5', '讨论明天吃什么', null, '0', null);
 
 -- ----------------------------
 -- Table structure for tb_conference_flow
@@ -199,19 +200,22 @@ CREATE TABLE `tb_conference_flow` (
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_conference_function`;
 CREATE TABLE `tb_conference_function` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
-  `function_id` int(11) DEFAULT NULL,
+  `function_id` varchar(11) DEFAULT NULL,
   `conference_id` int(11) DEFAULT NULL,
   `sponsor_id` int(11) DEFAULT NULL,
-  `memebr_id` int(11) DEFAULT NULL,
+  `member_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_conference_function
 -- ----------------------------
+INSERT INTO `tb_conference_function` VALUES ('6', '2018-01-23 10:09:53', '2018-01-23 10:09:53', '[1, 2]', '6', '5', '2');
+INSERT INTO `tb_conference_function` VALUES ('7', '2018-01-23 10:09:53', '2018-01-23 10:09:53', '[1, 2]', '6', '5', '3');
+INSERT INTO `tb_conference_function` VALUES ('8', '2018-01-23 10:09:53', '2018-01-23 10:09:53', '[1, 2]', '6', '5', '4');
 
 -- ----------------------------
 -- Table structure for tb_discussion_group_member
@@ -329,10 +333,9 @@ CREATE TABLE `tb_friend_function` (
 -- ----------------------------
 -- Records of tb_friend_function
 -- ----------------------------
-INSERT INTO `tb_friend_function` VALUES ('1', '2018-01-12 15:57:54', '2018-01-12 15:57:54', '2', '3', '1');
+INSERT INTO `tb_friend_function` VALUES ('1', '2018-01-16 09:27:10', '2018-01-16 09:27:10', '2', '3', '3');
 INSERT INTO `tb_friend_function` VALUES ('2', '2018-01-12 15:57:33', '2018-01-12 15:57:33', '2', '4', '3');
-INSERT INTO `tb_friend_function` VALUES ('6', null, null, '2', '3', '3');
-INSERT INTO `tb_friend_function` VALUES ('7', null, null, '3', null, null);
+INSERT INTO `tb_friend_function` VALUES ('7', '2018-01-16 09:51:49', '2018-01-16 09:51:49', '3', '2', '3');
 
 -- ----------------------------
 -- Table structure for tb_function
@@ -414,7 +417,7 @@ CREATE TABLE `tb_group_friend` (
 -- ----------------------------
 INSERT INTO `tb_group_friend` VALUES ('1', '2', '1', '3', null, null);
 INSERT INTO `tb_group_friend` VALUES ('3', '3', '4', '2', null, null);
-INSERT INTO `tb_group_friend` VALUES ('4', '2', '2', '4', null, null);
+INSERT INTO `tb_group_friend` VALUES ('4', '2', '1', '4', '2018-01-16 09:34:47', '2018-01-16 09:34:47');
 
 -- ----------------------------
 -- Table structure for tb_group_function
@@ -428,11 +431,14 @@ CREATE TABLE `tb_group_function` (
   `group_id` int(11) DEFAULT NULL,
   `function_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tb_group_function
 -- ----------------------------
+INSERT INTO `tb_group_function` VALUES ('1', null, null, '2', '1', '1');
+INSERT INTO `tb_group_function` VALUES ('2', null, null, '2', '2', '1');
+INSERT INTO `tb_group_function` VALUES ('3', null, null, '2', '1', '2');
 
 -- ----------------------------
 -- Table structure for tb_message_info

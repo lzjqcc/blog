@@ -1,7 +1,9 @@
 import com.lzj.Application;
 import com.lzj.dao.ConferenceDao;
+import com.lzj.dao.ConferenceFlowDao;
 import com.lzj.dao.dto.ConferenceDto;
 import com.lzj.domain.Conference;
+import com.lzj.domain.ConferenceFlow;
 import com.lzj.domain.Page;
 import com.lzj.service.impl.ConferenceServiceImpl;
 import org.assertj.core.util.Lists;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +26,19 @@ public class ConferenceTest {
     ConferenceDao conferenceDao;
     @Autowired
     ConferenceServiceImpl conferenceService;
+    @Autowired
+    ConferenceFlowDao conferenceFlowDao;
+    @Test
+    public void beach() {
+        ConferenceFlow flow = new ConferenceFlow();
+        flow.setConferenceId(6);
+        flow.setDescribe("李志坚发表");
+        ConferenceFlow flow1 = new ConferenceFlow();
+        flow1.setConferenceId(6);
+        flow1.setDescribe("瞿超超发表");
+        conferenceFlowDao.insertConferenceFlows(Lists.newArrayList(flow, flow1));
+
+    }
     @Test
     public void testInsert() {
         Conference conference = new Conference();

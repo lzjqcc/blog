@@ -84,4 +84,7 @@
         </set>
         WHERE id = #{param.id}
     </update>
+    <select id="findConferenceById" resultMap="conferenceMap">
+        SELECT id,<include refid="base"/> from tb_conference where id = #{param}
+    </select>
 </mapper>

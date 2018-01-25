@@ -4,6 +4,7 @@ import com.lzj.domain.Conference;
 import com.lzj.domain.ConferenceFunction;
 import com.lzj.domain.Function;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -39,6 +40,6 @@ public interface FunctionDao {
      * @param conferences
      * @return
      */
-    List<ConferenceFunction> findConferenceFunctions(@Param("param") List<Conference> conferences);
+    List<ConferenceFunction> findConferenceFunctions(@Param("param") List<Conference> conferences, @Param("memberId")Integer memberId);
 
 }

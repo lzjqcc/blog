@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.ConferenceFlowDao" >
+    <resultMap id="conferenceFlowResultMap" type="com.lzj.domain.ConferenceFlow">
+        <id column="id" property="id"></id>
+        <result column="conference_id" property="conferenceId"></result>
+        <result column="describes" property="describe"></result>
+        <result column="record" property="record"/>
+        <result column="recoder_id" property="recoderId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <sql id="base">
+        conference_id,
+        describes,
+        record,
+        recoder_id,
+        create_time,
+        update_time
+    </sql>
+    <insert id="insertConferenceFlow" useGeneratedKeys="true" keyProperty="id">
+        INSERT into tb_conference_flow (
+        <include refid="base"/>
+        ) VALUES
+        (#{conferenceId},#{describe},#{record},#{recoderId},#{createTime},#{updateTime})
+    </insert>
+    <insert id="insertConferenceFlows" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tb_conference_flow (
+        <include refid="base"/>
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.conferenceId},#{item.describe},#{item.record},#{item.recoderId},#{item.createTime},#{item.updateTime})
+        </foreach>
+    </insert>
+    <select id="findConferenceFlowsByConferenceId" resultMap="conferenceFlowResultMap">
+        SELECT id,<include refid="base"></include>
+        FROM tb_conference_flow
+        WHERE conference_id =#{conferenceId}
+    </select>
+    <update id="update">
+        update tb_conference_flow
+        <set>
+            <if test="describe != null">
+                describes = {describe},
+            </if>
+            <if test="record != null">
+                record = #{record},
+            </if>
+            <if test="recoderId != null">
+                recoder_id = #{recoderId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

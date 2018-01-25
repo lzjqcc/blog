@@ -28,4 +28,6 @@ public interface ConferenceDao{
      * @param conferenceDto
      */
     void updateConference(@Param("param") ConferenceDto conferenceDto);
+
+    Conference findConferenceById(@Param("param") Integer conferenceId);
 }

@@ -3,9 +3,11 @@ package com.lzj.controller;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.ConferenceDto;
 import com.lzj.domain.Conference;
+import com.lzj.domain.ConferenceFlow;
 import com.lzj.domain.Page;
 import com.lzj.service.impl.ConferenceServiceImpl;
 import com.lzj.utils.ComentUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,39 @@ import java.util.List;
 public class ConferenceController {
     @Autowired
     ConferenceServiceImpl conferenceService;
+    public static class Dto {
+        Conference conference;
+        List<ConferenceFlow> conferenceFlows;
+
+        public Conference getConference() {
+            return conference;
+        }
+
+        public void setConference(Conference conference) {
+            this.conference = conference;
+        }
+
+        public List<ConferenceFlow> getConferenceFlows() {
+            return conferenceFlows;
+        }
+
+        public void setConferenceFlows(List<ConferenceFlow> conferenceFlows) {
+            this.conferenceFlows = conferenceFlows;
+        }
+    }
+
+    /**
+     * {"conference":{"memberIds":[2,3],"theme":"他阿萨德来看","place":"上饶"},"conferenceFlows":[{"describe":"李志坚发表"},{"describe":"瞿超超发表"}]}
+     * @param dto
+     * @return
+     */
     @RequestMapping(value = "/save",method = RequestMethod.POST)
-    public ResponseVO insertConference(@RequestBody Conference conference) {
-        conference.setSponsorId(ComentUtils.getCurrentAccount().getId());
-        return conferenceService.insertConference(conference);
+    public ResponseVO insertConference(@RequestBody Dto dto) {
+        if (dto.getConference() != null && CollectionUtils.isNotEmpty(dto.getConferenceFlows())){
+            dto.getConference().setSponsorId(ComentUtils.getCurrentAccount().getId());
+            return conferenceService.insertConference(dto.getConference(), dto.getConferenceFlows());
+        }
+        return ComentUtils.buildResponseVO(false, "操作失败", null);
     }
 
     /**
@@ -60,6 +91,7 @@ public class ConferenceController {
      */
     @RequestMapping(value = "updateConference", method = RequestMethod.POST)
     public ResponseVO updateConference(@RequestBody ConferenceDto dto){
+        dto.setSponsorId(ComentUtils.getCurrentAccount().getId());
         return conferenceService.updateConference(dto);
     }
 

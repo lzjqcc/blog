@@ -70,6 +70,7 @@
         <foreach collection="param" open="(" close=")" separator="," item="item">
             #{item.id}
         </foreach>
+        and member_id = #{memberId}
     </select>
     <select id="findAll" resultMap="functionMap">
          SELECT id,

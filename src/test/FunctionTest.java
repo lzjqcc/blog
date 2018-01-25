@@ -32,7 +32,7 @@ public class FunctionTest {
         Conference conference = new Conference();
         conference.setId(6);
 
-        List<ConferenceFunction> functions =functionDao.findConferenceFunctions(Lists.newArrayList(conference));
+        List<ConferenceFunction> functions =functionDao.findConferenceFunctions(Lists.newArrayList(conference),2);
         System.out.println(functions);
     }
 }
