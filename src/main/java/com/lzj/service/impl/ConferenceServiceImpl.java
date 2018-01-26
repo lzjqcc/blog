@@ -82,6 +82,10 @@ public class ConferenceServiceImpl {
         conferenceDao.updateConference(dto);
         return ComentUtils.buildResponseVO(true, "操做成功", null);
     }
+    public ResponseVO delete(Integer conferenceId) {
+        conferenceDao.delete(conferenceId);
+        return ComentUtils.buildResponseVO(true, "操做成功", null);
+    }
     private ConferenceDto buildDto(Conference conference) {
         ConferenceDto dto = new ConferenceDto();
         BeanUtils.copyProperties(conference, dto);

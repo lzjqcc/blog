@@ -30,4 +30,10 @@ public interface ConferenceDao{
     void updateConference(@Param("param") ConferenceDto conferenceDto);
 
     Conference findConferenceById(@Param("param") Integer conferenceId);
+
+    /**
+     * 级联删除 tb_conference_flow中对应的数据  cascad
+     * @param conferenceId
+     */
+    void delete(Integer conferenceId);
 }

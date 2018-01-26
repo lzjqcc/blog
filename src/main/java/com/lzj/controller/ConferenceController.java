@@ -94,5 +94,9 @@ public class ConferenceController {
         dto.setSponsorId(ComentUtils.getCurrentAccount().getId());
         return conferenceService.updateConference(dto);
     }
+    @RequestMapping(value = "delete", method = RequestMethod.GET)
+    public ResponseVO delete(@RequestParam("conferenceId") Integer conferenceId) {
+        return conferenceService.delete(conferenceId);
+    }
 
 }

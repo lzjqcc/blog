@@ -17,4 +17,6 @@ public interface ConferenceFlowDao {
     List<ConferenceFlow> findConferenceFlowsByConferenceId(Integer conferenceId);
 
     void update(ConferenceFlow conferenceFlow);
+
+    int delete(Integer conferennceFlowId);
 }
