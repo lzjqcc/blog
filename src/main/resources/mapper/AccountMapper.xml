@@ -19,7 +19,7 @@
         <result column="occupation" property="occupation"/>
         <result column="personal_signature" property="personalSignature"/>
         <result column="sign" property="sign"/>
-        <result column="birth" property="birth"/>
+        <result column="birth" property="birth" jdbcType="TIMESTAMP"/>
         <result column="create_time" property="createTime"></result>
         <result column="update_time" property="updateTime"></result>
         <result column="user_name" property="userName"/>

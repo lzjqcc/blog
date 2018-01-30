@@ -12,6 +12,7 @@ import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
 import com.lzj.domain.*;
 import com.lzj.exception.SystemException;
+import com.lzj.helper.RedisTemplateHelper;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.ValidatorUtils;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.ValidationUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +36,8 @@ public class FriendService {
 
     @Autowired
     private GroupDao groupDao;
-
+    @Autowired
+    RedisTemplateHelper redisTemplateHelper;
     /**
      * currentAccountId
      * groupId
@@ -116,6 +119,19 @@ public class FriendService {
         }
 
         return ComentUtils.buildResponseVO(true, "操作成功",  friendDao.findFriends(dto));
+    }
+    public ResponseVO<List<Integer>> findOnlineFriends(Integer currentAccountId) {
+        FriendDto dto = new FriendDto();
+        dto.setCurrentAccountId(currentAccountId);
+        dto.setStatus(FriendStatusEnum.AGREE.code);
+        List<Friend> list = friendDao.findFriends(dto);
+        List<Integer> ids = new ArrayList<>();
+        for (Friend friend : list) {
+            if (redisTemplateHelper.get(friend.getFriendId()+"") != null) {
+                ids.add(friend.getFriendId());
+            }
+        }
+        return ComentUtils.buildResponseVO(true, "操作成功", ids);
     }
     /**
      * currentAccountId friendId 确定一条记录

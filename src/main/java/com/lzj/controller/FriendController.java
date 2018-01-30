@@ -62,6 +62,17 @@ public class FriendController {
         friendDto.setFriendId(friendId);
         return friendService.deleteFriend(friendDto);
     }
+
+    /**
+     * 查找在线好友
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/findOnlineFriends")
+    public ResponseVO<List<Integer>> findOnlineFriend() {
+        Account account = ComentUtils.getCurrentAccount();
+        return friendService.findOnlineFriends(account.getId());
+    }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/groupFriends")
     public ResponseVO<List<Friend>> findGroupFriends(@RequestParam("groupId") Integer groupId) {

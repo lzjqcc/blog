@@ -1,7 +1,9 @@
 import com.google.common.collect.Lists;
 import com.lzj.Application;
+import com.lzj.dao.AccountDao;
 import com.lzj.dao.FriendDao;
 import com.lzj.dao.dto.FriendDto;
+import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -18,6 +21,15 @@ import java.util.List;
 public class FriendTest {
     @Autowired
     FriendDao friendDao;
+    @Autowired
+    AccountDao accountDao;
+    @Test
+    public void test() {
+        Account account = new Account();
+        account.setBirth(new Date());
+        accountDao.insertAccount(account);
+
+    }
     @Test
     public void testInsert(){
         Friend friend = new Friend();

@@ -6,6 +6,7 @@ public class FriendDto {
     private Integer currentAccountId;
     private Integer friendId;
     private Integer groupId;
+    // @see FriendStatusEnum
     private Integer status;
     private Boolean isDefriend;
     // true 特别关注
