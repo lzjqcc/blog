@@ -7,6 +7,7 @@ import com.lzj.domain.Page;
 import com.lzj.exception.BusinessException;
 import com.lzj.service.impl.PictureGroupService;
 import com.lzj.utils.ComentUtils;
+import com.lzj.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +89,9 @@ public class ImageController {
             if (!dir.exists()) {
                 dir.mkdirs();
             }
+
             file = new File(dir, System.currentTimeMillis() + "." + uploadFile.getOriginalFilename().split("\\.")[1]);
-            Files.copy(inputStream, Paths.get(dir.getPath(), file.getName()));
+            ImageUtils.reduceImg(inputStream,file,50);
             Map<String, String> map = new HashMap<>();
             map.put("pictureURL",ComentUtils.getImageURL(file.getPath()));
             return map;
