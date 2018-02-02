@@ -6,16 +6,29 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.lang.annotation.*;
 import java.util.List;
 
 @Component
-public class RedisTemplateHelper {
+public class RedisTemplateHelper{
     @Autowired
-    private RedisTemplate<String,Serializable> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate ;
+    private RedisTemplate<String, Serializable> redisTemplate;
+    @PostConstruct
+    public void init() {
+        redisTemplate = (RedisTemplate) stringRedisTemplate;
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<Serializable>(Serializable.class));
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericToStringSerializer<Serializable>(Serializable.class));
+    }
     public long remove(String key) {
         return redisTemplate.execute(new RedisCallback<Long>() {
             @Override

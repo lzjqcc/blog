@@ -32,17 +32,17 @@ public class CommnetController {
     @RequestMapping(value = "insertComment",method = RequestMethod.POST)
     public void insertComment(@RequestBody Comment comment, HttpServletResponse response, HttpServletRequest request){
 
-        boolean isAccess = ComentUtils.vailedToken(response,request);
+      /*  boolean isAccess = ComentUtils.vailedToken(response,request);
         if (!isAccess){
             return;
-        }
-        commentService.insertComment(comment);
+        }*/
+        //commentService.insertComment(comment);
         MessageInfo info = new MessageInfo();
         info.setType(false);
         info.setToAccountId(comment.getToAccountId());
         info.setFromAccountId(comment.getFromAccountId());
         info.setPushMessage(comment.getComment());
         info.setFlag(MessageInfo.FLAG.COMMENT_FLAG);
-        webScoketService.sendSingleMessageToUser(info);
+        webScoketService.sendMessage(info);
     }
 }

@@ -35,11 +35,11 @@ public class UploadIconFilter implements Filter {
         try {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+            response.setHeader("Access-Control-Allow-Origin", "*");
 
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 
-            response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token,withCredentials");
+            response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, Pragma, Last-Modified, Cache-Control, Expires, Content-Type,Sec-WebSocket-Key,Upgrade,Sec-WebSocket-Extensions,userId,token,withCredentials");
 
             response.setHeader("Access-Control-Allow-Credentials", "true");
 

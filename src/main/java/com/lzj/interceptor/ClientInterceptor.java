@@ -1,3 +1,4 @@
+/*
 package com.lzj.interceptor;
 
 import com.lzj.domain.Client;
@@ -12,9 +13,11 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import java.util.LinkedList;
 import java.util.Map;
 
+*/
 /**
  *拦截前端的操作：连接，订阅，发送消息.....
- */
+ *//*
+
 public class ClientInterceptor  extends ChannelInterceptorAdapter{
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -36,3 +39,4 @@ public class ClientInterceptor  extends ChannelInterceptorAdapter{
     }
 
 }
+*/

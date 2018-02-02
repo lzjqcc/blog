@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import java.util.List;
  * EnableWebSecurity 已经包含Configuration
  */
 @EnableWebSecurity
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 10)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     FunctionDao functionDao;
@@ -83,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/articles/uploadArticlePic",
                 "/articles/abandonArticle",
                 "/articles/deleteArticle",
-                "/comment/insertComment",
+                /*"/comment/insertComment",*/
                 "/uploadPicture",
                 "/user/getUserDetail",
                 "/user/updateUser",

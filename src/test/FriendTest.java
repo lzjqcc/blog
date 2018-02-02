@@ -8,10 +8,14 @@ import com.lzj.domain.Friend;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +27,12 @@ public class FriendTest {
     FriendDao friendDao;
     @Autowired
     AccountDao accountDao;
+    @Autowired
+    private StringRedisTemplate redisTemplate = null;
+    @Test
+    public void testRedis(){
+        int i = 0;
+    }
     @Test
     public void test() {
         Account account = new Account();

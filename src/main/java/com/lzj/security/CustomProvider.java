@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.Objects;
+
 /**
  * 这里调用CustomUserDetailServe进行身份验证
  */
@@ -28,7 +30,10 @@ public class CustomProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Authentication cache = SecurityContextHolder.getContext().getAuthentication();
         if (cache != null && authentication instanceof AccountToken && cache instanceof AccountToken) {
-            return cache;
+            if (Objects.equals(cache.getCredentials(),authentication.getCredentials()) && Objects.equals(cache.getPrincipal(),authentication.getPrincipal())) {
+                return cache;
+            }
+
         }
 
         AccountDetails userDetails = (AccountDetails) this.userDetailsService.loadUserByUsername((String) authentication.getPrincipal());

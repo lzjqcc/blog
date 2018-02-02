@@ -12,7 +12,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @SpringBootApplication
 @EnableCaching
 @MapperScan("com.lzj.dao")
-@EnableRedisHttpSession
+
 public class Application {
     public static void main(String[]args){
         SpringApplication.run(Application.class,args);

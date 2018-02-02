@@ -39,6 +39,10 @@ public class ImageController {
      * @param userId
      * @return
      */
+    @RequestMapping("/")
+    public String im() {
+        return "dd";
+    }
     @RequestMapping(method = RequestMethod.GET, value = "/{firstDir}/{userId}/{filename:.+}")
     @ResponseBody
     public ResponseEntity<?> getFile(@PathVariable("firstDir") String firstDir,

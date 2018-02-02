@@ -61,7 +61,7 @@ public class WebConfig {
         registrationBean.setFilter(helloFilter);
         return registrationBean;
     }
-    @Bean
+  /*  @Bean
     public ServletContextAware endpointExporterInitializer(final ApplicationContext applicationContext) {
         return new ServletContextAware() {
 
@@ -76,7 +76,7 @@ public class WebConfig {
                 }
             }
         };
-    }
+    }*/
     /*spring-webscoket 消息推送
     * */
  /*   @Bean

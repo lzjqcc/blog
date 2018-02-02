@@ -1,6 +1,6 @@
 package com.lzj.config;
 
-import com.lzj.interceptor.ClientInterceptor;
+//import com.lzj.interceptor.ClientInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,22 +45,22 @@ public class WebSocketConfig extends AbstractSessionWebSocketMessageBrokerConfig
         // 点对点使用的订阅前缀（客户端订阅路径上会体现出来），不设置的话，默认也是/user/
         // registry.setUserDestinationPrefix("/user/");
     }
-    /**
+ /*   *//**
      * 配置客户端入站通道拦截器
-     */
+     *//*
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.setInterceptors(createUserInterceptor());
     }
 
-    /**
+    *//**
      *
      * @Title: createUserInterceptor
      * @Description: 将客户端渠道拦截器加入spring ioc容器
      * @return
-     */
+     *//*
     @Bean
     public ClientInterceptor createUserInterceptor() {
         return new ClientInterceptor();
-    }
+    }*/
 }
