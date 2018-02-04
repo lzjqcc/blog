@@ -1,6 +1,7 @@
 package com.lzj.service.impl;
 
 import com.google.common.collect.Lists;
+import com.lzj.VO.GroupFriendVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.AuthorityEnum;
 import com.lzj.constant.FriendStatusEnum;
@@ -10,6 +11,7 @@ import com.lzj.dao.FunctionDao;
 import com.lzj.dao.GroupDao;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
+import com.lzj.dao.dto.GroupDto;
 import com.lzj.domain.*;
 import com.lzj.exception.SystemException;
 import com.lzj.helper.RedisTemplateHelper;
@@ -38,6 +40,31 @@ public class FriendService {
     private GroupDao groupDao;
     @Autowired
     RedisTemplateHelper redisTemplateHelper;
+
+    /**
+     * 获取当前登陆人的 好友分组与分组中的好友
+     * @return
+     */
+    public ResponseVO<List<GroupFriendVO>> getCurrentAccountGroupFriend(Account currentAccount) {
+        GroupDto groupDto = new GroupDto();
+        groupDto.setCurrentAccountId(currentAccount.getId());
+        List<Group> list =groupDao.findGroupsByDto(groupDto);
+        List<GroupFriendVO> groupFriendVOS = new ArrayList<>();
+        for (Group group : list) {
+            FriendDto friendDto = new FriendDto();
+            friendDto.setGroupId(group.getId());
+            friendDto.setCurrentAccountId(currentAccount.getId());
+            List<Friend> friends = friendDao.findFriends(friendDto);
+            GroupFriendVO groupFriendVO = new GroupFriendVO();
+            groupFriendVO.setFriends(friends);
+            GroupDto dto = new GroupDto();
+            dto.setCurrentAccountId(currentAccount.getId());
+            dto.setGroupName(group.getGroupName());
+            dto.setId(group.getId());
+            groupFriendVO.setGroupDto(dto);
+        }
+        return ComentUtils.buildResponseVO(true, "操作成功", groupFriendVOS);
+    }
     /**
      * currentAccountId
      * groupId

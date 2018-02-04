@@ -35,7 +35,7 @@ public class UploadIconFilter implements Filter {
         try {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
 
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 

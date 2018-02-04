@@ -37,6 +37,12 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Calendar;
+
+/**
+ * 为什么 使用原生的websocket不会走 SessionConnectEvent
+ * 1,这个使用的Stomp （简单文本协议）
+ * @param <S>
+ */
 @Component
 public class WebSocketConnectHandler<S>
 		implements ApplicationListener<SessionConnectEvent> {
@@ -56,7 +62,7 @@ public class WebSocketConnectHandler<S>
 		if (user instanceof AccountToken) {
 			AccountToken accountToken = (AccountToken) user;
 			String id = SimpMessageHeaderAccessor.getSessionId(headers);
-			this.messagingTemplate.convertAndSend("/topic/friends/signin",
+			this.messagingTemplate.convertAndSend("/top/friends/signin",
 					Arrays.asList(user.getName()));
 			templateHelper.put(accountToken.getAccount().getId()+"", id);
 		}

@@ -19,6 +19,7 @@ package com.lzj.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 /**
  * @author Rob Winch
@@ -34,6 +35,21 @@ public class WebSocketSecurityConfig
 			//.simpMessageDestMatchers("/queue/**", "/topic/**").denyAll()
 			//.simpSubscribeDestMatchers("/queue/**/*-user*", "/topic/**/*-user*").denyAll()
 			//.anyMessage().authenticated();
+		messages.anyMessage().permitAll();
+	}
+
+	@Override
+	public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+		super.configureWebSocketTransport(registration);
+	}
+
+	/**
+	 *  Disable CSRF
+	 * @return
+	 */
+	@Override
+	protected boolean sameOriginDisabled() {
+		return true;
 	}
 	// @formatter:on
 }

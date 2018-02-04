@@ -1,5 +1,6 @@
 package com.lzj.controller;
 
+import com.lzj.VO.GroupFriendVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
@@ -83,12 +84,17 @@ public class FriendController {
         return friendService.findGroupFriends(friendDto);
     }
     @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/currentGroupAndFriend")
+    public ResponseVO<List<GroupFriendVO>> findCurrentGroupAndFriend() {
+        return friendService.getCurrentAccountGroupFriend(ComentUtils.getCurrentAccount());
+    }
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/get")
     public ResponseVO<Authentication> get() {
         ResponseVO<Authentication> responseVO = new ResponseVO<>();
         responseVO.setResult(SecurityContextHolder.getContext().getAuthentication());
         responseVO.setSuccess(true);
-        responseVO.setMessage("lk");
+        responseVO.setMessage("0k");
         return responseVO;
     }
     @ResponseBody
