@@ -44,6 +44,13 @@ public class MessageController {
         }
 
     }
+    @ResponseBody
+    @RequestMapping(value = "cc")
+    public void  send() {
+        Map<String, String> map = new HashMap<>();
+        map.put("dd", "dd");
+            template.convertAndSend("/topic/top",map);
+    }
     @RequestMapping(value = "toRead/{id}",method = RequestMethod.GET )
     @ResponseBody
     public void toRead(@PathVariable Integer id){
