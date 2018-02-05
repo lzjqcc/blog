@@ -63,7 +63,11 @@ public class FriendController {
         friendDto.setFriendId(friendId);
         return friendService.deleteFriend(friendDto);
     }
-
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET,value = "/findAllFriends")
+    public ResponseVO<List<Friend>> findAllFriends() {
+        return friendService.findAllFriends(ComentUtils.getCurrentAccount());
+    }
     /**
      * 查找在线好友
      * @return

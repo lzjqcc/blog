@@ -63,7 +63,7 @@ public class AccountToken implements Authentication, Serializable {
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return true;
     }
 
     @Override

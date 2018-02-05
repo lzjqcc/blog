@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.lang.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class RedisTemplateHelper{
@@ -29,6 +30,15 @@ public class RedisTemplateHelper{
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         redisTemplate.setHashValueSerializer(new GenericToStringSerializer<Serializable>(Serializable.class));
     }
+/*    public Map<String, Serializable> getAll() {
+        return redisTemplate.execute(new RedisCallback<Map<String, Serializable>>() {
+            @Override
+            public Map<String, Serializable> doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                redisConnection.hGetAll()
+                return null;
+            }
+        });
+    }*/
     public long remove(String key) {
         return redisTemplate.execute(new RedisCallback<Long>() {
             @Override
@@ -37,6 +47,7 @@ public class RedisTemplateHelper{
             }
         });
     }
+
     public void put(String key, Serializable value) {
         redisTemplate.execute(new RedisCallback<Serializable>(){
 

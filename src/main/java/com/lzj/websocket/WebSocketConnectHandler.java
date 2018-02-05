@@ -16,11 +16,15 @@
 
 package com.lzj.websocket;
 
+import com.lzj.VO.ResponseVO;
+import com.lzj.constant.FriendStatusEnum;
 import com.lzj.dao.FriendDao;
+import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
 import com.lzj.helper.RedisTemplateHelper;
 import com.lzj.security.AccountToken;
+import com.lzj.service.impl.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.dao.DataAccessException;
@@ -35,8 +39,8 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 为什么 使用原生的websocket不会走 SessionConnectEvent
@@ -49,6 +53,8 @@ public class WebSocketConnectHandler<S>
 	@Autowired
 	private FriendDao friendDao;
 	@Autowired
+	private FriendService friendService;
+	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
 	@Autowired
 	private RedisTemplateHelper templateHelper;
@@ -60,10 +66,23 @@ public class WebSocketConnectHandler<S>
 			return;
 		}
 		if (user instanceof AccountToken) {
+			Map<String, Object> map = new HashMap<>();
 			AccountToken accountToken = (AccountToken) user;
 			String id = SimpMessageHeaderAccessor.getSessionId(headers);
-			this.messagingTemplate.convertAndSend("/top/friends/signin",
-					Arrays.asList(user.getName()));
+			FriendDto dto = new FriendDto();
+			dto.setFriendId(accountToken.getAccount().getId());
+			dto.setStatus(FriendStatusEnum.AGREE.code);
+			Map<Integer, Friend> map1  = friendDao.findFriends(dto).stream().collect(Collectors.toMap(Friend::getCurrentAccountId, t-> t));
+			List<Integer> onlineFriendId = friendService.findOnlineFriends(accountToken.getAccount().getId()).getResult();
+			for (Integer friendId : onlineFriendId) {
+				if ( !Objects.isNull(this.templateHelper.get(friendId + ""))) {
+					map.put("friendId", friendId);
+					map.put("friendName", map1.get(friendId).getFriendName());
+					this.messagingTemplate.convertAndSend(WebSocketConstans.NOTIFY_FRIEND_SIGN +"/"+friendId,
+							map);
+				}
+			}
+
 			templateHelper.put(accountToken.getAccount().getId()+"", id);
 		}
 

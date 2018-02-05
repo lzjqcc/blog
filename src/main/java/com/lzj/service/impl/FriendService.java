@@ -40,7 +40,14 @@ public class FriendService {
     private GroupDao groupDao;
     @Autowired
     RedisTemplateHelper redisTemplateHelper;
+    public ResponseVO<List<Friend>> findAllFriends(Account currentAccount) {
+        FriendDto dto = new FriendDto();
+        dto.setCurrentAccountId(currentAccount.getId());
+        dto.setStatus(FriendStatusEnum.AGREE.code);
 
+        List<Friend> list = friendDao.findFriends(dto);
+        return ComentUtils.buildResponseVO(true, "操作成功", list);
+    }
     /**
      * 获取当前登陆人的 好友分组与分组中的好友
      * @return
