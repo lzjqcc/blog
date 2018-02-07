@@ -16,8 +16,15 @@
 
 package com.lzj.websocket;
 
+import com.lzj.constant.FriendStatusEnum;
+import com.lzj.dao.FriendDao;
+import com.lzj.dao.dto.FriendDto;
+import com.lzj.domain.Friend;
 import com.lzj.helper.RedisTemplateHelper;
 import com.lzj.security.AccountToken;
+import com.lzj.service.impl.FriendService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.MessageHeaders;
@@ -29,13 +36,23 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Component
 public class WebSocketDisconnectHandler<S>
 		implements ApplicationListener<SessionDisconnectEvent> {
+	private Logger logger = LoggerFactory.getLogger(WebSocketDisconnectHandler.class);
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
 	@Autowired
 	private RedisTemplateHelper helper;
+	@Autowired
+	private FriendDao friendDao;
+	@Autowired
+	private FriendService friendService;
 	@Override
 	public void onApplicationEvent(SessionDisconnectEvent event) {
 		MessageHeaders headers = event.getMessage().getHeaders();
@@ -45,11 +62,20 @@ public class WebSocketDisconnectHandler<S>
 			return;
 		}
 		if (user instanceof AccountToken) {
-			AccountToken token = (AccountToken) user;
+			AccountToken accountToken = (AccountToken) user;
+			FriendDto dto = new FriendDto();
+			dto.setFriendId(accountToken.getAccount().getId());
+			dto.setStatus(FriendStatusEnum.AGREE.code);
+			Map<Integer, Friend> map1  = friendDao.findFriends(dto).stream().collect(Collectors.toMap(Friend::getCurrentAccountId , t-> t));
+			List<Friend> onlineFriendId = friendService.findOnlineFriends(accountToken.getAccount().getId()).getResult();
+			for (Friend friend : onlineFriendId) {
+				if ( !Objects.isNull(this.helper.get(friend.getFriendId() + ""))) {
+					logger.info("推送消息，routing key = {}", WebSocketConstans.NOTIFY_FRIEND_SIGN_OUT+"/"+ friend.getFriendId());
+					this.messagingTemplate.convertAndSend(WebSocketConstans.NOTIFY_FRIEND_SIGN_OUT +"/"+friend.getFriendId(), map1.get(friend.getFriendId()));
+				}
+			}
+			helper.remove(accountToken.getAccount().getId() + "");
 
-			helper.remove(token.getAccount().getId() + "");
-			this.messagingTemplate.convertAndSend("/topic/friend/signout",
-					Arrays.asList(token.getAccount().getUserName()));
 		}
 
 
