@@ -36,7 +36,7 @@ import java.util.List;
  * EnableWebSecurity 已经包含Configuration
  */
 @EnableWebSecurity
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 10)
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     FunctionDao functionDao;

@@ -5,6 +5,7 @@ import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
+import com.lzj.security.AccountToken;
 import com.lzj.service.impl.FriendService;
 import com.lzj.utils.ComentUtils;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class FriendController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/findOnlineFriends")
-    public ResponseVO<List<Integer>> findOnlineFriend() {
+    public ResponseVO<List<Friend>> findOnlineFriend() {
         Account account = ComentUtils.getCurrentAccount();
         return friendService.findOnlineFriends(account.getId());
     }
@@ -94,11 +95,12 @@ public class FriendController {
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/get")
-    public ResponseVO<Authentication> get() {
-        ResponseVO<Authentication> responseVO = new ResponseVO<>();
-        responseVO.setResult(SecurityContextHolder.getContext().getAuthentication());
+    public ResponseVO<Account> get() {
+        ResponseVO<Account> responseVO = new ResponseVO<>();
+        AccountToken token = (AccountToken) SecurityContextHolder.getContext().getAuthentication();
+        responseVO.setResult(token.getAccount());
         responseVO.setSuccess(true);
-        responseVO.setMessage("0k");
+        responseVO.setMessage("ok");
         return responseVO;
     }
     @ResponseBody

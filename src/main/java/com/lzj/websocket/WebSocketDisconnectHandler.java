@@ -46,8 +46,9 @@ public class WebSocketDisconnectHandler<S>
 		}
 		if (user instanceof AccountToken) {
 			AccountToken token = (AccountToken) user;
+
 			helper.remove(token.getAccount().getId() + "");
-			this.messagingTemplate.convertAndSend("/topic/friends/signout",
+			this.messagingTemplate.convertAndSend("/topic/friend/signout",
 					Arrays.asList(token.getAccount().getUserName()));
 		}
 

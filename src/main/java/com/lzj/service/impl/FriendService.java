@@ -154,15 +154,15 @@ public class FriendService {
 
         return ComentUtils.buildResponseVO(true, "操作成功",  friendDao.findFriends(dto));
     }
-    public ResponseVO<List<Integer>> findOnlineFriends(Integer currentAccountId) {
+    public ResponseVO<List<Friend>> findOnlineFriends(Integer currentAccountId) {
         FriendDto dto = new FriendDto();
         dto.setCurrentAccountId(currentAccountId);
         dto.setStatus(FriendStatusEnum.AGREE.code);
         List<Friend> list = friendDao.findFriends(dto);
-        List<Integer> ids = new ArrayList<>();
+        List<Friend> ids = new ArrayList<>();
         for (Friend friend : list) {
             if (redisTemplateHelper.get(friend.getFriendId()+"") != null) {
-                ids.add(friend.getFriendId());
+                ids.add(friend);
             }
         }
         return ComentUtils.buildResponseVO(true, "操作成功", ids);
