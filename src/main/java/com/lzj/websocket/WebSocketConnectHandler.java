@@ -78,6 +78,7 @@ public class WebSocketConnectHandler<S>
 			Map<Integer, Friend> map1  = friendDao.findFriends(dto).stream().collect(Collectors.toMap(Friend::getCurrentAccountId , t-> t));
 			List<Friend> onlineFriendId = friendService.findOnlineFriends(accountToken.getAccount().getId()).getResult();
 			// 将自己作为friend的记录推送给已经登录的朋友用户
+			// 前端只订阅自己的id, 由后端推送
 			for (Friend friend : onlineFriendId) {
 				if ( !Objects.isNull(this.templateHelper.get(friend.getFriendId() + ""))) {
 					logger.info("推送消息，routing key = {}", WebSocketConstans.NOTIFY_FRIEND_SIGN+"/"+ friend.getFriendId());
