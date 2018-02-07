@@ -66,6 +66,7 @@ public class WebSocketDisconnectHandler<S>
 			FriendDto dto = new FriendDto();
 			dto.setFriendId(accountToken.getAccount().getId());
 			dto.setStatus(FriendStatusEnum.AGREE.code);
+			// 自己为好友的记录
 			Map<Integer, Friend> map1  = friendDao.findFriends(dto).stream().collect(Collectors.toMap(Friend::getCurrentAccountId , t-> t));
 			List<Friend> onlineFriendId = friendService.findOnlineFriends(accountToken.getAccount().getId()).getResult();
 			for (Friend friend : onlineFriendId) {
