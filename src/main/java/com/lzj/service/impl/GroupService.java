@@ -8,13 +8,22 @@ import com.lzj.dao.dto.GroupDto;
 import com.lzj.domain.Friend;
 import com.lzj.domain.Group;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.List;
 
 @Service
 public class GroupService {
+    Logger logger = LoggerFactory.getLogger(GroupService.class);
+    @Autowired
+    PlatformTransactionManager manager;
     @Autowired
     private GroupDao groupDao;
     public ResponseVO insertGroup(GroupDto dto) {
@@ -22,13 +31,21 @@ public class GroupService {
         if (dto.getCurrentAccountId() == null || StringUtils.isEmpty(dto.getGroupName())) {
             responseVO.setSuccess(false);
             responseVO.setMessage("分组名能为空");
+            return responseVO;
         }
-
-        Group group = new Group();
-        buildGroup(group,dto);
-        groupDao.insertGroup(group);
-        responseVO.setSuccess(true);
-        responseVO.setMessage("操作成功");
+        TransactionDefinition definition = new DefaultTransactionDefinition(3);
+        TransactionStatus status = manager.getTransaction(definition);
+        try {
+            Group group = new Group();
+            buildGroup(group,dto);
+            groupDao.insertGroup(group);
+            responseVO.setSuccess(true);
+            responseVO.setMessage("操作成功");
+            manager.commit(status);
+        }catch (Exception e) {
+            manager.rollback(status);
+            logger.info("回滚e={}",e);
+        }
         return responseVO;
     }
     private void buildGroup(Group group, GroupDto dto) {

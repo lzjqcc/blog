@@ -21,7 +21,7 @@
         INSERT INTO tb_group
         (<include refid="columns"/>)
         VALUES
-        (#{currentAccoutId},
+        (#{currentAccountId},
         #{createTime},
         #{updateTime},
         #{groupName})
