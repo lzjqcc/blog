@@ -26,7 +26,7 @@
     </insert>
     <select id="findByUserIdAndName" resultMap="assortmentResultMap" useCache="true">
       SELECT t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
-        FROM  tb_assortment t WHERE t.current_account_id=#{currentAccountId} and t.assortment_name=#{name}
+        FROM  tb_assortment t WHERE t.current_account_id=#{userId} and t.assortment_name=#{name}
     </select>
     <select id="updateAssortment" flushCache="true">
         UPDATE tb_assortment SET

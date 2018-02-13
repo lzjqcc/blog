@@ -4,6 +4,7 @@ import com.lzj.VO.ResponseVO;
 import com.lzj.constant.CommentTypeEnum;
 import com.lzj.dao.AssortmentDao;
 import com.lzj.dao.dto.AccountDto;
+import com.lzj.dao.dto.ArticleDto;
 import com.lzj.domain.*;
 import com.lzj.exception.BusinessException;
 import com.lzj.service.ArticleService;
@@ -76,27 +77,19 @@ public class ArticleController {
      */
     @RequestMapping(value = "insertArticle", method = RequestMethod.POST)
     @ResponseBody
-    public void insertArticle(
-                              @RequestParam(name = "content") String content,
-                              @RequestParam(name = "title") String title,
-                              @RequestParam(name = "assortment", required = false) String assortment,
-                              @RequestParam(name = "top", required = false) Integer top,
-                              @RequestParam(name = "toTop", required = false) Boolean toTop,
-                              HttpServletResponse response, HttpServletRequest request) {
-        boolean isAccess =  ComentUtils.vailedToken(response, request);
+    public void insertArticle(@RequestBody ArticleDto articleDto) {
+       /* boolean isAccess =  ComentUtils.vailedToken(response, request);
         if (!isAccess){
             return;
-        }
+        }*/
+
         Account account = ComentUtils.getCurrentAccount();
         Article article = new Article();
-        article.setTitle(title);
-        article.setContent(content);
-        article.setTop(top);
-        article.setToTop(toTop);
+        BeanUtils.copyProperties(articleDto, article);
         article.setCurrentAccountId(account.getId());
         AccountDto dto = new AccountDto();
         BeanUtils.copyProperties(account,dto);
-        articleService.insertArticle(article, dto, assortment, picMap.get(account.getId()));
+        articleService.insertArticle(article, dto, articleDto.getAssortment(), picMap.get(account.getId()));
         picMap.remove(account.getId());
        // return "forward:/articles/articlePage";
     }

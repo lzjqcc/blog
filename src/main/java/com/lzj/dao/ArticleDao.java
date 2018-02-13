@@ -15,7 +15,6 @@ import java.util.Map;
  */
 @Repository("articleDao")
 public interface ArticleDao {
-    @EnableRelationTable(relationTableName = "tb_friend_function",value = {"current_account_id","friend_id","function_id"})
     void insertArticle(Article article);
     Article findById(Integer id);
     List<Article> findByUserId(@Param("userId") Integer userId, Page page);
