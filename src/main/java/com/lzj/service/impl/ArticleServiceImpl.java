@@ -1,6 +1,7 @@
 package com.lzj.service.impl;
 
 import com.lzj.VO.ArticleMongo;
+import com.lzj.VO.ResponseVO;
 import com.lzj.dao.ArticleDao;
 import com.lzj.dao.AssortmentDao;
 import com.lzj.dao.dto.AccountDto;
@@ -19,8 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 如果要
@@ -84,9 +87,6 @@ public class ArticleServiceImpl implements ArticleService {
         query.addCriteria(Criteria.where("id").is(article.getId()));
         ArticleMongo articleMongo = template.findOne(query, ArticleMongo.class,mongoDB);
         article.setContent(articleMongo.getContent());
-        if (article.getVisitTimes()==null){
-            article.setVisitTimes(0);
-        }
         return article;
     }
 
@@ -145,6 +145,14 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
         return map;
+    }
+
+    @Override
+    public ResponseVO<Map<String, Integer>> findGroupByCreateTime(Integer userId) {
+        List<Article> list = articleDao.findGroupByCreateTime(userId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        Map<String, Integer> map = list.stream().collect(Collectors.toMap(t->format.format(t.getCreateTime()), Article::getCount));
+        return ComentUtils.buildResponseVO(true, "操作成功", map);
     }
 
     private String getYearAndMon(Date date) {

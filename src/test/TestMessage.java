@@ -23,8 +23,8 @@ public class TestMessage {
         MessageInfo info=new MessageInfo();
 
         info.setFlag(MessageInfo.FLAG.COMMENT_FLAG);
-        info.setToUserId(1);
-        info.setFromUserId(2);
+        info.setToAccountId(1);
+        info.setFromAccountId(2);
         info.setType(true);
         messageDao.insertMessage(info);
     }*/

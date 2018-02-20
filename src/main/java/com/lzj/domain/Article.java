@@ -1,5 +1,7 @@
 package com.lzj.domain;
 
+import java.util.Date;
+
 /**
  * Created by li on 17-8-6.
  */
@@ -19,6 +21,15 @@ public class Article extends BaseEntity {
     private Boolean toTop;//是否置顶
     private Integer assortmentId;
     private String tips;//标签
+    private Integer count;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public String getTips() {
         return tips;

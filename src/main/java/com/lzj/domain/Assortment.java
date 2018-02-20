@@ -1,6 +1,7 @@
 package com.lzj.domain;
 
 public class Assortment extends BaseEntity {
+    private static final long serialVersionUID = -372347969624746560L;
     private String assortmentName;
     private Integer articleNum;
     private Integer currentAccountId;

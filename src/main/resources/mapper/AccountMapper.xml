@@ -108,7 +108,7 @@
           select id , <include refid="userField"></include> from tb_account
     </select>
     <select id="findAccountsByIds" resultMap="userResultMap" useCache="true">
-        SELECT <include refid="userField"></include> from tb_account WHERE
+        SELECT id,<include refid="userField"></include> from tb_account WHERE
         id in
         <foreach collection="param" item="item" separator="," open="(" close=")">
             #{item}

@@ -16,6 +16,7 @@
         <result column="top" property="top"/>
         <result column="to_top" property="toTop"/>
         <result column="assortment_id" property="assortmentId"/>
+        <result column="count" property="count"/>
     </resultMap>
     <sql id="userColumns">
     ${alias}.id,
@@ -72,5 +73,8 @@
     <select id="findHistoryMax" resultMap="articleResultMap" useCache="true">
         SELECT id,title,visit_times from tb_article WHERE
         current_account_id=#{currentAccountId} ORDER BY visit_times DESC
+    </select>
+    <select id="findGroupByCreateTime" resultMap="articleResultMap">
+        SELECT count(id) as count  ,date(create_time) as create_time FROM tb_article where current_account_id = #{userId} group by date_format(create_time,'%Y-%m');
     </select>
 </mapper>

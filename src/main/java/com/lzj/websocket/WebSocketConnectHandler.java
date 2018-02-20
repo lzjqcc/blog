@@ -36,6 +36,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 
@@ -60,6 +62,8 @@ public class WebSocketConnectHandler<S>
 	private SimpMessageSendingOperations messagingTemplate;
 	@Autowired
 	private RedisTemplateHelper templateHelper;
+
+
 	private Logger logger = LoggerFactory.getLogger(WebSocketConnectHandler.class);
 	@Override
 	public void onApplicationEvent(SessionConnectEvent event) {
@@ -72,6 +76,7 @@ public class WebSocketConnectHandler<S>
 			Map<String, Object> map = new HashMap<>();
 			AccountToken accountToken = (AccountToken) user;
 			String id = SimpMessageHeaderAccessor.getSessionId(headers);
+
 			FriendDto dto = new FriendDto();
 			dto.setFriendId(accountToken.getAccount().getId());
 			dto.setStatus(FriendStatusEnum.AGREE.code);

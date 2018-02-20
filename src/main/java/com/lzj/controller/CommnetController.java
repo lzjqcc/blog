@@ -1,5 +1,8 @@
 package com.lzj.controller;
 
+import com.lzj.VO.CommentMongo;
+import com.lzj.VO.ResponseVO;
+import com.lzj.constant.CommentTypeEnum;
 import com.lzj.domain.Comment;
 import com.lzj.domain.MessageInfo;
 import com.lzj.service.ArticleService;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by li on 17-8-7.
@@ -27,22 +31,26 @@ public class CommnetController {
     private ArticleService articleService;
     @Autowired
     WebScoketService webScoketService;
-
+    @RequestMapping(value = "getComments/{articleId}", method = RequestMethod.GET)
+    public ResponseVO getComments(@PathVariable Integer articleId) {
+        List<CommentMongo> list = commentService.getComments(articleId, CommentTypeEnum.ARTICLE.code);
+        return ComentUtils.buildResponseVO(true, "操作成功", list);
+    }
     @ResponseBody
     @RequestMapping(value = "insertComment",method = RequestMethod.POST)
-    public void insertComment(@RequestBody Comment comment, HttpServletResponse response, HttpServletRequest request){
+    public void insertComment(@RequestBody Comment comment){
 
       /*  boolean isAccess = ComentUtils.vailedToken(response,request);
         if (!isAccess){
             return;
         }*/
-        //commentService.insertComment(comment);
-        MessageInfo info = new MessageInfo();
+        commentService.insertComment(comment);
+        /*MessageInfo info = new MessageInfo();
         info.setType(false);
         info.setToAccountId(comment.getToAccountId());
         info.setFromAccountId(comment.getFromAccountId());
         info.setPushMessage(comment.getComment());
         info.setFlag(MessageInfo.FLAG.COMMENT_FLAG);
-        webScoketService.sendMessage(info);
+        webScoketService.sendMessage(info);*/
     }
 }

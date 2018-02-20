@@ -4,9 +4,11 @@ import com.lzj.annotation.EnableRelationTable;
 import com.lzj.domain.Article;
 
 import com.lzj.domain.Page;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,5 +39,5 @@ public interface ArticleDao {
      * @return
      */
     List<Article>   findHistoryMax(@Param("userId")Integer userId, Page page);
-
+    List<Article> findGroupByCreateTime(Integer userId);
 }

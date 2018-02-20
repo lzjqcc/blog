@@ -1,5 +1,6 @@
 package com.lzj.service;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.*;
 
@@ -24,5 +25,6 @@ public interface ArticleService {
      * @return
      */
     Map<String,List<Article>> findDateNum(Integer userId, Page page);
+    ResponseVO<Map<String, Integer>> findGroupByCreateTime(Integer userId);
 }
 

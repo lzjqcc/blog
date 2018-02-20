@@ -7,9 +7,10 @@ import java.io.Serializable;
  */
 
 
-public class Comment extends BaseEntity implements Cloneable,Serializable{
+public class Comment extends BaseEntity implements Serializable{
 
 
+    private static final long serialVersionUID = 8680640561261347063L;
     //用户评论组合  这个真是不错 time=*** FromUserSaid1
    /* @ElementCollection(targetClass = String.class)
     @MapKeyClass(value = String.class)
@@ -26,32 +27,23 @@ public class Comment extends BaseEntity implements Cloneable,Serializable{
     private Integer source;
     private Integer currentAccountId;
     private Integer pictureGroupId;
+    private String fromAccountName;
+    private String toAccountName;
 
-    public Integer getSource() {
-        return source;
+    public String getFromAccountName() {
+        return fromAccountName;
     }
 
-    public Comment setSource(Integer source) {
-        this.source = source;
-        return this;
+    public void setFromAccountName(String fromAccountName) {
+        this.fromAccountName = fromAccountName;
     }
 
-    public Integer getCurrentAccountId() {
-        return currentAccountId;
+    public String getToAccountName() {
+        return toAccountName;
     }
 
-    public Comment setCurrentAccountId(Integer currentAccountId) {
-        this.currentAccountId = currentAccountId;
-        return this;
-    }
-
-    public Integer getPictureGroupId() {
-        return pictureGroupId;
-    }
-
-    public Comment setPictureGroupId(Integer pictureGroupId) {
-        this.pictureGroupId = pictureGroupId;
-        return this;
+    public void setToAccountName(String toAccountName) {
+        this.toAccountName = toAccountName;
     }
 
     public String getComment() {
@@ -92,5 +84,29 @@ public class Comment extends BaseEntity implements Cloneable,Serializable{
 
     public void setReplayComentId(Integer replayComentId) {
         this.replayComentId = replayComentId;
+    }
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
+
+    public Integer getCurrentAccountId() {
+        return currentAccountId;
+    }
+
+    public void setCurrentAccountId(Integer currentAccountId) {
+        this.currentAccountId = currentAccountId;
+    }
+
+    public Integer getPictureGroupId() {
+        return pictureGroupId;
+    }
+
+    public void setPictureGroupId(Integer pictureGroupId) {
+        this.pictureGroupId = pictureGroupId;
     }
 }

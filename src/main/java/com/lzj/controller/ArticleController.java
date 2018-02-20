@@ -57,7 +57,6 @@ public class ArticleController {
         articleService.updateByMap(map);
         Map<String, Object> entityMap = new HashMap<>();
         entityMap.put("article", article);
-        entityMap.put("comment", commentService.getComments(article.getId(), CommentTypeEnum.ARTICLE.code));
         responseVO.setSuccess(true);
         responseVO.setResult(entityMap);
         return responseVO;
@@ -77,7 +76,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "insertArticle", method = RequestMethod.POST)
     @ResponseBody
-    public void insertArticle(@RequestBody ArticleDto articleDto) {
+    public ResponseVO insertArticle(@RequestBody ArticleDto articleDto) {
        /* boolean isAccess =  ComentUtils.vailedToken(response, request);
         if (!isAccess){
             return;
@@ -91,6 +90,7 @@ public class ArticleController {
         BeanUtils.copyProperties(account,dto);
         articleService.insertArticle(article, dto, articleDto.getAssortment(), picMap.get(account.getId()));
         picMap.remove(account.getId());
+        return ComentUtils.buildResponseVO(true, "操作成功", article.getId());
        // return "forward:/articles/articlePage";
     }
     /**不需要登录
@@ -121,15 +121,19 @@ public class ArticleController {
     /**这个不需要登录
      * 根据user_id来查询显示博客分类及文章个数
      */
-    @RequestMapping(value = "findGroup" )
+    @RequestMapping(value = "findGroup/{userId}" )
     @ResponseBody
-    public List<Assortment> findGroupByUserId(@RequestParam("userId")Integer userId){
-       return articleService.findAssortmentByUserId(userId);
+    public ResponseVO<List<Assortment>> findGroupByUserId(@PathVariable Integer userId){
+        if (Objects.isNull(userId)) {
+            userId = ComentUtils.getCurrentAccount().getId();
+        }
+        return ComentUtils.buildResponseVO(true, "操作成功", articleService.findAssortmentByUserId(userId));
     }
     @RequestMapping(value = "updateAssortment")
     public void updateAssortment(@RequestParam("assortmentId")Integer assortmentId ,@RequestParam("assortment")String assortment){
         assortmentDao.updateAssortment(assortment,null,assortmentId);
     }
+
     /**不需要登录
      * 描述：点击具体的某个分类，显示该分类下面所有的文章
      * @return
@@ -165,15 +169,20 @@ public class ArticleController {
     /**不需要登录
      * 总浏览   每月写作数目
      */
-    @RequestMapping(value = "findDateNum")
+    @RequestMapping(value = "findDateNum/{userId}")
     @ResponseBody
-    public Map<String, List<Article>> findDateNum(@RequestParam("userId")Integer userId,
+    public Map<String, List<Article>> findDateNum(@PathVariable("userId")Integer userId,
                                                   @RequestParam("currentPage") Integer currentPage,
                                                   @RequestParam("pageSize")Integer pageSize) {
         Page page = new Page();
         page.setCurrentPage(currentPage);
         page.setPageSize(pageSize);
         return articleService.findDateNum(userId, page);
+    }
+    @RequestMapping(value = "findGroupByCreateTime/{userId}")
+    @ResponseBody
+    public ResponseVO<Map<String, Integer>> findGroupByCreateTime(@PathVariable Integer userId) {
+      return    articleService.findGroupByCreateTime(userId);
     }
     /**
      * 不需要登录

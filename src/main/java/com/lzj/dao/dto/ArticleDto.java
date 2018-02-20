@@ -13,7 +13,7 @@ public class ArticleDto implements Serializable {
     private Integer visitTimes;//访问次数
     private Integer currentAccountId;
     private Integer top;//置顶排序
-    private Boolean toTop;//是否置顶
+    private boolean toTop;//是否置顶
     private String tips;//标签
     private String assortment;
 

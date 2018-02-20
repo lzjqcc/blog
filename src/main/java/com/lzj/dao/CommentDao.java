@@ -10,8 +10,6 @@ import java.util.List;
  */
 @Repository("commentDao")
 public interface CommentDao{
-    public List<Comment> findAllByFromUser_Id(Integer userId);
-    public List<Comment> findAllByToUser_Id(Integer userId);
     void insertComment(Comment comment);
     List<Comment> findByArticleId(Integer articleId);
 

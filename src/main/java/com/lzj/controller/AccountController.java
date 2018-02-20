@@ -1,5 +1,6 @@
 package com.lzj.controller;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
 import com.lzj.exception.BusinessException;
@@ -20,6 +21,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 用户信息修改，头像上传,查看个人信息
@@ -38,7 +40,15 @@ public class AccountController {
         dto.setHeadIconURL(ComentUtils.getImageURL(account.getHeadIcon()));
         return dto;
     }
-
+    @RequestMapping(value = "isLogin", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseVO isLogin() {
+        Account account = ComentUtils.getCurrentAccount();
+        if (Objects.isNull(account)) {
+            return ComentUtils.buildResponseVO(true, "操作成功", false);
+        }
+        return ComentUtils.buildResponseVO(true,"操作成功", true);
+    }
     @RequestMapping(value = "updateUser", method = RequestMethod.POST)
     @ResponseBody
     public void updateUser(@RequestBody AccountDto dto) {

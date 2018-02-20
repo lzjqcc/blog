@@ -1,7 +1,9 @@
 import com.lzj.Application;
+import com.lzj.VO.CommentMongo;
 import com.lzj.dao.ArticleDao;
 import com.lzj.domain.Article;
 import com.lzj.service.ArticleService;
+import com.lzj.service.impl.CommentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -20,10 +19,17 @@ import java.util.Set;
 public class TestArticle {
     @Autowired
     ArticleDao articleDao;
+    @Autowired
+    CommentService commentService;
+    @Test
+    public void testComment() {
+      List<CommentMongo> list =  commentService.getComments(21, 0);
+      int i=0;
+    }
     @Test
     public void testFindById(){
-       Article article= articleService.findById(6);
-       System.out.println(article);
+        List<Article> list  = articleDao.findGroupByCreateTime(2);
+        int i = 0;
     }
     @Test
     public void testInsert(){

@@ -28,6 +28,10 @@
       SELECT t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
         FROM  tb_assortment t WHERE t.current_account_id=#{userId} and t.assortment_name=#{name}
     </select>
+    <select id="findAssortmentByUserId" resultMap="assortmentResultMap">
+        select t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
+        FROM tb_assortment t where t.current_account_id = #{userId}
+    </select>
     <select id="updateAssortment" flushCache="true">
         UPDATE tb_assortment SET
         <if test="name!=null">

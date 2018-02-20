@@ -6,11 +6,39 @@ import com.lzj.domain.Comment;
 import java.util.List;
 
 public class CommentMongo extends BaseEntity{
+    private static final long serialVersionUID = -4502229365996582610L;
     private String comment;
     private Integer articleId;
-    private Integer fromUserId;//哪个用户评论
-    private Integer toUserId;//给哪个用户
+    private Integer fromAccountId;//哪个用户评论
+    private String fromAccountName;
+    private String toAccountName;
+    private Integer toAccountId;//给哪个用户
+    private Integer currentAccountId;
     private List<Comment> list;
+
+    public String getFromAccountName() {
+        return fromAccountName;
+    }
+
+    public void setFromAccountName(String fromAccountName) {
+        this.fromAccountName = fromAccountName;
+    }
+
+    public String getToAccountName() {
+        return toAccountName;
+    }
+
+    public void setToAccountName(String toAccountName) {
+        this.toAccountName = toAccountName;
+    }
+
+    public Integer getCurrentAccountId() {
+        return currentAccountId;
+    }
+
+    public void setCurrentAccountId(Integer currentAccountId) {
+        this.currentAccountId = currentAccountId;
+    }
 
     public String getComment() {
         return comment;
@@ -28,20 +56,20 @@ public class CommentMongo extends BaseEntity{
         this.articleId = articleId;
     }
 
-    public Integer getFromUserId() {
-        return fromUserId;
+    public Integer getFromAccountId() {
+        return fromAccountId;
     }
 
-    public void setFromUserId(Integer fromUserId) {
-        this.fromUserId = fromUserId;
+    public void setFromAccountId(Integer fromAccountId) {
+        this.fromAccountId = fromAccountId;
     }
 
-    public Integer getToUserId() {
-        return toUserId;
+    public Integer getToAccountId() {
+        return toAccountId;
     }
 
-    public void setToUserId(Integer toUserId) {
-        this.toUserId = toUserId;
+    public void setToAccountId(Integer toAccountId) {
+        this.toAccountId = toAccountId;
     }
 
     public List<Comment> getList() {
