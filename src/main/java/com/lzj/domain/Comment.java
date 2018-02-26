@@ -1,6 +1,9 @@
 package com.lzj.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by li on 17-8-6.
@@ -29,6 +32,20 @@ public class Comment extends BaseEntity implements Serializable{
     private Integer pictureGroupId;
     private String fromAccountName;
     private String toAccountName;
+    private String src;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Override
+    public Date getCreateTime() {
+        return super.getCreateTime();
+    }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
 
     public String getFromAccountName() {
         return fromAccountName;

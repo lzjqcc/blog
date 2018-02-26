@@ -38,12 +38,14 @@ public class CommnetController {
     }
     @ResponseBody
     @RequestMapping(value = "insertComment",method = RequestMethod.POST)
-    public void insertComment(@RequestBody Comment comment){
+    public ResponseVO insertComment(@RequestBody Comment comment){
 
       /*  boolean isAccess = ComentUtils.vailedToken(response,request);
         if (!isAccess){
             return;
         }*/
+        comment.setFromAccountId(ComentUtils.getCurrentAccount().getId());
+        comment.setCurrentAccountId(ComentUtils.getCurrentAccount().getId());
         commentService.insertComment(comment);
         /*MessageInfo info = new MessageInfo();
         info.setType(false);
@@ -52,5 +54,6 @@ public class CommnetController {
         info.setPushMessage(comment.getComment());
         info.setFlag(MessageInfo.FLAG.COMMENT_FLAG);
         webScoketService.sendMessage(info);*/
+        return ComentUtils.buildResponseVO(true, "操作成功", comment.getId());
     }
 }

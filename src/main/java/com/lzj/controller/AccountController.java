@@ -47,7 +47,7 @@ public class AccountController {
         if (Objects.isNull(account)) {
             return ComentUtils.buildResponseVO(true, "操作成功", false);
         }
-        return ComentUtils.buildResponseVO(true,"操作成功", true);
+        return ComentUtils.buildResponseVO(true,"操作成功", account);
     }
     @RequestMapping(value = "updateUser", method = RequestMethod.POST)
     @ResponseBody

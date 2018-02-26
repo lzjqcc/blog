@@ -73,6 +73,7 @@ public class InsertAop {
             statement = connection.prepareStatement(SQL);
             statement.executeUpdate();
             logger.info("插入关联表成功sql --->{}",SQL);
+            transactional.commit();
         } catch (IllegalAccessException e) {
             rollback(transactional);
             throw new SystemException(321, "插入关系表失败:SQL-->"+SQL,e );
@@ -80,10 +81,11 @@ public class InsertAop {
             rollback(transactional);
             throw new SystemException(321, "插入关系表失败:SQL-->"+SQL ,e);
         } catch (IntrospectionException e) {
+            rollback(transactional);
             e.printStackTrace();
         } finally {
 
-            try {
+          /*  try {
                 transactional.commit();
                 if (statement != null) {
                     statement.close();
@@ -94,7 +96,7 @@ public class InsertAop {
                 transactional.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-            }
+            }*/
 
         }
 

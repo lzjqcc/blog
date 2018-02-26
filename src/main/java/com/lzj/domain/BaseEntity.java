@@ -2,6 +2,8 @@ package com.lzj.domain;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,7 +16,6 @@ import java.util.Date;
 public class BaseEntity implements Serializable {
 
     protected Integer id;
-
     private Date createTime;
 
     private Date updateTime;

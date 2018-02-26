@@ -2,6 +2,7 @@ import com.lzj.Application;
 import com.lzj.VO.CommentMongo;
 import com.lzj.dao.ArticleDao;
 import com.lzj.domain.Article;
+import com.lzj.domain.Comment;
 import com.lzj.service.ArticleService;
 import com.lzj.service.impl.CommentService;
 import org.junit.Test;
@@ -25,6 +26,17 @@ public class TestArticle {
     public void testComment() {
       List<CommentMongo> list =  commentService.getComments(21, 0);
       int i=0;
+    }
+    @Test
+    public void testInsertComment() {
+        Comment comment = new Comment();
+        comment.setCurrentAccountId(4);
+        comment.setFromAccountId(4);
+        comment.setToAccountId(2);
+        comment.setArticleId(21);
+        comment.setComment("你最菜了");
+        commentService.insertComment(comment);
+
     }
     @Test
     public void testFindById(){
@@ -68,7 +80,7 @@ public class TestArticle {
     public void testInsert(){
         Article article=new Article();
         article.setTitle("真实");
-        article.setPushMessage("真实男上来看打飞机");
+        article.setPushMessage("真实男上来看打机");
         User user=new User();
         user.setId(1);
         article.setUserId(1);

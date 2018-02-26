@@ -47,7 +47,8 @@
         </include>
         )
         VALUES
-        (#{comment},#{articleId},#{fromAccountId},#{toAccountId},#{replayComentId},#{createTime},#{updateTime})
+        (#{comment},#{articleId},#{fromAccountId},#{toAccountId},#{replayComentId},
+        #{createTime},#{updateTime},#{pictureGroupId},#{source},#{currentAccountId})
     </insert>
     <select id="findByArticleId" useCache="true" resultMap="commentResultMap">
         SELECT
