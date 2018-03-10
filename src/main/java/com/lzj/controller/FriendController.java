@@ -18,7 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/friend")
@@ -90,8 +92,11 @@ public class FriendController {
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/currentGroupAndFriend")
-    public ResponseVO<List<GroupFriendVO>> findCurrentGroupAndFriend() {
-        return friendService.getCurrentAccountGroupFriend(ComentUtils.getCurrentAccount());
+    public ResponseVO findCurrentGroupAndFriend() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("currentAccount", ComentUtils.getCurrentAccount());
+        map.put("group", friendService.getCurrentAccountGroupFriend(ComentUtils.getCurrentAccount()).getResult());
+        return ComentUtils.buildResponseVO(true, "操纵成功", map);
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/get")

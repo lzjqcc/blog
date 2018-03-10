@@ -9,7 +9,7 @@
         <result column="group_id" property="groupId"></result>
         <result column="group_name" property="groupName"/>
         <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateCreate"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
     <sql id="columns">
         current_account_id,
@@ -32,7 +32,7 @@
         WHERE
         id = #{id}
     </update>
-    <select id="findGroupsByDto">
+    <select id="findGroupsByDto" resultMap="groupMap">
         SELECT id,
         <include refid="columns"/>
         from tb_group

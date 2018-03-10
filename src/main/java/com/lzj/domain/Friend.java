@@ -19,6 +19,36 @@ public class Friend extends BaseEntity implements Serializable {
     // @link FriendStatusEnum
     private Integer status;
     private String friendName;
+    // 数据库中部存储
+    private String personalSignature;
+    // 数据库中不存储
+    private String headIcon;
+    private boolean online;
+
+    public boolean getOnline() {
+        return online;
+    }
+
+    public void setOnline(Boolean online) {
+        this.online = online;
+    }
+
+    public String getHeadIcon() {
+        return headIcon;
+    }
+
+    public void setHeadIcon(String headIcon) {
+        this.headIcon = headIcon;
+    }
+
+    public String getPersonalSignature() {
+        return personalSignature;
+    }
+
+    public void setPersonalSignature(String personalSignature) {
+        this.personalSignature = personalSignature;
+    }
+
     @NotNull
     private List<Integer> functionList = null;
     private Integer groupId;

@@ -84,6 +84,14 @@ public class InsertAop {
             rollback(transactional);
             e.printStackTrace();
         } finally {
+            try {
+                transactional.close();
+                if(statement != null) {
+                    statement.close();;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
           /*  try {
                 transactional.commit();
@@ -93,7 +101,6 @@ public class InsertAop {
                 if (connection != null) {
                     connection.close();
                 }
-                transactional.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }*/

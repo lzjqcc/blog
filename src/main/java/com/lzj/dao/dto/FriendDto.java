@@ -12,12 +12,20 @@ public class FriendDto {
     // true 特别关注
     private Boolean specialAttention;
     private String friendName;
+    private String personalSignature;
     public Boolean getSpecialAttention() {
         return specialAttention;
     }
-
     public String getFriendName() {
         return friendName;
+    }
+
+    public String getPersonalSignature() {
+        return personalSignature;
+    }
+
+    public void setPersonalSignature(String personalSignature) {
+        this.personalSignature = personalSignature;
     }
 
     public void setFriendName(String friendName) {

@@ -1,6 +1,8 @@
 package com.lzj.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.lzj.utils.ComentUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
@@ -61,6 +63,9 @@ public class Account extends BaseEntity implements Serializable {
     }
 
     public String getHeadIcon() {
+        if (StringUtils.isEmpty(headIcon)) {
+            return "https://material.angular.io/assets/img/examples/shiba1.jpg";
+        }
         return headIcon;
     }
 

@@ -86,7 +86,7 @@ public class WebSocketConnectHandler<S>
 			// 前端只订阅自己的id, 由后端推送
 			for (Friend friend : onlineFriendId) {
 				if ( !Objects.isNull(this.templateHelper.get(friend.getFriendId() + ""))) {
-					logger.info("推送消息，routing key = {}", WebSocketConstans.NOTIFY_FRIEND_SIGN+"/"+ friend.getFriendId());
+					logger.info("推送在线消息，routing key = {}", WebSocketConstans.NOTIFY_FRIEND_SIGN+"/"+ friend.getFriendId());
 					this.messagingTemplate.convertAndSend(WebSocketConstans.NOTIFY_FRIEND_SIGN +"/"+friend.getFriendId(), map1.get(friend.getFriendId()));
 				}
 			}
