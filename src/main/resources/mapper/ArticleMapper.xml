@@ -62,7 +62,10 @@
         WHERE
         id=#{map.id}
     </update>
-
+    <select id="findByUserId" resultMap="articleResultMap">
+        SELECT         <include refid="userColumns"><property name="alias" value="a"/></include>
+        FROM tb_article a where a.current_account_id = #{userId}
+    </select>
     <select id="findBycurrentAccountIdAndAssortment" resultMap="articleResultMap" useCache="true">
         SELECT
         <include refid="userColumns"><property name="alias" value="a"/></include>

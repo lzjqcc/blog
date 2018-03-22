@@ -67,15 +67,22 @@ public class CommentService {
             BeanUtils.copyProperties(comment, mongo);
             mongo.setToAccountName(map.get(comment.getToAccountId()).getUserName());
             mongo.setFromAccountName(map.get(comment.getFromAccountId()).getUserName());
-            mongo.setSrc(ComentUtils.getImageURL(map.get(comment.getFromAccountId()).getHeadIcon()));
+            if (map.get(comment.getFromAccountId()).getHeadIcon().startsWith("http")) {
+                mongo.setSrc(map.get(comment.getFromAccountId()).getHeadIcon());
+            }else {
+                mongo.setSrc(ComentUtils.getImageURL(map.get(comment.getFromAccountId()).getHeadIcon()));
+            }
             List<Comment> children = new ArrayList<>();
             Comment preComment = comment;
             for (Comment child : replayCommentNotNull) {
                 if (preComment.getId().equals(child.getReplayComentId())) {
                     child.setFromAccountName(map.get(child.getFromAccountId()).getUserName());
                     child.setToAccountName(map.get(child.getToAccountId()).getUserName());
-                    child.setSrc(ComentUtils.getImageURL(map.get(child.getFromAccountId()).getHeadIcon()));
-                    children.add(child);
+                    if (map.get(child.getFromAccountId()).getHeadIcon().startsWith("http")) {
+                        mongo.setSrc(map.get(child.getFromAccountId()).getHeadIcon());
+                    }else {
+                        mongo.setSrc(ComentUtils.getImageURL(map.get(child.getFromAccountId()).getHeadIcon()));
+                    }                    children.add(child);
                     preComment = child;
                 }
             }

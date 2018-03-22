@@ -3,6 +3,7 @@ import com.lzj.VO.CommentMongo;
 import com.lzj.dao.ArticleDao;
 import com.lzj.domain.Article;
 import com.lzj.domain.Comment;
+import com.lzj.domain.Page;
 import com.lzj.service.ArticleService;
 import com.lzj.service.impl.CommentService;
 import org.junit.Test;
@@ -70,7 +71,10 @@ public class TestArticle {
     ArticleService articleService;
     @Test
     public void testFindDateNum(){
-        Map<String,List<Article>> map=articleService.findDateNum(1, null);
+        Page page = new Page();
+        page.setCurrentPage(1);
+        page.setPageSize(1);
+        Map<String,List<Article>> map=articleService.findDateNum(2, page);
         Set<Map.Entry<String,List<Article>>> set=map.entrySet();
         for (Map.Entry<String,List<Article>> entry:set){
             System.out.println(entry.getKey()+":"+entry.getValue().size());

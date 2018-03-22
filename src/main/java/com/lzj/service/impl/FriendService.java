@@ -213,7 +213,7 @@ public class FriendService {
             return vo;
         }
         // 同意
-        if (dto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
+        if (dto.getStatus() != null && dto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
             if (dto.getGroupId() == null) {
                 vo.setSuccess(false);
                 vo.setMessage("没有好友分组");

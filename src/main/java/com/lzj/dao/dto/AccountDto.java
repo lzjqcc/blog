@@ -23,6 +23,15 @@ public class AccountDto {
     private String email;
     private String password;
     private String headIconURL;
+    private Date updateTime;
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public String getHeadIconURL() {
         return headIconURL;

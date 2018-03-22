@@ -74,6 +74,6 @@ public class AccountToken implements Authentication, Serializable {
 
     @Override
     public String getName() {
-        return account.getUserName();
+        return account.getEmail();
     }
 }

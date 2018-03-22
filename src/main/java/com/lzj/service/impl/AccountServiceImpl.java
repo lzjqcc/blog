@@ -55,7 +55,6 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public void updateUser(AccountDto user) {
-
         accountDao.updateUser(user);
     }
 

@@ -42,7 +42,7 @@ public class GroupController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/updateGroup")
+    @RequestMapping(method = RequestMethod.POST, value = "/updateGroup")
     public ResponseVO operatorGroup(@RequestBody GroupDto dto) {
         return groupService.updateGrop(dto);
     }

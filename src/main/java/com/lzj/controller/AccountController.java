@@ -53,7 +53,6 @@ public class AccountController {
     @ResponseBody
     public void updateUser(@RequestBody AccountDto dto) {
         Account user = ComentUtils.getCurrentAccount();
-        BeanUtils.copyProperties(user, dto, ReflectUtils.findNullFieldName(dto));
         dto.setId(user.getId());
         accountService.updateUser(dto);
     }

@@ -3,8 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lzj.dao.AccountDao">
-   <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-    </cache>-->
+    <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+     </cache>-->
     <resultMap id="userResultMap" type="com.lzj.domain.Account">
         <id column="id" property="id"></id>
         <result column="password" property="password"></result>
@@ -42,7 +42,7 @@
         user_name
     </sql>
     <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id" parameterType="com.lzj.domain.Account">
-      INSERT INTO tb_account
+        INSERT INTO tb_account
         (<include refid="userField"></include>,update_time)
         VALUES
         (#{password},#{email},#{createTime},#{headIcon},#{gender},#{city},#{age},
@@ -50,52 +50,54 @@
         #{birth},#{userName},#{updateTime})
     </insert>
     <update id="updateUser">
-        UPDATE tb_account set
-        <if test="param.headIcon != null">
-            head_icon =#{param.headIcon},
-        </if>
-        <if test="param.password!=null">
-            password=#{param.password},
-        </if>
-        <if test="param.email!=null">
-            email=#{param.email},
-        </if>
-        <if test="param.gender !=null">
-            gender = #{param.gender},
-        </if>
-        <if test="param.birth != null">
-            birth = #{param.birth},
-        </if>
-        <if test="param.age">
-            age = #{param.age},
-        </if>
-        <if test="param.blogYear != null">
-            blog_year=#{param.blogYear},
-        </if>
-        <if test="param.mobile != null">
-            mobile = #{param.mobile},
-        </if>
-        <if test="param.occupation ! = null">
-            occupation = #{param.occupation},
-        </if>
-        <if test="param.personSignature != null">
-            personSignature = #{param.personSignature},
-        </if>
-        <if test="param.sign != null">
-            sign = #{param.sign},
-        </if>
-        <if test="param.userName !=null">
-            user_name=#{param.userName}
-        </if>
-        update_time=#{updateTime}
-        WHERE id=#{id}
+        UPDATE tb_account
+        <set>
+            <if test="param.headIcon != null">
+                head_icon =#{param.headIcon},
+            </if>
+            <if test="param.password!=null">
+                password=#{param.password},
+            </if>
+            <if test="param.email!=null">
+                email=#{param.email},
+            </if>
+            <if test="param.gender !=null">
+                gender = #{param.gender},
+            </if>
+            <if test="param.birth != null">
+                birth = #{param.birth},
+            </if>
+            <if test="param.age != null">
+                age = #{param.age},
+            </if>
+            <if test="param.blogYear != null">
+                blog_year=#{param.blogYear},
+            </if>
+            <if test="param.mobile != null">
+                mobile = #{param.mobile},
+            </if>
+            <if test="param.occupation != null">
+                occupation = #{param.occupation},
+            </if>
+            <if test="param.personalSignature != null">
+                personal_signature = #{param.personalSignature},
+            </if>
+            <if test="param.sign != null">
+                sign = #{param.sign},
+            </if>
+            <if test="param.userName !=null">
+                user_name=#{param.userName},
+            </if>
+            update_time=#{param.updateTime}
+        </set>
+        WHERE id=#{param.id}
     </update>
 
     <select id="findByDto" resultMap="userResultMap" useCache="true">
         SELECT id,<include refid="userField"></include> from tb_account WHERE
         1=1
-        <if test="param.email != null" >
-           and email = #{param.email}
+        <if test="param.email != null">
+            and email = #{param.email}
         </if>
         <if test="param.password != null ">
             and password = #{param.password}
@@ -105,7 +107,7 @@
         </if>
     </select>
     <select id="findAll" resultMap="userResultMap" useCache="true">
-          select id , <include refid="userField"></include> from tb_account
+        select id , <include refid="userField"></include> from tb_account
     </select>
     <select id="findAccountsByIds" resultMap="userResultMap" useCache="true">
         SELECT id,<include refid="userField"></include> from tb_account WHERE

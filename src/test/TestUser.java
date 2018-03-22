@@ -1,6 +1,7 @@
 import com.lzj.Application;
 import com.lzj.dao.AccountDao;
 import com.lzj.dao.ArticleDao;
+import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Page;
 import com.lzj.service.AccountService;
@@ -87,5 +88,12 @@ public class TestUser {
         User user1 = userDao.findByEmailOrNameAndPassword(user);
         System.out.print(user1);
     }*/
+   @Test
+    public void testUpdate() {
+        AccountDto accountDto = new AccountDto();
+        accountDto.setPersonalSignature(" ");
+       accountDto.setId(2);
+       userDao.updateUser(accountDto);
 
+    }
 }

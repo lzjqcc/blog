@@ -72,6 +72,7 @@ public class WebSocketDisconnectHandler<S>
 			for (Friend friend : onlineFriendId) {
 				if ( !Objects.isNull(this.helper.get(friend.getFriendId() + ""))) {
 					logger.info("推送离线消息，routing key = {}", WebSocketConstans.NOTIFY_FRIEND_SIGN_OUT+"/"+ friend.getFriendId());
+					map1.get(friend.getFriendId()).setOnline(false);
 					this.messagingTemplate.convertAndSend(WebSocketConstans.NOTIFY_FRIEND_SIGN_OUT +"/"+friend.getFriendId(), map1.get(friend.getFriendId()));
 				}
 			}

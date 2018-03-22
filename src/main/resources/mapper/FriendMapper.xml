@@ -63,10 +63,13 @@
                 status=#{status},
             </if>
             <if test="specialAttention != null">
-                special_attention=#{special_attention},
+                special_attention=#{specialAttention},
             </if>
             <if test="groupId != null">
-                group_id = #{groupId}
+                group_id = #{groupId},
+            </if>
+            <if test="friendName != null">
+                friend_name = #{friendName}
             </if>
         </set>
         WHERE current_account_id =#{currentAccountId} and friend_id=#{friendId}

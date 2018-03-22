@@ -80,8 +80,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         });
         http.cors().disable();
         http.csrf().disable();
-        http.authorizeRequests().antMatchers("/friend/", "/friend/*", "/friend/**").authenticated();
-        http.authorizeRequests().antMatchers("/articles/insertArticles",
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/friend/", "/friend/*", "/friend/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/friend/", "/friend/*", "/friend/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/group/", "/group/*", "/group/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/group/", "/group/*", "/group/**").authenticated();
+
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/articles/insertArticles",
                 "/articles/uploadArticlePic",
                 "/articles/abandonArticle",
                 "/articles/deleteArticle",
@@ -89,8 +93,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/uploadPicture",
                 "/user/getUserDetail",
                 "/user/updateUser",
-                "/user/uploadHeadPortrait",
-                "/group", "/group/*").authenticated();
+                "/user/uploadHeadPortrait").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/articles/insertArticles",
+                "/articles/uploadArticlePic",
+                "/articles/abandonArticle",
+                "/articles/deleteArticle",
+                /*"/comment/insertComment",*/
+                "/uploadPicture",
+                "/user/getUserDetail",
+                "/user/updateUser",
+                "/user/uploadHeadPortrait").authenticated();
         http.authorizeRequests().antMatchers("/loginBlog").permitAll();
         http.authenticationProvider(new CustomProvider());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/pictureGroup/*", "/pictureGroup/**").

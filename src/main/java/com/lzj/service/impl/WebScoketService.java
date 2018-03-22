@@ -50,10 +50,10 @@ public class WebScoketService {
     public void sendSingleMessageToUser(final MessageInfo messageInfo) {
         executor.execute(() -> {
             try {
-                template.convertAndSendToUser(messageInfo.getToAccountId() + "", queueMessage, messageInfo);
+               // template.convertAndSendToUser(messageInfo.getToAccountId() + "", queueMessage, messageInfo);
                 messageDao.insertMessage(messageInfo);
             } catch (Exception e) {
-                throw new SystemException(246, messageInfo.getToAccountId() + "消息发送失败" + messageInfo.getFromAccountId(), this.getClass().getSimpleName(), "sendMessageToUser", e.toString());
+               // throw new SystemException(246, messageInfo.getToAccountId() + "消息发送失败" + messageInfo.getFromAccountId(), this.getClass().getSimpleName(), "sendMessageToUser", e.toString());
             }
         });
 
@@ -67,7 +67,7 @@ public class WebScoketService {
         if (list!=null && list.size()>0){
             MessageInfo info=list.get(0);
             executor.execute(() -> {
-                template.convertAndSendToUser(info.getToAccountId().toString(),queueMessage,list);
+              //  template.convertAndSendToUser(info.getToAccountId().toString(),queueMessage,list);
             });
         }
 

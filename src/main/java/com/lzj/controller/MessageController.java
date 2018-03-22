@@ -2,8 +2,11 @@ package com.lzj.controller;
 
 import com.lzj.annotation.CurrentUser;
 import com.lzj.dao.MessageDao;
+import com.lzj.dao.dto.AccountDto;
+import com.lzj.domain.Account;
 import com.lzj.domain.MessageInfo;
 import com.lzj.security.AccountToken;
+import com.lzj.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,23 +31,26 @@ public class MessageController {
     @Autowired
     SimpMessagingTemplate template;
     @Autowired
+    AccountService accountService;
+
+
+    @Autowired
     MessageDao messageDao;
     @Value("${push.message.queuemessage}")
     String queueMessage;
-    @RequestMapping(value = "dd")
-    @ResponseBody
-    public void sendSpecificMessageToUser(
-            @RequestParam("id") Integer id, @RequestBody MessageInfo info, @CurrentUser AccountToken accountToken){
+    @Value("${push.message.queue}")
+    String queue;
+    // 有关 user的解释https://stackoverflow.com/questions/37853727/where-user-comes-from-in-convertandsendtouser-works-in-sockjsspring-websocket
+    @MessageMapping(value = "/chat")
+    public void sendSpecificMessageToUser(@RequestBody MessageInfo info, @CurrentUser AccountToken accountToken){
+        AccountDto accountDto = new AccountDto();
+        accountDto.setId(info.getFriendId());
 
-        for (SimpUser user:userRegistry.getUsers()){
-            if (user.getName().equals(id)){
-                template.convertAndSendToUser(id+"",queueMessage,info);
-                break;
-            }
-        }
+        Account account = accountService.findByDto(accountDto);
+        info.setFromAccountId(accountToken.getAccount().getId());
+        template.convertAndSendToUser(account.getEmail(),queue+"messages", info);
 
     }
-    @ResponseBody
     @RequestMapping(value = "cc")
     public void  send() {
         Map<String, String> map = new HashMap<>();

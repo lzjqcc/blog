@@ -124,7 +124,19 @@ public class PaginationInterceptor implements Interceptor{
         if (!hasOrder) {
             if (!StringUtils.containsIgnoreCase(sql,"and") && !StringUtils.containsIgnoreCase(sql,"join")) {
                 // select * from tb_account where id >=(select id from tb_account order by id limit startIndex,1) limit pageSize;
-                pageSql =  " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
+                if (StringUtils.containsIgnoreCase(sql, "where")) {
+                    if (StringUtils.isEmpty(getTableAlias(sql))) {
+                        pageSql = " and id >= " + getSubSql(page, sql) + " limit "+page.getPageSize();
+                    }else {
+                        pageSql = " and " + getTableAlias(sql) + ".id >= " + getSubSql(page, sql) + " limit " + page.getPageSize();
+                    }
+                }else {
+                    if (StringUtils.isEmpty(getTableAlias(sql))) {
+                        pageSql =  " where id >= " +getSubSql(page,sql)+ " limit "+ page.getPageSize();
+                    }else {
+                        pageSql = " where " + getTableAlias(sql) + ".id >=" + getSubSql(page, sql) + " limit " + page.getPageSize();
+                    }
+                }
             }else if (!StringUtils.containsIgnoreCase(sql,"join")) {
                 pageSql =  " and id >=" +getSubSql(page,sql) + " limit " +page.getPageSize();
             }else if (StringUtils.containsIgnoreCase(sql,"join")) {
