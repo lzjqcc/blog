@@ -82,6 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/friend/", "/friend/*", "/friend/**").authenticated();
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/friend/", "/friend/*", "/friend/**").authenticated();
+        // 由于Post 请求之前会产生一个option请求，额这个option请求过来的时候不会携带session信息，因此对option请求放过
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/group/", "/group/*", "/group/**").authenticated();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/group/", "/group/*", "/group/**").authenticated();
 
