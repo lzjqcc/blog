@@ -8,6 +8,8 @@
         <result column="push_message" property="pushMessage"></result>
         <result column="from_account_id" property="fromAccountId"/>
         <result column="to_account_id" property="toAccountId"/>
+        <result column="to_account_name" property="toAccountName"/>
+        <result column="from_account_name" property="fromAccountName"/>
         <result column="create_time" property="createTime"/>
         <result column="type" property="type"/>
         <result column="flag" property="flag"/>
@@ -18,28 +20,15 @@
         to_account_id,
         create_time,
         type,
-        flag
+        flag,
+        to_account_name,
+        from_account_name
     </sql>
     <insert id="insertMessage" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO tb_message_info
         (<include refid="columns" ></include>)
-        VALUES (#{pushessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag})
+        VALUES (#{pushessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag},#{toAccountName},#{fromAccountName})
     </insert>
-    <select id="getMessageByToUserIdAndType" resultMap="messageMap" >
-        SELECT id ,<include refid="columns"></include>
-        FROM tb_message_info
-        WHERE to_account_id=#{toAccountId} AND type=#{type}
-    </select>
-    <select id="getMessages" resultMap="messageMap">
-        select id,<include refid="columns"></include>
-        FROM tb_message_info
-        WHERE
-        <foreach collection="map" index="key" item="value" separator="and">
-            <if test="key!=null">
-                ${key}=#{value}
-            </if>
-        </foreach>
-    </select>
     <update id="updateType">
         update tb_message_info SET type=#{type} where id=#{id}
     </update>
@@ -58,4 +47,7 @@
             and flag = #{param.flag}
         </if>
     </select>
+    <delete id="deleteMessageInfo" >
+        DELETE from tb_message_info where id = #{id}
+    </delete>
 </mapper>

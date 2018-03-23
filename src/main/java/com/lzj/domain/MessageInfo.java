@@ -6,7 +6,9 @@ public class MessageInfo extends BaseEntity implements Serializable{
     private String pushMessage;
     //发送系统广播消息时，toAccountId=-1 代表所有人，fromAccountId 表示admin
     private Integer fromAccountId;
-
+    private String fromAccountName;
+    private Integer toAccountId;
+    private String toAccountName;
     public Integer getFriendId() {
         return friendId;
     }
@@ -23,6 +25,30 @@ public class MessageInfo extends BaseEntity implements Serializable{
     //2,评论消息
     //3,别人发送的私信息
     private Integer flag;
+
+    public String getFromAccountName() {
+        return fromAccountName;
+    }
+
+    public void setFromAccountName(String fromAccountName) {
+        this.fromAccountName = fromAccountName;
+    }
+
+    public Integer getToAccountId() {
+        return toAccountId;
+    }
+
+    public void setToAccountId(Integer toAccountId) {
+        this.toAccountId = toAccountId;
+    }
+
+    public String getToAccountName() {
+        return toAccountName;
+    }
+
+    public void setToAccountName(String toAccountName) {
+        this.toAccountName = toAccountName;
+    }
 
     public Integer getFlag() {
         return flag;

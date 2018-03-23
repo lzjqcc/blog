@@ -13,44 +13,39 @@ public class Chat extends BaseEntity implements Serializable {
         return currentAccountId;
     }
 
-    public Chat setCurrentAccountId(Integer currentAccountId) {
+    public void setCurrentAccountId(Integer currentAccountId) {
         this.currentAccountId = currentAccountId;
-        return this;
     }
 
     public Integer getFromAccountId() {
         return fromAccountId;
     }
 
-    public Chat setFromAccountId(Integer fromAccountId) {
+    public void setFromAccountId(Integer fromAccountId) {
         this.fromAccountId = fromAccountId;
-        return this;
     }
 
     public Integer getToAccountId() {
         return toAccountId;
     }
 
-    public Chat setToAccountId(Integer toAccountId) {
+    public void setToAccountId(Integer toAccountId) {
         this.toAccountId = toAccountId;
-        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public Chat setMessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
-        return this;
     }
 
-    public Boolean getIsDelete() {
+    public Boolean getDelete() {
         return isDelete;
     }
 
-    public Chat setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-        return this;
+    public void setDelete(Boolean delete) {
+        isDelete = delete;
     }
 }

@@ -1,12 +1,16 @@
 package com.lzj.controller;
 
+import com.lzj.VO.ResponseVO;
 import com.lzj.annotation.CurrentUser;
 import com.lzj.dao.MessageDao;
 import com.lzj.dao.dto.AccountDto;
+import com.lzj.dao.dto.MessageDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.MessageInfo;
 import com.lzj.security.AccountToken;
 import com.lzj.service.AccountService;
+import com.lzj.service.impl.MessageTemplate;
+import com.lzj.utils.ComentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,17 +27,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/message")
 public class MessageController {
     @Autowired
     SimpUserRegistry userRegistry;
     @Autowired
-    SimpMessagingTemplate template;
+    MessageTemplate template;
     @Autowired
     AccountService accountService;
-
-
     @Autowired
     MessageDao messageDao;
     @Value("${push.message.queuemessage}")
@@ -48,21 +50,39 @@ public class MessageController {
 
         Account account = accountService.findByDto(accountDto);
         info.setFromAccountId(accountToken.getAccount().getId());
-        template.convertAndSendToUser(account.getEmail(),queue+"messages", info);
+        template.sendToUser(info,account.getEmail(),queue+"messages", false);
 
     }
-    @RequestMapping(value = "cc")
-    public void  send() {
-        Map<String, String> map = new HashMap<>();
-        map.put("dd", "dd");
-            template.convertAndSend("/topic/top",map);
-    }
+
     @RequestMapping(value = "toRead/{id}",method = RequestMethod.GET )
-    @ResponseBody
     public void toRead(@PathVariable Integer id){
         messageDao.updateType(true,id);
     }
-    public List<MessageInfo> getMessageByFlagAndType(){
-        return null;
+
+    /**
+     * 已读消息
+     * @return
+     */
+    @RequestMapping(value = "/findAllRead")
+    public ResponseVO<List<MessageInfo>> findAllReadMessage() {
+        MessageDto messageDto = new MessageDto();
+        messageDto.setToAccountId(ComentUtils.getCurrentAccount().getId());
+        messageDto.setType(true);
+        List<MessageInfo> list = messageDao.findMessagesByDto(messageDto);
+
+        return ComentUtils.buildResponseVO(true, "操作成功", list);
     }
+
+    /**
+     * 未读消息
+     * @return
+     */
+    @RequestMapping(value = "/findAllUnRead")
+    public ResponseVO<List<MessageInfo>> findAllUnReadMessage() {
+        MessageDto messageDto = new MessageDto();
+        messageDto.setToAccountId(ComentUtils.getCurrentAccount().getId());
+        messageDto.setType(false);
+        return ComentUtils.buildResponseVO(true, "操作成功", messageDao.findMessagesByDto(messageDto));
+    }
+
 }

@@ -15,4 +15,6 @@ public interface MessageDao {
 
     List<MessageInfo> findMessagesByDto(@Param("param") MessageDto dto);
     void updateType(@Param("type") Boolean type,@Param("id")Integer id);
+
+    void deleteMessageInfo(Integer id);
 }
