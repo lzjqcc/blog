@@ -1,23 +1,23 @@
 package com.lzj.controller;
 
-import com.lzj.VO.GroupFriendVO;
 import com.lzj.VO.ResponseVO;
+import com.lzj.constant.FriendStatusEnum;
+import com.lzj.constant.MessageTypeEnum;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
 import com.lzj.security.AccountToken;
 import com.lzj.service.impl.FriendService;
 import com.lzj.utils.ComentUtils;
+import com.lzj.websocket.WebSocketConstans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,9 @@ public class FriendController {
 
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
-        return friendService.friendApply(friendDto);
+        ResponseVO responseVO = friendService.friendApply(friendDto);
+        friendService.send(account, friendDto, MessageTypeEnum.FRIEND_APPLY.code, WebSocketConstans.NOTIFY_FRIEND_APPLY);
+        return responseVO;
     }
 
     /**
@@ -55,7 +57,11 @@ public class FriendController {
     public ResponseVO operatorFriend(@RequestBody FriendDto friendDto) {
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
-        return friendService.operatorFriend(friendDto);
+        ResponseVO  responseVO = friendService.operatorFriend(friendDto);
+        if (friendDto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
+            friendService.send(account, friendDto, MessageTypeEnum.FRIEND_AGREE.code, WebSocketConstans.NOTIFY_FRIEND_AGREE);
+        }
+        return responseVO;
     }
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/deleteFriend")

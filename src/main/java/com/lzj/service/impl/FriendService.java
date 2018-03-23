@@ -5,11 +5,13 @@ import com.lzj.VO.GroupFriendVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.AuthorityEnum;
 import com.lzj.constant.FriendStatusEnum;
+import com.lzj.constant.MessageTypeEnum;
 import com.lzj.controller.FriendController;
 import com.lzj.dao.AccountDao;
 import com.lzj.dao.FriendDao;
 import com.lzj.dao.FunctionDao;
 import com.lzj.dao.GroupDao;
+import com.lzj.dao.dto.AccountDto;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
 import com.lzj.dao.dto.GroupDto;
@@ -18,6 +20,7 @@ import com.lzj.exception.SystemException;
 import com.lzj.helper.RedisTemplateHelper;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.ValidatorUtils;
+import com.lzj.websocket.WebSocketConstans;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.ValidationUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,6 +49,8 @@ public class FriendService {
     private GroupDao groupDao;
     @Autowired
     RedisTemplateHelper redisTemplateHelper;
+    @Autowired
+    MessageTemplate messageTemplate;
 
     public ResponseVO<List<Friend>> findAllFriends(Account currentAccount) {
         FriendDto dto = new FriendDto();
@@ -164,6 +170,25 @@ public class FriendService {
 
     }
 
+    /**
+     * 发送好友相关请消息
+     * @param fromAccount
+     * @param dto
+     */
+    public void send(Account fromAccount, FriendDto dto, int messageFlag, String dest) {
+        MessageInfo messageInfo  = new MessageInfo();
+        messageInfo.setFromAccountName(fromAccount.getUserName());
+        messageInfo.setFromAccountId(fromAccount.getId());
+        messageInfo.setToAccountId(dto.getFriendId());
+        messageInfo.setToAccountName(dto.getFriendName());
+        messageInfo.setType(false);
+        messageInfo.setFlag(messageFlag);
+        messageInfo.setCreateTime(new Date());
+        AccountDto dto1 = new AccountDto();
+        dto1.setId(dto.getFriendId());
+        Account toAccount = accountDao.findByDto(dto1);
+        messageTemplate.sendToUser(messageInfo, toAccount.getEmail(), WebSocketConstans.NOTIFY_FRIEND_APPLY, true);
+    }
 
     /**
      * 查找好友
@@ -224,6 +249,7 @@ public class FriendService {
             FriendDto friendDto = new FriendDto();
             BeanUtils.copyProperties(dto, friendDto);
             friendDto.setFriendId(dto.getCurrentAccountId());
+
             friendDao.updateFriend(friendDto);
             insertFriend(dto);
             vo.setSuccess(true);
