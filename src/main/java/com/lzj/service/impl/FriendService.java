@@ -116,7 +116,7 @@ public class FriendService {
     public ResponseVO<List<Friend>> findGroupFriends(FriendDto dto) {
         ResponseVO<List<Friend>> responseVO = ValidatorUtils.validatorData(dto);
         if (!responseVO.getSuccess()) {
-            return null;
+            return responseVO;
         }
         responseVO.setResult(friendDao.findFriends(dto));
         return responseVO;
