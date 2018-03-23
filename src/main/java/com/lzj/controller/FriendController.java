@@ -58,7 +58,7 @@ public class FriendController {
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         ResponseVO  responseVO = friendService.operatorFriend(friendDto);
-        if (friendDto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
+        if (friendDto.getStatus() != null && friendDto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
             friendService.send(account, friendDto, MessageTypeEnum.FRIEND_AGREE.code, WebSocketConstans.NOTIFY_FRIEND_AGREE);
         }
         return responseVO;
