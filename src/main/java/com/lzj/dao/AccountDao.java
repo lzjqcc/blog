@@ -2,6 +2,7 @@ package com.lzj.dao;
 
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
+import com.lzj.domain.Friend;
 import com.lzj.domain.Function;
 import com.lzj.domain.Page;
 import org.apache.ibatis.annotations.Flush;
@@ -34,5 +35,5 @@ public interface AccountDao {
     List<Account> findAll(Page page);
 
     List<Account> findAccountsByIds(@Param("param") List<Integer> ids);
-
+    List<Account> searchAccount(@Param("email") String email, @Param("userName") String userName, Page page);
 }

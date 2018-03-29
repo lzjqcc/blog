@@ -116,4 +116,15 @@
             #{item}
         </foreach>
     </select>
+    <select id="searchAccount" resultMap="userResultMap">
+        SELECT id, email, user_name,gender,age from tb_account
+        WHERE
+        1=1
+        <if test="email != null">
+            and email like CONCAT('%',#{email},'%')
+        </if>
+        <if test="userName != null">
+            and user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+    </select>
 </mapper>

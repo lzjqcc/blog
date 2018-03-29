@@ -56,6 +56,7 @@ public class AccountController {
         dto.setId(user.getId());
         accountService.updateUser(dto);
     }
+
     /**
      * 头像上传
      *

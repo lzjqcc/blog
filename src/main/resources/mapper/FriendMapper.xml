@@ -92,5 +92,4 @@
             and group_id = #{groupId}
         </if>
     </select>
-
 </mapper>

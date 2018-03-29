@@ -4,6 +4,8 @@ import com.lzj.annotation.EnableRelationTable;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Friend;
 import com.lzj.domain.Function;
+import com.lzj.domain.Page;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface FriendDao extends BaseDao{
     void deleteFriend(FriendDto friendDto);
 
     List<Friend> findFriends(FriendDto friendDto);
+
+
 }
