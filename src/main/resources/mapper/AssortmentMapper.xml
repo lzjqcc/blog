@@ -16,7 +16,8 @@
     ${alias}.assortment_name,
     ${alias}.article_num,
     ${alias}.create_time,
-    ${alias}.update_time
+    ${alias}.update_time,
+    ${alias}.current_account_id
     </sql>
     <insert id="insertAssortment" useGeneratedKeys="true" keyProperty="id" flushCache="true">
       INSERT INTO tb_assortment
@@ -41,5 +42,12 @@
             article_num=#{num}
         </if>
         WHERE id=#{id}
+    </select>
+    <select id="findByIds" resultMap="assortmentResultMap">
+        select t.id ,<include refid="userColumns"><property name="alias" value="t"/></include>
+        from tb_assortment t where t.id in
+        <foreach collection="ids" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
     </select>
 </mapper>

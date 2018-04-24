@@ -1,10 +1,13 @@
 import com.google.common.collect.Lists;
 import com.lzj.Application;
+import com.lzj.constant.FriendStatusEnum;
 import com.lzj.dao.AccountDao;
 import com.lzj.dao.FriendDao;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
+import com.lzj.domain.Page;
+import com.lzj.service.impl.FriendService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +31,22 @@ public class FriendTest {
     @Autowired
     AccountDao accountDao;
     @Autowired
+    FriendService friendService;
+    @Autowired
     private StringRedisTemplate redisTemplate = null;
     @Test
     public void testRedis(){
         int i = 0;
+    }
+    @Test
+    public void testApplyFriend() {
+        FriendDto dto = new FriendDto();
+        dto.setStatus(FriendStatusEnum.APPLE.code);
+        dto.setCurrentAccountId(2);
+        dto.setFriendId(3);
+        dto.setGroupId(2);
+        dto.setFriendName("小李子");
+        friendService.friendApply(dto);
     }
     @Test
     public void test() {
@@ -39,6 +54,25 @@ public class FriendTest {
         account.setBirth(new Date());
         accountDao.insertAccount(account);
 
+    }
+    @Test
+    public void testSearch() {
+        Page page = new Page();
+        page.setCurrentPage(1);
+        page.setPageSize(2);
+        List<Account> list = accountDao.searchAccount(null,3, page);
+        print(list);
+        while (page.getCurrentPage() < page.getPageSize()) {
+            page.setCurrentPage(page.getCurrentPage() + 1);
+           list =  accountDao.searchAccount(null, 3, page);
+            print(list);
+        }
+        int i = 0;
+    }
+    private void print(List<Account> list) {
+        for (Account account : list) {
+            System.out.println(account.getId());
+        }
     }
     @Test
     public void testInsert(){

@@ -11,6 +11,7 @@ public interface AssortmentDao {
     void insertAssortment(Assortment assortment);
     Assortment findByUserIdAndName(@Param("userId") Integer userId,@Param("name") String name);
 
+    List<Assortment> findByIds(@Param("ids") List<Integer> assortmentIds);
     /**
      * name 或num可以微null,id不能微null
      * @param name

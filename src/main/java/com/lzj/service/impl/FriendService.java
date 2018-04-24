@@ -7,10 +7,7 @@ import com.lzj.constant.AuthorityEnum;
 import com.lzj.constant.FriendStatusEnum;
 import com.lzj.constant.MessageTypeEnum;
 import com.lzj.controller.FriendController;
-import com.lzj.dao.AccountDao;
-import com.lzj.dao.FriendDao;
-import com.lzj.dao.FunctionDao;
-import com.lzj.dao.GroupDao;
+import com.lzj.dao.*;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.dao.dto.FunctionDto;
@@ -18,15 +15,18 @@ import com.lzj.dao.dto.GroupDto;
 import com.lzj.domain.*;
 import com.lzj.exception.SystemException;
 import com.lzj.helper.RedisTemplateHelper;
+import com.lzj.helper.TransactionHelper;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.ValidatorUtils;
 import com.lzj.websocket.WebSocketConstans;
 import org.apache.commons.collections.CollectionUtils;
+import org.mybatis.spring.transaction.SpringManagedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.ValidationUtils;
 
@@ -51,7 +51,10 @@ public class FriendService {
     RedisTemplateHelper redisTemplateHelper;
     @Autowired
     MessageTemplate messageTemplate;
-
+    @Autowired
+    TransactionHelper transactionHelper;
+    @Autowired
+    MessageDao messageDao;
     public ResponseVO<List<Friend>> findAllFriends(Account currentAccount) {
         FriendDto dto = new FriendDto();
         dto.setCurrentAccountId(currentAccount.getId());
@@ -76,6 +79,11 @@ public class FriendService {
             accountIds.add(f.getFriendId());
         });
         if (CollectionUtils.isEmpty(accountIds)) {
+            for (Group group : list) {
+                GroupFriendVO groupFriendVO = new GroupFriendVO();
+                groupFriendVO.setGroupDto(buildGroupDto(group));
+                groupFriendVOS.add(groupFriendVO);
+            }
             return ComentUtils.buildResponseVO(true, "操作成功", groupFriendVOS);
         }
         Map<Integer, Account> map = accountDao.findAccountsByIds(accountIds).stream().collect(Collectors.toMap(Account::getId, t -> t));
@@ -96,16 +104,19 @@ public class FriendService {
             });
             GroupFriendVO groupFriendVO = new GroupFriendVO();
             groupFriendVO.setFriends(friends);
-            GroupDto dto = new GroupDto();
-            dto.setCurrentAccountId(currentAccount.getId());
-            dto.setGroupName(group.getGroupName());
-            dto.setId(group.getId());
-            groupFriendVO.setGroupDto(dto);
+            groupFriendVO.setGroupDto(buildGroupDto(group));
             groupFriendVOS.add(groupFriendVO);
         }
         return ComentUtils.buildResponseVO(true, "操作成功", groupFriendVOS);
     }
+    private GroupDto buildGroupDto(Group group) {
+        GroupDto dto = new GroupDto();
+        dto.setCurrentAccountId(group.getCurrentAccountId());
+        dto.setGroupName(group.getGroupName());
+        dto.setId(group.getId());
+        return dto;
 
+    }
     /**
      * currentAccountId
      * groupId
@@ -158,15 +169,30 @@ public class FriendService {
         if (dto.getGroupId() == null) {
             return ComentUtils.buildResponseVO(false, "请选择好友分组", null);
         }
+        TransactionStatus status  = transactionHelper.beginTransaction();
         try {
-            insertFriend(dto);
+            dto.setStatus(FriendStatusEnum.APPLE.code);
+            FriendDto query = new FriendDto();
+            query.setFriendId(dto.getFriendId());
             responseVO.setSuccess(true);
             responseVO.setMessage("好友申请成功");
-            return responseVO;
+            query.setCurrentAccountId(dto.getCurrentAccountId());
+            List<Friend> friends = friendDao.findFriends(query);
+            if (CollectionUtils.isNotEmpty(friends)) {
+                log.info("更新好友申请 currentAccountId={}, friendId={},groupId={}", dto.getCurrentAccountId(),dto.getFriendId(),dto.getGroupId());
+                friendDao.updateFriend(dto);
+                transactionHelper.commit(status);
+                return responseVO;
+            }
+            insertFriend(dto);
+            transactionHelper.commit(status);
         } catch (SystemException e) {
             e.setMessage(e.getMessage() + "    好友申请失败");
+            transactionHelper.rollback(status);
             throw e;
         }
+        send(ComentUtils.getCurrentAccount(), dto, MessageTypeEnum.FRIEND_APPLY.code, WebSocketConstans.NOTIFY_FRIEND_APPLY);
+        return responseVO;
 
     }
 
@@ -184,10 +210,17 @@ public class FriendService {
         messageInfo.setType(false);
         messageInfo.setFlag(messageFlag);
         messageInfo.setCreateTime(new Date());
+        if (messageFlag == MessageTypeEnum.FRIEND_AGREE.code.intValue()) {
+            messageInfo.setPushMessage(fromAccount.getUserName() + "同意加你为好友");
+        }
+        if (messageFlag == MessageTypeEnum.FRIEND_APPLY.code.intValue()) {
+            messageInfo.setPushMessage(fromAccount.getUserName()+" 申请加你为好友");
+        }
         AccountDto dto1 = new AccountDto();
         dto1.setId(dto.getFriendId());
         Account toAccount = accountDao.findByDto(dto1);
-        messageTemplate.sendToUser(messageInfo, toAccount.getEmail(), WebSocketConstans.NOTIFY_FRIEND_APPLY, true);
+
+        messageTemplate.sendToUser(messageInfo, toAccount.getEmail(), dest, true);
     }
 
     /**
@@ -247,11 +280,24 @@ public class FriendService {
             //同意好友申请 B申请好友 A (currentAccountId = Bid,friendId = Aid ,status = Apply),
             // A同意 更新上面那条记录status = Agree并且插入一条 currentAccountId = AId, friendId = Bid, status=AGREE
             FriendDto friendDto = new FriendDto();
-            BeanUtils.copyProperties(dto, friendDto);
             friendDto.setFriendId(dto.getCurrentAccountId());
-
+            friendDto.setCurrentAccountId(dto.getFriendId());
+            friendDto.setStatus(FriendStatusEnum.AGREE.code);
             friendDao.updateFriend(friendDto);
             insertFriend(dto);
+            vo.setSuccess(true);
+            vo.setMessage("操作成功");
+            dto.setFriendName(accountDao.findAccountsByIds(Lists.newArrayList(dto.getFriendId())).get(0).getUserName());
+            send(ComentUtils.getCurrentAccount(), dto, MessageTypeEnum.FRIEND_AGREE.code, WebSocketConstans.NOTIFY_FRIEND_AGREE);
+            if (dto.getMessageId() != null) {
+                messageDao.updateType(true, Lists.newArrayList(dto.getMessageId()));
+            }
+            return vo;
+        }
+        if (dto.getStatus() != null && dto.getStatus().intValue() == FriendStatusEnum.REFUSE.code.intValue()) {
+            dto.setCurrentAccountId(dto.getFriendId());
+            dto.setFriendId(ComentUtils.getCurrentAccount().getId());
+            friendDao.updateFriend(dto);
             vo.setSuccess(true);
             vo.setMessage("操作成功");
             return vo;
@@ -270,6 +316,7 @@ public class FriendService {
         friend.setFunctionList(Lists.newArrayList(AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.id, AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.id));
         friend.setStatus(dto.getStatus());
         friend.setFriendName(dto.getFriendName());
+        friend.setGroupId(dto.getGroupId());
         friendDao.insertFriend(friend);
         log.info("添加成功");
     }

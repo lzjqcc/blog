@@ -34,17 +34,15 @@ public class UploadIconFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
+            response.addHeader("Access-Control-Allow-Origin", "http://localhost:4201");
 
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost:4201");
+            response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
 
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+            response.addHeader("Access-Control-Allow-Headers", "Origin, No-Cache, Pragma, Last-Modified, Cache-Control, Expires, Content-Type,Sec-WebSocket-Key,Upgrade,Sec-WebSocket-Extensions,userId,token,withCredentials");
 
-            response.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, Pragma, Last-Modified, Cache-Control, Expires, Content-Type,Sec-WebSocket-Key,Upgrade,Sec-WebSocket-Extensions,userId,token,withCredentials");
-
-            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.addHeader("Access-Control-Allow-Credentials", "true");
 
             HttpServletRequest request = (HttpServletRequest) servletRequest;
-
             filterChain.doFilter(servletRequest, response);
         } catch (MultipartException e) {
             HttpServletResponse response= (HttpServletResponse) servletResponse;

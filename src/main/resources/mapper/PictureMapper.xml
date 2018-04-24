@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lzj.dao.PictureDao" >
+    <resultMap id="pictureMap" type="com.lzj.domain.Picture">
+        <id column="id" property="id"></id>
+        <result column="current_account_id" property="currentAccountId"/>
+        <result column="picture_name" property="pictureName"/>
+        <result column="picture_src" property="pictureSrc"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="picture_group_id" property="pictureGroupId"/>
+    </resultMap>
+    <sql id="pictureField">
+        current_account_id,
+        picture_src,
+        picture_name,
+        update_time,
+        create_time,
+        picture_group_id
+    </sql>
+    <sql id="pictureFieldWithId">
+        current_account_id,
+        picture_src,
+        picture_name,
+        update_time,
+        create_time,
+        id,
+        picture_group_id
+    </sql>
+    <insert id="insertPicture" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_picture
+        (<include refid="pictureField"/>)
+        VALUES
+        (#{currentAccountId},#{pictureSrc},#{pictureName},#{updateTime},#{createTime},#{pictureGroupId})
+    </insert>
+    <select id="findGroupByCurrentAccountIdAndGroupIds" resultMap="pictureMap">
+        SELECT <include refid="pictureFieldWithId"></include> FROM tb_picture p
+        INNER join (SELECT max(id) as id from tb_picture group by picture_group_id HAVING
+        <if test="list != null and list.size >0">
+            and picture_group_id in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ) temp on p.id = temp.id
+    </select>
+    <select id="findByCurrentAccountIdAndGroupId" resultMap="pictureMap">
+        select <include refid="pictureFieldWithId"></include>
+        FROM tb_picture
+        where current_account_id = #{currentAccountId}
+        and picture_group_id = #{groupId}
+    </select>
+</mapper>

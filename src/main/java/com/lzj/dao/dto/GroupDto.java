@@ -1,8 +1,10 @@
 package com.lzj.dao.dto;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class GroupDto {
+public class GroupDto implements Serializable{
+    private static final long serialVersionUID = 7101682645707919509L;
     private Integer id;
     private String groupName;
     private Integer currentAccountId;

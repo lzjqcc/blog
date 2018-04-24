@@ -51,7 +51,7 @@ public class ImageUtils {
                             Image.SCALE_SMOOTH), 0, 0, null);
 
             out = new FileOutputStream(dest);
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+            JPEGCodec.createJPEGEncoder(out);
         }catch (Exception e) {
             e.printStackTrace();
         }finally {

@@ -7,22 +7,43 @@
         <id column="id" property="id"></id>
         <result column="current_account_id" property="currentAccountId"/>
         <result column="picture_group_name" property="pictureGroupName"/>
-        <result column="picture_describe" property="pictureDescribe"/>
+        <result column="group_describe" property="pictureDescribe"/>
         <result column="update_time" property="updateTime"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
     <sql id="pictureGroupField">
         current_account_id,
         picture_group_name,
-        picture_describe,
+        group_describe,
         update_time,
         create_time
     </sql>
+    <sql id="pictureGroupFieldWithId">
+        current_account_id,
+        picture_group_name,
+        group_describe,
+        update_time,
+        create_time,
+        id
+    </sql>
+    <select id="findByCurrentAccountIdAndGroupId" resultMap="pictureGoupMap">
+        SELECT <include refid="pictureGroupFieldWithId"></include>
+        FROM tb_picture_group WHERE
+        current_account_id = #{currentAccountId}
+        and id = #{id}
+    </select>
     <insert id="insertPictureGroup" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO tb_picture_group
         (<include refid="pictureGroupField"/>)
         VALUES
         (#{currentAccountId},#{pictureGroupName},#{pictureDescribe},#{updateTime},#{createTime})
     </insert>
-
+    <select id="findByCurrentAccountIdAndGroupName" resultMap="pictureGoupMap">
+        SELECT <include refid="pictureGroupFieldWithId"></include>
+        from tb_picture_group WHERE current_account_id = #{currentId} and picture_group_name = #{groupName}
+    </select>
+    <select id="findByCurrentAccountId" resultMap="pictureGoupMap">
+        SELECT <include refid="pictureGroupFieldWithId"></include>
+        FROM tb_picture_group where current_account_id = #{param}
+    </select>
 </mapper>

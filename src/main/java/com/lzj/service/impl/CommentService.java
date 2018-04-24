@@ -70,7 +70,7 @@ public class CommentService {
             if (map.get(comment.getFromAccountId()).getHeadIcon().startsWith("http")) {
                 mongo.setSrc(map.get(comment.getFromAccountId()).getHeadIcon());
             }else {
-                mongo.setSrc(ComentUtils.getImageURL(map.get(comment.getFromAccountId()).getHeadIcon()));
+                mongo.setSrc(map.get(comment.getFromAccountId()).getHeadIcon());
             }
             List<Comment> children = new ArrayList<>();
             Comment preComment = comment;
@@ -81,7 +81,7 @@ public class CommentService {
                     if (map.get(child.getFromAccountId()).getHeadIcon().startsWith("http")) {
                         mongo.setSrc(map.get(child.getFromAccountId()).getHeadIcon());
                     }else {
-                        mongo.setSrc(ComentUtils.getImageURL(map.get(child.getFromAccountId()).getHeadIcon()));
+                        mongo.setSrc(map.get(child.getFromAccountId()).getHeadIcon());
                     }                    children.add(child);
                     preComment = child;
                 }

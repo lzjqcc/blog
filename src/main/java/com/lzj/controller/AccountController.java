@@ -1,8 +1,10 @@
 package com.lzj.controller;
 
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
+import com.lzj.domain.Page;
 import com.lzj.exception.BusinessException;
 import com.lzj.exception.SystemException;
 import com.lzj.service.AccountService;
@@ -11,7 +13,9 @@ import com.lzj.utils.ReflectUtils;
 import org.assertj.core.util.Arrays;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.util.ReflectionUtils;
+import org.springframework.session.SessionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,8 +41,30 @@ public class AccountController {
         Account account = ComentUtils.getCurrentAccount();
         AccountDto dto = new AccountDto();
         BeanUtils.copyProperties(account,dto);
-        dto.setHeadIconURL(ComentUtils.getImageURL(account.getHeadIcon()));
+        dto.setHeadIconURL(account.getHeadIcon());
+        dto.setPassword(null);
         return dto;
+    }
+    @RequestMapping(value = "saveUser", method = RequestMethod.POST)
+    @ResponseBody
+    public void saveUser(@RequestBody AccountDto accountDto) {
+        accountDto.setId(ComentUtils.getCurrentAccount().getId());
+        accountService.updateUser(accountDto);
+        AccountDto query = new AccountDto();
+        query.setId(ComentUtils.getCurrentAccount().getId());
+        Account dest = accountService.findByDto(query);
+        ComentUtils.updateCurrentAccout(dest);
+
+    }
+    @ResponseBody
+    @RequestMapping(value = "/searchAccount")
+    public PageVO<List<AccountDto>> searchAccount(@RequestParam(value = "searchKey", required = false) String searchKey,
+                                                  @RequestParam(value = "currentPage")Integer currentPage,
+                                                  @RequestParam(value = "size") Integer size) {
+        Page page = new Page();
+        page.setPageSize(size);
+        page.setCurrentPage(currentPage);
+        return accountService.searchAccount(searchKey, page);
     }
     @RequestMapping(value = "isLogin", method = RequestMethod.GET)
     @ResponseBody
@@ -47,6 +73,7 @@ public class AccountController {
         if (Objects.isNull(account)) {
             return ComentUtils.buildResponseVO(true, "操作成功", false);
         }
+        account.setPassword(null);
         return ComentUtils.buildResponseVO(true,"操作成功", account);
     }
     @RequestMapping(value = "updateUser", method = RequestMethod.POST)

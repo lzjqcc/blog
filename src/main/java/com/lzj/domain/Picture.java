@@ -7,6 +7,15 @@ public class Picture extends BaseEntity implements Serializable {
     private String pictureDescribe;
     private String pictureName;
     private Integer currentAccountId;
+    private Integer pictureGroupId;
+
+    public Integer getPictureGroupId() {
+        return pictureGroupId;
+    }
+
+    public void setPictureGroupId(Integer pictureGroupId) {
+        this.pictureGroupId = pictureGroupId;
+    }
 
     public String getPictureSrc() {
         return pictureSrc;

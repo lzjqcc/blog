@@ -1,7 +1,10 @@
 package com.lzj.service;
 
+import com.lzj.VO.ArticleIndexVO;
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.dto.AccountDto;
+import com.lzj.dao.dto.ArticleDto;
 import com.lzj.domain.*;
 
 import java.util.*;
@@ -13,9 +16,11 @@ public interface ArticleService {
     
     void insertArticle(Article article, AccountDto user, String assortment, List<String> picURL);
     Article findById(Integer id);
-    List<Article> findAllByUserId(Integer userId,Page page);
+    PageVO<List<ArticleIndexVO>> findAllByUserId(Integer assortmentId,Integer userId,Page page);
     void updateByMap(Map map);
+    void  updateArticle(ArticleDto dto);
     List<Assortment> findAssortmentByUserId(Integer userId);
+    PageVO<List<ArticleIndexVO>> findByCreateDesc(String searchKey, Page page);
     List<Article> specificChildren(Integer userId,String assortment,Page page);
     List<Article>   findHistoryMax(Integer userId, Page page);
     void deleteArticle(Integer id);

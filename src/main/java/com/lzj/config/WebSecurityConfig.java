@@ -3,10 +3,14 @@ package com.lzj.config;
 import com.google.common.collect.Lists;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.FunctionDao;
+import com.lzj.dao.dto.AccountDto;
+import com.lzj.domain.Account;
+import com.lzj.filter.UploadIconFilter;
 import com.lzj.security.*;
 import com.lzj.utils.ComentUtils;
 import com.lzj.utils.JsonUtils;
 import net.sf.json.JSON;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -18,17 +22,24 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.SessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -40,7 +51,8 @@ import java.util.List;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     FunctionDao functionDao;
-
+    @Autowired
+    SessionRepository sessionRepository;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
@@ -58,6 +70,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 }
 
 
+            }
+        });
+        http.addFilterBefore(new UploadIconFilter(), ChannelProcessingFilter.class);
+        http.logout().logoutUrl("/registerOut").invalidateHttpSession(true).logoutSuccessHandler(new LogoutSuccessHandler() {
+            @Override
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                response.setContentType("application/json");
+                OutputStream outputStream = response.getOutputStream();
+                try {
+
+                    if (authentication instanceof AccountToken) {
+                        AccountToken token = (AccountToken) authentication;
+                        ResponseVO<AccountDto> responseVO = new ResponseVO<>();
+                        AccountDto dto = new AccountDto();
+                        BeanUtils.copyProperties(token.getAccount(), dto);
+                        dto.setPassword(null);
+                        responseVO.setResult(dto);
+                        responseVO.setSuccess(true);
+                        responseVO.setMessage("操作成功");
+                        outputStream.write(JsonUtils.toJson(responseVO).getBytes());
+                    }
+                }finally {
+                    sessionRepository.delete(request.getRequestedSessionId());
+                    ComentUtils.closeStream(outputStream);
+                }
             }
         });
         http.exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
@@ -86,6 +123,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/group/", "/group/*", "/group/**").authenticated();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/group/", "/group/*", "/group/**").authenticated();
 
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/message/", "/message/*", "/message/**").authenticated();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/message/", "/message/*", "/message/**").authenticated();
+
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/articles/insertArticles",
                 "/articles/uploadArticlePic",
                 "/articles/abandonArticle",
@@ -109,7 +149,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/pictureGroup/*", "/pictureGroup/**").
                 // 内部使用SpringEl解析
                         access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager());
-
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override
@@ -153,9 +192,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 PrintWriter writer = null;
                 try {
-                    ResponseVO responseVO = new ResponseVO();
+                    ResponseVO<String> responseVO = new ResponseVO();
                     responseVO.setMessage("登录失败");
                     responseVO.setSuccess(false);
+                    responseVO.setResult(exception.toString());
                     response.setContentType("application/json");
                     writer = response.getWriter();
                     writer.write(JsonUtils.toJson(responseVO));

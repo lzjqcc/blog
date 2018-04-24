@@ -35,5 +35,5 @@ public interface AccountDao {
     List<Account> findAll(Page page);
 
     List<Account> findAccountsByIds(@Param("param") List<Integer> ids);
-    List<Account> searchAccount(@Param("email") String email, @Param("userName") String userName, Page page);
+    List<Account> searchAccount(@Param("searchKey") String searchKey,@Param("currentAccountId")Integer currentAccountId, Page page);
 }

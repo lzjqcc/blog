@@ -41,6 +41,7 @@ public class GroupService {
             groupDao.insertGroup(group);
             responseVO.setSuccess(true);
             responseVO.setMessage("操作成功");
+            responseVO.setResult(group);
             manager.commit(status);
         }catch (Exception e) {
             manager.rollback(status);

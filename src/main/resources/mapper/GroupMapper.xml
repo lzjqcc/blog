@@ -26,6 +26,17 @@
         #{updateTime},
         #{groupName})
     </insert>
+    <insert id="insertGroups">
+        INSERT INTO tb_group
+        (<include refid="columns"/>)
+        VALUES
+        <foreach collection="list" open="(" close=")" separator="," >
+            #{currentAccountId},
+            #{createTime},
+            #{updateTime},
+            #{groupName}
+        </foreach>
+    </insert>
     <update id="updateGroup">
         UPDATE tb_group
         SET group_name =#{groupName}

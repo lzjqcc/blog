@@ -1,9 +1,12 @@
 package com.lzj.service;
 
+import com.lzj.VO.PageVO;
 import com.lzj.dao.dto.AccountDto;
 import com.lzj.domain.Account;
+import com.lzj.domain.Page;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 public interface AccountService {
     /**
@@ -21,5 +24,5 @@ public interface AccountService {
      * @return true表示用户存在，false表示不存在
      */
     Boolean exitsUser(String name,String email);
-
+    PageVO<List<AccountDto>> searchAccount(String searchKey, Page page);
 }

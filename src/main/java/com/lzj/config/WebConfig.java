@@ -47,12 +47,12 @@ public class WebConfig {
         return multipartFilter;
     }
 
-    /**
+   /* *//**
      * 注册过滤器UploadIconFilter
      * @return
-     */
+     *//*
     @Bean
-    @Order(2)
+    @Order(0)
     public FilterRegistrationBean uploadIconFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setName("hello");
@@ -60,7 +60,7 @@ public class WebConfig {
 
         registrationBean.setFilter(helloFilter);
         return registrationBean;
-    }
+    }*/
   /*  @Bean
     public ServletContextAware endpointExporterInitializer(final ApplicationContext applicationContext) {
         return new ServletContextAware() {

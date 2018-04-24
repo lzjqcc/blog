@@ -89,23 +89,25 @@ public class LoginController {
      */
     @RequestMapping("/registerAct")
     @ResponseBody
-    public Map<String,String> registerAct(@RequestBody AccountDto user){
-        Map<String, String> result = new HashMap<>();
+    public Map<String,Object> registerAct(@RequestBody AccountDto user){
+        Map<String, Object> result = new HashMap<>();
         if (user.getEmail()!=null && !user.getEmail().contains("@") && user.getEmail().lastIndexOf(".com")==-1){
             result.put("result", "邮箱格式错误");
             return result;
         }
         if (!accountService.insertUser(user)){
-            result.put("result", "用户名存在");
+            result.put("result", "邮箱已注册");
             return result;
         }
         EmailObject object=new EmailObject();
         object.setSendTo(user.getEmail());
         object.setDefaultEncoding("UTF-8");
         object.setSubject("用户注册");
-        object.setContent("");
+        object.setContent("<h3>用户名:"+user.getEmail()+"</h3><h3>密码:"+user.getPassword()+"</h3>");
         ComentUtils.sendEmail(object);
-        result.put("result", "注册成功");
+        result.put("success", "true");
+        result.put("result", ComentUtils.getCurrentAccount());
+
         return result;
     }
 }

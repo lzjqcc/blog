@@ -8,6 +8,7 @@ import com.lzj.exception.SystemException;
 import com.lzj.security.AccountToken;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,6 +20,10 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,11 +33,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ComentUtils {
     private final static List<SystemException> list = new CopyOnWriteArrayList<SystemException>();
 
-    public final static String ICON_DIR = "./src/main/resources/static/icon";
-    public final static String HOST = "http://localhost:8080";
-    public final static String ARTICLE_PIC = "./src/main/resources/static/articlepic";
-    public final static String PICTURE_DIR = "./src/main/resources/static/picture";
-
+    public final static String ICON_DIR = "D:\\lzjimage\\icon";
+    public final static String HOST = "http://localhost:8070";
+    public final static String ARTICLE_PIC = "D:\\lzjimage\\articlepic";
+    public final static String PICTURE_DIR = "D:\\lzjimage\\picture";
+    public static void updateCurrentAccout(Account account) {
+        AccountToken token = (AccountToken) SecurityContextHolder.getContext().getAuthentication();
+        token.setAccount(account);
+        SecurityContextHolder.clearContext();
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
     public static Account getCurrentAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
@@ -151,9 +161,16 @@ public class ComentUtils {
         if (StringUtils.isEmpty(local)) {
             return "";
         }
-        return ComentUtils.HOST + local.split("static")[1];
-    }
 
+        // D:\lzjimage\picture\2\1\1524550097386.jpg
+        return ComentUtils.HOST + local.split("lzjimage")[1];
+    }
+    public static String getPicture(String uri) {
+        if (StringUtils.isEmpty(uri)) {
+            return "";
+        }
+        return ComentUtils.HOST + "/" + uri.substring(uri.indexOf("picture"));
+    }
     /**
      * 获取token防止用户多次提交
      */

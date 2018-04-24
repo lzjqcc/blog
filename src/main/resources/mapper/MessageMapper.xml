@@ -27,10 +27,13 @@
     <insert id="insertMessage" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO tb_message_info
         (<include refid="columns" ></include>)
-        VALUES (#{pushessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag},#{toAccountName},#{fromAccountName})
+        VALUES (#{pushMessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag},#{toAccountName},#{fromAccountName})
     </insert>
     <update id="updateType">
-        update tb_message_info SET type=#{type} where id=#{id}
+        update tb_message_info SET type=#{type} where id in
+        <foreach collection="ids" separator="," item="item" close=")" open="(">
+            #{item}
+        </foreach>
     </update>
     <select id="findMessagesByDto" resultMap="messageMap">
         SELECT  id,<include refid="columns"></include>

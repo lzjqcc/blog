@@ -82,7 +82,7 @@ public class InsertAop {
             throw new SystemException(321, "插入关系表失败:SQL-->"+SQL ,e);
         } catch (IntrospectionException e) {
             rollback(transactional);
-            e.printStackTrace();
+            throw new SystemException(321, "插入关系表失败:SQL -->" + SQL, e);
         } finally {
             try {
                 transactional.close();

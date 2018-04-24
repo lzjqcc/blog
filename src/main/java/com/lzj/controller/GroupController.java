@@ -29,7 +29,7 @@ public class GroupController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/addGroup")
+    @RequestMapping(method = RequestMethod.POST, value = "/addGroup")
     public ResponseVO addGroup(@RequestBody GroupDto dto) {
         Account account = ComentUtils.getCurrentAccount();
         dto.setCurrentAccountId(account.getId());

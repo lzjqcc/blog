@@ -88,6 +88,9 @@
             <if test="param.userName !=null">
                 user_name=#{param.userName},
             </if>
+            <if test="param.city != null">
+                city = #{param.city},
+            </if>
             update_time=#{param.updateTime}
         </set>
         WHERE id=#{param.id}
@@ -119,12 +122,13 @@
     <select id="searchAccount" resultMap="userResultMap">
         SELECT id, email, user_name,gender,age from tb_account
         WHERE
-        1=1
-        <if test="email != null">
-            and email like CONCAT('%',#{email},'%')
+        id != #{currentAccountId} and
+        id not in (select friend_id from tb_friend where current_account_id = #{currentAccountId} and friend_status = 1)
+        <if test="searchKey != null">
+            and ( email like CONCAT('%',#{searchKey},'%')
         </if>
-        <if test="userName != null">
-            and user_name LIKE CONCAT('%',#{userName},'%')
+        <if test="searchKey != null">
+            or user_name LIKE CONCAT('%',#{searchKey},'%') )
         </if>
     </select>
 </mapper>

@@ -24,6 +24,14 @@ public class TestArticle {
     @Autowired
     CommentService commentService;
     @Test
+    public void findByCreateTimeAndvisitTimes() {
+        Page page = new Page();
+        page.setPageSize(5);
+        page.setCurrentPage(1);
+       List<Article> list =  articleDao.findByCreateTimeAndvisitTimes("java",page);
+       int i = 0;
+    }
+    @Test
     public void testComment() {
       List<CommentMongo> list =  commentService.getComments(21, 0);
       int i=0;

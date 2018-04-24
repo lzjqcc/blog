@@ -25,7 +25,6 @@ public class MessageInfo extends BaseEntity implements Serializable{
     //2,评论消息
     //3,别人发送的私信息
     private Integer flag;
-
     public String getFromAccountName() {
         return fromAccountName;
     }

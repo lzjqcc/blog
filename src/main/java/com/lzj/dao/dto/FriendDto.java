@@ -1,8 +1,11 @@
 package com.lzj.dao.dto;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 public class FriendDto {
+    private Date createTime;
+    private Date updateTime;
     private Integer currentAccountId;
     private Integer friendId;
     private Integer groupId;
@@ -13,11 +16,37 @@ public class FriendDto {
     private Boolean specialAttention;
     private String friendName;
     private String personalSignature;
+    private Integer messageId;
+
+    public Integer getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
+    }
+
     public Boolean getSpecialAttention() {
         return specialAttention;
     }
     public String getFriendName() {
         return friendName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getPersonalSignature() {

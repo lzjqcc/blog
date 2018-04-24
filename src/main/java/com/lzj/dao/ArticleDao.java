@@ -19,7 +19,7 @@ import java.util.Map;
 public interface ArticleDao {
     void insertArticle(Article article);
     Article findById(Integer id);
-    List<Article> findByUserId(@Param("userId") Integer userId, Page page);
+    List<Article> findByUserId(@Param("assortmentId")Integer assortmentId ,@Param("userId") Integer userId, Page page);
     void deleteById(Integer id);
     void updateArticle(Article article);
     void updateByMap(@Param("map") Map map);
@@ -40,4 +40,6 @@ public interface ArticleDao {
      */
     List<Article>   findHistoryMax(@Param("userId")Integer userId, Page page);
     List<Article> findGroupByCreateTime(Integer userId);
+
+    List<Article> findByCreateTimeAndvisitTimes(@Param("searchKey")String searchKey, Page page);
 }

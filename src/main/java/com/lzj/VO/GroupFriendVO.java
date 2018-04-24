@@ -8,8 +8,8 @@ import java.util.List;
 
 public class GroupFriendVO implements Serializable {
     private static final long serialVersionUID = -442378781861743L;
-    public GroupDto groupDto;
-    public List<Friend> friends;
+    private GroupDto groupDto;
+    private List<Friend> friends;
 
     public GroupDto getGroupDto() {
         return groupDto;

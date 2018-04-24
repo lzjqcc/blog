@@ -1,5 +1,7 @@
 package com.lzj.controller;
 
+import com.lzj.VO.ArticleIndexVO;
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.CommentTypeEnum;
 import com.lzj.dao.AssortmentDao;
@@ -85,6 +87,7 @@ public class ArticleController {
         Account account = ComentUtils.getCurrentAccount();
         Article article = new Article();
         BeanUtils.copyProperties(articleDto, article);
+        article.setVisitTimes(0);
         article.setCurrentAccountId(account.getId());
         AccountDto dto = new AccountDto();
         BeanUtils.copyProperties(account,dto);
@@ -121,9 +124,9 @@ public class ArticleController {
     /**这个不需要登录
      * 根据user_id来查询显示博客分类及文章个数
      */
-    @RequestMapping(value = "findGroup/{userId}" )
+    @RequestMapping(value = "findGroup" )
     @ResponseBody
-    public ResponseVO<List<Assortment>> findGroupByUserId(@PathVariable Integer userId){
+    public ResponseVO<List<Assortment>> findGroupByUserId(@RequestParam(required = false) Integer userId){
         if (Objects.isNull(userId)) {
             userId = ComentUtils.getCurrentAccount().getId();
         }
@@ -133,7 +136,20 @@ public class ArticleController {
     public void updateAssortment(@RequestParam("assortmentId")Integer assortmentId ,@RequestParam("assortment")String assortment){
         assortmentDao.updateAssortment(assortment,null,assortmentId);
     }
-
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+    @ResponseBody
+    public PageVO<List<ArticleIndexVO>> findAll(@RequestParam(value = "userId", required = false)Integer userId,
+                                            @RequestParam(value = "pageSize")Integer pageSize,
+                                            @RequestParam(value = "currentPage")Integer currentPage,
+                                                @RequestParam(value = "assortmentId", required = false)Integer assortmentId) {
+        if (userId == null) {
+            userId = ComentUtils.getCurrentAccount().getId();
+        }
+        Page page = new Page();
+        page.setPageSize(pageSize);
+        page.setCurrentPage(currentPage);
+       return articleService.findAllByUserId(assortmentId,userId, page);
+    }
     /**不需要登录
      * 描述：点击具体的某个分类，显示该分类下面所有的文章
      * @return
@@ -200,6 +216,18 @@ public class ArticleController {
         Map<String,List<Article>> listMap=articleService.findDateNum(userId,page);
         return listMap.get(singleDate);
     }
+    @RequestMapping(value = "/findIndex")
+    @ResponseBody
+    public PageVO<List<ArticleIndexVO>> findByCreateDescAndVisiTimes(@RequestParam("pageSize") Integer size,
+                                                                     @RequestParam("currentPage")Integer currentPage,
+                                                                     @RequestParam(value = "searchKey", required = false) String searchKey,
+                                                                     @RequestParam(value = "self", required = false) Boolean self) {
+        Page page = new Page();
+        page.setPageSize(size);
+        page.setCurrentPage(currentPage);
+        return articleService.findByCreateDesc(searchKey,page);
+
+    }
     @RequestMapping(value = "/uploadArticlePic",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,String> uploadArticlePic(@RequestParam(value = "image", required = true) MultipartFile uploadFile) throws IOException {
@@ -217,7 +245,7 @@ public class ArticleController {
                 }
                 file = new File(parent, System.currentTimeMillis()+"."+uploadFile.getOriginalFilename().split("\\.")[1]);
                 Files.copy(inputStream, Paths.get(articlePic, file.getName()));
-                String picURL = ComentUtils.getImageURL(file.getPath());
+                String picURL = ComentUtils.getImageURL(file.toURI().getPath());
                 Map<String,String> map=new HashMap<>();
                 if (!picMap.containsKey(user.getId())){
                     List<String> list = new ArrayList<>();

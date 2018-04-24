@@ -24,6 +24,15 @@ public class AccountDto {
     private String password;
     private String headIconURL;
     private Date updateTime;
+    private String school;
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
 
     public Date getUpdateTime() {
         return updateTime;

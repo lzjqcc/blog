@@ -15,8 +15,12 @@ import java.util.List;
 @Repository
 public interface PictureGroupDao {
 
-    void insertPictureGroupDao(@Param("param") PictureGroup group);
+    void insertPictureGroup(PictureGroup group);
 
-    List<PictureGroup> findByCurrentAccountId(@Param("param") Integer currentAccountId, Page page);
+    List<PictureGroup> findByCurrentAccountId(@Param("param") Integer currentAccountId);
+
+    PictureGroup findByCurrentAccountIdAndGroupName(@Param("currentId")Integer currentId, @Param("groupName") String groupName);
+
+    PictureGroup findByCurrentAccountIdAndGroupId(@Param("currentAccountId") Integer currentAccountId, @Param("id") Integer id);
 
 }

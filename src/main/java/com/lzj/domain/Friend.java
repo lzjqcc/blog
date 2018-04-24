@@ -23,9 +23,12 @@ public class Friend extends BaseEntity implements Serializable {
     private String personalSignature;
     // 数据库中不存储
     private String headIcon;
-    private boolean online;
+    private Boolean online;
 
-    public boolean getOnline() {
+    public Boolean getOnline() {
+        if (online == null) {
+            return false;
+        }
         return online;
     }
 

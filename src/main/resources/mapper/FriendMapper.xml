@@ -60,7 +60,7 @@
                 is_defriend = #{isDefriend},
             </if>
             <if test="status != null">
-                status=#{status},
+                friend_status=#{status},
             </if>
             <if test="specialAttention != null">
                 special_attention=#{specialAttention},
@@ -69,7 +69,10 @@
                 group_id = #{groupId},
             </if>
             <if test="friendName != null">
-                friend_name = #{friendName}
+                friend_name = #{friendName},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
             </if>
         </set>
         WHERE current_account_id =#{currentAccountId} and friend_id=#{friendId}

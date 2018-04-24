@@ -1,5 +1,6 @@
 package com.lzj.controller;
 
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.FriendStatusEnum;
 import com.lzj.constant.MessageTypeEnum;
@@ -43,7 +44,6 @@ public class FriendController {
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         ResponseVO responseVO = friendService.friendApply(friendDto);
-        friendService.send(account, friendDto, MessageTypeEnum.FRIEND_APPLY.code, WebSocketConstans.NOTIFY_FRIEND_APPLY);
         return responseVO;
     }
 
@@ -58,9 +58,6 @@ public class FriendController {
         Account account = ComentUtils.getCurrentAccount();
         friendDto.setCurrentAccountId(account.getId());
         ResponseVO  responseVO = friendService.operatorFriend(friendDto);
-        if (friendDto.getStatus() != null && friendDto.getStatus().intValue() == FriendStatusEnum.AGREE.code.intValue()) {
-            friendService.send(account, friendDto, MessageTypeEnum.FRIEND_AGREE.code, WebSocketConstans.NOTIFY_FRIEND_AGREE);
-        }
         return responseVO;
     }
     @ResponseBody
@@ -124,5 +121,10 @@ public class FriendController {
         dto.setFriendId(friendId);
         dto.setStatus(status);
        return friendService.findSameStatusFriend(dto);
+    }
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/searchFriends")
+    public PageVO<List<Friend>> searchFriend(@RequestParam(value = "searchKey", required = false) String searchKey) {
+        return null;
     }
 }

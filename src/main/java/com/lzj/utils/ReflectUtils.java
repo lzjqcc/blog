@@ -1,5 +1,7 @@
 package com.lzj.utils;
 
+import com.google.common.collect.Lists;
+import com.lzj.domain.Account;
 import com.lzj.domain.BaseEntity;
 import com.lzj.exception.SystemException;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +20,7 @@ public class ReflectUtils {
      * @return
      */
     public static String[] findNullFieldName(Object entity) {
-        Field[] allFileds = entity.getClass().getFields();
+        List<Field> allFileds = getAllFields(entity.getClass(), new ArrayList<>());
         List<String> nullFiledNames = new ArrayList<>();
         try {
             for (Field field : allFileds) {
@@ -32,12 +34,16 @@ public class ReflectUtils {
             return null;
         }
         String[] array = new String[nullFiledNames.size()];
-        for (int i = 0; i < nullFiledNames.size(); i++) {
-            array[i] = nullFiledNames.get(i);
-        }
-        return array;
+        return nullFiledNames.toArray(array);
     }
-
+    private static List<Field> getAllFields(Class entityClass, List<Field> list) {
+        Field[] allFields = entityClass.getDeclaredFields();
+        list.addAll(Lists.newArrayList(allFields));
+        if (!entityClass.getSuperclass().equals(Object.class)) {
+            getAllFields(entityClass.getSuperclass(), list);
+        }
+        return list;
+    }
     public static void copyFieldValue(Object source, Object targe, String... copyName) {
         if (source == null || targe == null) {
             throw new SystemException(300, "source || targe 为null");
@@ -64,6 +70,15 @@ public class ReflectUtils {
             String args = source.getClass().getSimpleName()+":"+targe.getClass().getSimpleName()+":"+builder.toString();
             throw new SystemException(300, "没有字段访问权限", ReflectUtils.class.toString(), "copyFieldValue", args,e.toString());
         }
+    }
+    public static void main(String [] args) {
+        Account account = new Account();
+        account.setEmail("skldf");
+        account.setId(1);
+        Account d = new Account();
+        BeanUtils.copyProperties(account, d);
+        System.out.println(d.getId());
+        System.out.println(Lists.newArrayList(ReflectUtils.findNullFieldName(account)));
     }
 
 }

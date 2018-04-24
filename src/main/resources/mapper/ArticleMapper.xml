@@ -65,6 +65,10 @@
     <select id="findByUserId" resultMap="articleResultMap">
         SELECT         <include refid="userColumns"><property name="alias" value="a"/></include>
         FROM tb_article a where a.current_account_id = #{userId}
+        <if test="assortmentId != null">
+            and assortment_id =#{assortmentId}
+        </if>
+        ORDER by a.top desc, a.create_time DESC
     </select>
     <select id="findBycurrentAccountIdAndAssortment" resultMap="articleResultMap" useCache="true">
         SELECT
@@ -79,5 +83,13 @@
     </select>
     <select id="findGroupByCreateTime" resultMap="articleResultMap">
         SELECT count(id) as count  ,date(create_time) as create_time FROM tb_article where current_account_id = #{userId} group by date_format(create_time,'%Y-%m');
+    </select>
+    <select id="findByCreateTimeAndvisitTimes" resultMap="articleResultMap">
+        SELECT <include refid="userColumns"><property name="alias" value="a"/></include>
+        from tb_article a
+        <if test="searchKey != null">
+            where a.title LIKE concat(concat('%',#{searchKey}),'%')
+        </if>
+          order by a.create_time desc
     </select>
 </mapper>
