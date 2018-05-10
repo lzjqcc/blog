@@ -17,6 +17,15 @@
         <result column="member_id" property="memberId"/>
         <result column="sponsor_id" property="sponsorId"/>
     </resultMap>
+    <resultMap id="friendFunctionMap" type="com.lzj.domain.FriendFunction">
+        <id column="id" property="id"/>
+        <result column="current_account_id" property="currentAccountId"/>
+        <result column="function_id" property="functionId"/>
+        <result column="friend_id" property="friendId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="auth" property="auth"/>
+    </resultMap>
     <sql id="base">
       create_time,
       update_time,
@@ -44,6 +53,11 @@
       VALUES
       (#{createTime},#{updateTime},#{authority},#{describtion})
     </insert>
+    <select id="findAllFriendFuntions" resultMap="friendFunctionMap">
+        SELECT friend_id,function_id,tfu.id,current_account_id , tf.authority as auth
+        from tb_friend_function tfu left JOIN tb_function tf on tfu.function_id = tf.id
+        where tfu.current_account_id = #{currentAccountId}
+    </select>
     <select id="findFriendFunction" resultMap="functionMap">
         SELECT
         <include refid="aliasBase"></include>

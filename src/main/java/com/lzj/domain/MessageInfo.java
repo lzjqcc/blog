@@ -9,6 +9,8 @@ public class MessageInfo extends BaseEntity implements Serializable{
     private String fromAccountName;
     private Integer toAccountId;
     private String toAccountName;
+    // 扩展id
+    private Integer otherId;
     public Integer getFriendId() {
         return friendId;
     }
@@ -25,6 +27,15 @@ public class MessageInfo extends BaseEntity implements Serializable{
     //2,评论消息
     //3,别人发送的私信息
     private Integer flag;
+
+    public Integer getOtherId() {
+        return otherId;
+    }
+
+    public void setOtherId(Integer otherId) {
+        this.otherId = otherId;
+    }
+
     public String getFromAccountName() {
         return fromAccountName;
     }

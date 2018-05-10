@@ -13,6 +13,7 @@
         <result column="create_time" property="createTime"/>
         <result column="type" property="type"/>
         <result column="flag" property="flag"/>
+        <result column="other_id" property="otherId"/>
     </resultMap>
     <sql id="columns">
         push_message,
@@ -22,12 +23,13 @@
         type,
         flag,
         to_account_name,
-        from_account_name
+        from_account_name,
+        other_id
     </sql>
     <insert id="insertMessage" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO tb_message_info
         (<include refid="columns" ></include>)
-        VALUES (#{pushMessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag},#{toAccountName},#{fromAccountName})
+        VALUES (#{pushMessage},#{fromAccountId},#{toAccountId},#{createTime},#{type},#{flag},#{toAccountName},#{fromAccountName},#{otherId})
     </insert>
     <update id="updateType">
         update tb_message_info SET type=#{type} where id in

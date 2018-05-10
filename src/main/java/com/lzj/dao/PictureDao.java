@@ -14,4 +14,5 @@ public interface PictureDao {
     List<Picture> findGroupByCurrentAccountIdAndGroupIds(@Param("currentAccountId")Integer currentAccountId, @Param("list") List<Integer> groupIds);
 
     List<Picture> findByCurrentAccountIdAndGroupId(@Param("currentAccountId") Integer currentAccountId, @Param("groupId") Integer groupId, Page page);
+
 }

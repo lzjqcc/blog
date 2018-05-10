@@ -125,7 +125,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/message/", "/message/*", "/message/**").authenticated();
         http.authorizeRequests().antMatchers(HttpMethod.POST, "/message/", "/message/*", "/message/**").authenticated();
-
+        // 这样可以动态匹配角色
+        //http.authorizeRequests().accessDecisionManager(imageAccessDecisionManager());
         http.authorizeRequests().antMatchers(HttpMethod.GET,"/articles/insertArticles",
                 "/articles/uploadArticlePic",
                 "/articles/abandonArticle",
@@ -148,7 +149,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authenticationProvider(new CustomProvider());
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/pictureGroup/*", "/pictureGroup/**").
                 // 内部使用SpringEl解析
-                        access("hasAuthority('group_picture_group_see') and hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager());
+                        access("hasAuthority('friend_picture_group_see')").accessDecisionManager(imageAccessDecisionManager());
         // 如果需要在SpringSecurity相应类中添加自定义组件就i需要这个
         /*.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>(){
             @Override

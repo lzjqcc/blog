@@ -2,6 +2,7 @@ package com.lzj.dao;
 
 import com.lzj.domain.Conference;
 import com.lzj.domain.ConferenceFunction;
+import com.lzj.domain.FriendFunction;
 import com.lzj.domain.Function;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.access.method.P;
@@ -24,6 +25,7 @@ public interface FunctionDao {
     List<Function> findFriendFunction(@Param("currentAccountId") Integer currentAccountId,
                                       @Param("friendId") Integer friendId);
 
+    List<FriendFunction> findAllFriendFuntions(@Param("currentAccountId") Integer currentAccountId);
     /**
      *
      * @param currentAccountId 当前登录人

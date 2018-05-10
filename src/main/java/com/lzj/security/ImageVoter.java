@@ -31,7 +31,7 @@ public class ImageVoter extends AbstractVoter {
                 AccountToken accountToken = (AccountToken) authentication;
                 String friendId = object.getHttpRequest().getParameter("friendId");
                 if (StringUtils.isEmpty(friendId)) {
-                    throw new BusinessException(305, "缺少参数friendId");
+                    return ACCESS_GRANTED;
                 }
                 return AccessDecisionManagerUtils.decide(voter, authentication, object, attributes, getFunctions(accountToken, Integer.parseInt(friendId)));
             }
@@ -50,10 +50,8 @@ public class ImageVoter extends AbstractVoter {
         return voter.vote(authentication,object,attributes);
     }
     private List<Function> getFunctions(AccountToken accountToken, Integer friendId) {
-        List<Function> groupFunctions = functionDao.findGroupFunction(accountToken.getAccount().getId(),friendId);
         List<Function> friendFunctions = functionDao.findFriendFunction(accountToken.getAccount().getId(),friendId);
         List<Function> list = Lists.newArrayList();
-        list.addAll(groupFunctions);
         list.addAll(friendFunctions);
         return list;
     }

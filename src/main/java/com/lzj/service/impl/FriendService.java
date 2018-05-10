@@ -8,10 +8,7 @@ import com.lzj.constant.FriendStatusEnum;
 import com.lzj.constant.MessageTypeEnum;
 import com.lzj.controller.FriendController;
 import com.lzj.dao.*;
-import com.lzj.dao.dto.AccountDto;
-import com.lzj.dao.dto.FriendDto;
-import com.lzj.dao.dto.FunctionDto;
-import com.lzj.dao.dto.GroupDto;
+import com.lzj.dao.dto.*;
 import com.lzj.domain.*;
 import com.lzj.exception.SystemException;
 import com.lzj.helper.RedisTemplateHelper;
@@ -25,15 +22,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.ValidationUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,9 +51,55 @@ public class FriendService {
     TransactionHelper transactionHelper;
     @Autowired
     MessageDao messageDao;
-    public ResponseVO<List<Friend>> findAllFriends(Account currentAccount) {
+    public FriendService() {
+
+    }
+    public FriendService(String a) {
+        System.out.println(a);
+    }
+    public ResponseVO<List<AuthPrictureDto>> findFriendsAuth(Integer accountId) {
+        List<Friend> friends = findAllFriends(accountId).getResult();
+        List<AuthPrictureDto> authPrictureDtos = new ArrayList<>();
+        if (CollectionUtils.isEmpty(friends)) {
+            return ComentUtils.buildResponseVO(true, "操作成功", authPrictureDtos);
+        }
+        List<FriendFunction> functions = functionDao.findAllFriendFuntions(accountId);
+        Map<Integer, List<FriendFunction>> map = new HashMap<>();
+        for (FriendFunction friendFunction: functions) {
+            if (map.get(friendFunction.getFriendId()) == null) {
+                List<FriendFunction> list = new ArrayList<>();
+                list.add(friendFunction);
+                map.put(friendFunction.getFriendId(), list);
+            }else {
+                map.get(friendFunction.getFriendId()).add(friendFunction);
+            }
+        }
+        for (Friend friend : friends) {
+           List<FriendFunction> friendFunctions = map.get(friend.getId());
+           authPrictureDtos.add(buildAuthPrictureDto(friend, friendFunctions));
+        }
+        return ComentUtils.buildResponseVO(true, "操作成功", authPrictureDtos);
+    }
+    public AuthPrictureDto buildAuthPrictureDto(Friend friend, List<FriendFunction> friendFunctions) {
+        AuthPrictureDto dto = new AuthPrictureDto();
+        dto.setFriendName(friend.getFriendName());
+        dto.setId(friend.getId());
+        if (CollectionUtils.isEmpty(friendFunctions)) {
+            return dto;
+        }
+        friendFunctions.stream().forEach(t-> {
+            if (t.getAuth().equals(AuthorityEnum.FRIEND_PICTURE_GROUP_SEE.authority)) {
+                dto.setLookPictureAuth(true);
+            }
+            if (t.getAuth().equals(AuthorityEnum.FRIEND_PICTURE_GROUP_COMMENT.authority)) {
+                dto.setCommentPictureAuth(true);
+            }
+        });
+        return dto;
+    }
+    public ResponseVO<List<Friend>> findAllFriends(Integer currentAccountId) {
         FriendDto dto = new FriendDto();
-        dto.setCurrentAccountId(currentAccount.getId());
+        dto.setCurrentAccountId(currentAccountId);
         dto.setStatus(FriendStatusEnum.AGREE.code);
 
         List<Friend> list = friendDao.findFriends(dto);
@@ -75,7 +117,7 @@ public class FriendService {
         List<Group> list = groupDao.findGroupsByDto(groupDto);
         List<GroupFriendVO> groupFriendVOS = new ArrayList<>();
         List<Integer> accountIds = new ArrayList<>();
-        findAllFriends(currentAccount).getResult().stream().forEach(f -> {
+        findAllFriends(currentAccount.getId()).getResult().stream().forEach(f -> {
             accountIds.add(f.getFriendId());
         });
         if (CollectionUtils.isEmpty(accountIds)) {

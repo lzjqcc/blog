@@ -4,6 +4,7 @@ import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.FriendStatusEnum;
 import com.lzj.constant.MessageTypeEnum;
+import com.lzj.dao.dto.AuthPrictureDto;
 import com.lzj.dao.dto.FriendDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Friend;
@@ -61,6 +62,11 @@ public class FriendController {
         return responseVO;
     }
     @ResponseBody
+    @RequestMapping(value = "/findFriendsAuth", method = RequestMethod.GET)
+    public ResponseVO<List<AuthPrictureDto>> findFriendAuth() {
+        return friendService.findFriendsAuth(ComentUtils.getCurrentAccount().getId());
+    }
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/deleteFriend")
     public ResponseVO deleteFriend(@RequestParam("friendId") Integer friendId) {
         Account account = ComentUtils.getCurrentAccount();
@@ -72,7 +78,7 @@ public class FriendController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET,value = "/findAllFriends")
     public ResponseVO<List<Friend>> findAllFriends() {
-        return friendService.findAllFriends(ComentUtils.getCurrentAccount());
+        return friendService.findAllFriends(ComentUtils.getCurrentAccount().getId());
     }
     /**
      * 查找在线好友

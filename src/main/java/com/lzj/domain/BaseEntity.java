@@ -16,7 +16,7 @@ import java.util.Date;
 public class BaseEntity implements Serializable {
 
     protected Integer id;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
 
     private Date updateTime;

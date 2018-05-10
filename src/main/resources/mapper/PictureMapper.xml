@@ -36,20 +36,24 @@
         (#{currentAccountId},#{pictureSrc},#{pictureName},#{updateTime},#{createTime},#{pictureGroupId})
     </insert>
     <select id="findGroupByCurrentAccountIdAndGroupIds" resultMap="pictureMap">
-        SELECT <include refid="pictureFieldWithId"></include> FROM tb_picture p
-        INNER join (SELECT max(id) as id from tb_picture group by picture_group_id HAVING
+        SELECT DISTINCT <include refid="pictureFieldWithId"></include> FROM tb_picture p
+        INNER join (SELECT max(id) as did from tb_picture group by picture_group_id HAVING
         <if test="list != null and list.size >0">
-            and picture_group_id in
+             picture_group_id in
             <foreach collection="list" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        ) temp on p.id = temp.id
+        ) temp on p.id = temp.did
     </select>
     <select id="findByCurrentAccountIdAndGroupId" resultMap="pictureMap">
         select <include refid="pictureFieldWithId"></include>
         FROM tb_picture
         where current_account_id = #{currentAccountId}
         and picture_group_id = #{groupId}
+    </select>
+    <select id="findCountByGroupIdAndCurrentAccountId" resultType="java.lang.Integer">
+        SELECT count(id) from tb_picture WHERE picture_group_id = #{groupId} and current_account_id = #{currentAccountId}
+
     </select>
 </mapper>

@@ -5,14 +5,23 @@ import java.util.List;
 public class PictureGroupDto extends GroupDto {
     private static final long serialVersionUID = 3588650417684495331L;
     private String prictureDesribe;
-    private List<String> pictureURL;
+    private List<String> pictureURLs;
+    private Integer pictureCount;
 
-    public List<String> getPictureURL() {
-        return pictureURL;
+    public Integer getPictureCount() {
+        return pictureCount;
     }
 
-    public void setPictureURL(List<String> pictureURL) {
-        this.pictureURL = pictureURL;
+    public void setPictureCount(Integer pictureCount) {
+        this.pictureCount = pictureCount;
+    }
+
+    public List<String> getPictureURLs() {
+        return pictureURLs;
+    }
+
+    public void setPictureURLs(List<String> pictureURLs) {
+        this.pictureURLs = pictureURLs;
     }
 
     public String getPrictureDesribe() {

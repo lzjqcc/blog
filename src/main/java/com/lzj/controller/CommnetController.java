@@ -87,6 +87,7 @@ public class CommnetController {
         messageInfo.setToAccountName(toAccount.getUserName());
         messageInfo.setToAccountId(toAccount.getId());
         messageInfo.setCreateTime(comment.getCreateTime());
+        messageInfo.setOtherId(comment.getArticleId());
         messageTemplate.sendToUser(messageInfo,toAccount.getEmail(), WebSocketConstans.NOTIFY_USER_COMMENT, true);
     }
 }

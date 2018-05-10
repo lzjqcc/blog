@@ -13,11 +13,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +34,15 @@ public class FriendTest {
     AccountDao accountDao;
     @Autowired
     FriendService friendService;
-    @Autowired
     private StringRedisTemplate redisTemplate = null;
+    @Autowired
+    ApplicationContext applicationContext;
     @Test
     public void testRedis(){
-        int i = 0;
+        FriendService friendService = applicationContext.getBean(FriendService.class, "a");
+        FriendService friendService1 = applicationContext.getBean(FriendService.class, "b");
+        System.out.println(friendService);
+        System.out.println(friendService1);
     }
     @Test
     public void testApplyFriend() {

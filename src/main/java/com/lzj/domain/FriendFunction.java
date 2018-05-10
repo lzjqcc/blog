@@ -7,9 +7,19 @@ import java.io.Serializable;
  *
  */
 public class FriendFunction extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 4165987871333934186L;
     private Integer currentAccountId;
     private Integer friendId;
     private Integer functionId;
+    private String auth;
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
+    }
 
     public Integer getCurrentAccountId() {
         return currentAccountId;

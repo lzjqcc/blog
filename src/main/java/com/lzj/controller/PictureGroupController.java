@@ -1,6 +1,8 @@
 package com.lzj.controller;
 
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
+import com.lzj.dao.dto.PictureDto;
 import com.lzj.dao.dto.PictureGroupDto;
 import com.lzj.domain.Page;
 import com.lzj.service.impl.PictureGroupService;
@@ -18,21 +20,25 @@ import java.util.List;
 public class PictureGroupController {
     @Autowired
     private PictureGroupService pictureGroupService;
-    @GetMapping("/findCurrentPictureGroup")
-    public ResponseVO<List<PictureGroupDto>> findCurrentPictureGroup() {
-        return pictureGroupService.findCurrentAccountPictureGroup(ComentUtils.getCurrentAccount().getId());
-    }
     @GetMapping("/findGroupWithSinalePicture")
-    public ResponseVO<List<PictureGroupDto>> findWithSinglePicture() {
-        return pictureGroupService.findWithSinglePicture();
+    public ResponseVO<List<PictureGroupDto>> findWithSinglePicture(@RequestParam(value = "friendId", required = false) Integer accountId) {
+        if (accountId == null) {
+            accountId = ComentUtils.getCurrentAccount().getId();
+        }
+        return pictureGroupService.findWithSinglePicture(accountId);
+
     }
     @GetMapping("/findWithMutiPicture")
-    public ResponseVO<PictureGroupDto> findWithMutiPicture(@RequestParam("groupId") Integer groupId,
-                                                           @RequestParam("pageSize") Integer size,
-                                                           @RequestParam("currentPage")Integer currentPage) {
+    public PageVO<List<PictureDto>> findWithMutiPicture(@RequestParam(value = "friendId", required = false) Integer accountId,
+                                                        @RequestParam("groupId") Integer groupId,
+                                                        @RequestParam("pageSize") Integer size,
+                                                        @RequestParam("currentPage")Integer currentPage) {
         Page page = new Page();
         page.setPageSize(size);
         page.setCurrentPage(currentPage);
-        return pictureGroupService.findWithMutiPicture(groupId, page);
+        if (accountId == null) {
+            accountId = ComentUtils.getCurrentAccount().getId();
+        }
+        return pictureGroupService.findWithMutiPicture(accountId,groupId, page);
     }
 }

@@ -1,8 +1,10 @@
 package com.lzj.controller;
 
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.constant.ImageTypeEnum;
 import com.lzj.dao.PictureDao;
+import com.lzj.dao.dto.PictureDto;
 import com.lzj.dao.dto.PictureGroupDto;
 import com.lzj.domain.Account;
 import com.lzj.domain.Page;
@@ -28,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller()
+@RestController()
 @RequestMapping
 public class ImageController {
     @Autowired
@@ -137,4 +139,9 @@ public class ImageController {
     private String getPictureDir(String userId, String groupId) {
         return ComentUtils.PICTURE_DIR + File.separator + userId + File.separator + groupId;
     }
+    @GetMapping("/findCurrentPictureGroup")
+    public ResponseVO<List<PictureGroupDto>> findCurrentPictureGroup() {
+        return pictureGroupService.findCurrentAccountPictureGroup(ComentUtils.getCurrentAccount().getId());
+    }
+
 }

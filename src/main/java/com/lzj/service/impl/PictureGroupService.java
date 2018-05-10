@@ -1,10 +1,13 @@
 package com.lzj.service.impl;
 
+import com.google.common.collect.Lists;
+import com.lzj.VO.PageVO;
 import com.lzj.VO.ResponseVO;
 import com.lzj.dao.FriendDao;
 import com.lzj.dao.PictureDao;
 import com.lzj.dao.PictureGroupDao;
 import com.lzj.dao.dto.FunctionDto;
+import com.lzj.dao.dto.PictureDto;
 import com.lzj.dao.dto.PictureGroupDto;
 import com.lzj.domain.*;
 import com.lzj.service.FunctionService;
@@ -59,39 +62,48 @@ public class PictureGroupService implements FunctionService {
      * @param page
      * @return
      */
-    public ResponseVO<List<PictureGroupDto>> findWithSinglePicture() {
+    public ResponseVO<List<PictureGroupDto>> findWithSinglePicture(Integer accountId) {
         List<Integer> pictureGroupIds = new ArrayList<>();
-        List<PictureGroupDto> list = findCurrentAccountPictureGroup(ComentUtils.getCurrentAccount().getId()).getResult();
+        List<PictureGroupDto> list = findCurrentAccountPictureGroup(accountId).getResult();
         if (CollectionUtils.isEmpty(list)) {
             return ComentUtils.buildResponseVO(true, "操作成功", null);
         }
         list.stream().forEach(t -> pictureGroupIds.add(t.getId()));
         List<String> urls = new ArrayList<>();
-        List<Picture> pictures = pictureDao.findGroupByCurrentAccountIdAndGroupIds(ComentUtils.getCurrentAccount().getId(), pictureGroupIds);
+        List<Picture> pictures = pictureDao.findGroupByCurrentAccountIdAndGroupIds(accountId, pictureGroupIds);
         Map<Integer, List<String>> urlMap = pictures.stream().collect(Collectors.toMap(Picture::getPictureGroupId, t -> {
-            urls.add(t.getPictureSrc());
-            return urls;
+            return Lists.newArrayList(t.getPictureSrc());
         }));
         for (PictureGroupDto dto : list) {
-            dto.setPictureURL(urlMap.get(dto.getId()));
+            dto.setPictureURLs(urlMap.get(dto.getId()));
         }
         return ComentUtils.buildResponseVO(true, "操作成功", list);
     }
 
-    public ResponseVO<PictureGroupDto> findWithMutiPicture(Integer groupId, Page page) {
-        PictureGroup pictureGroup = pictureGroupDao.findByCurrentAccountIdAndGroupId(ComentUtils.getCurrentAccount().getId(), groupId);
-
-        List<Picture> pictures = pictureDao.findByCurrentAccountIdAndGroupId(ComentUtils.getCurrentAccount().getId(), groupId, page);
+    public PageVO<List<PictureDto>> findWithMutiPicture(Integer accountId, Integer groupId, Page page) {
+        PictureGroup pictureGroup = pictureGroupDao.findByCurrentAccountIdAndGroupId(accountId, groupId);
+        PageVO<List<PictureDto>> pageVO = new PageVO<>();
+        pageVO.setPage(page);
+        pageVO.setSuccess(true);
+        List<Picture> pictures = pictureDao.findByCurrentAccountIdAndGroupId(accountId, groupId, page);
         if (pictureGroup == null || CollectionUtils.isEmpty(pictures)) {
-            return ComentUtils.buildResponseVO(true, "操作成功", null);
+            return pageVO;
         }
-        PictureGroupDto dto = buildGroupDto(pictureGroup);
-        List<String> urls = new ArrayList<>();
-        pictures.stream().forEach(t -> urls.add(t.getPictureSrc()));
-        dto.setPictureURL(urls);
-        return ComentUtils.buildResponseVO(true, "操作成功", dto);
-    }
+        List<PictureDto> pictureDtos = new ArrayList<>();
+        for (Picture picture : pictures) {
+            pictureDtos.add(buildPictureDto(picture));
+        }
+        pageVO.setResult(pictureDtos);
 
+        return pageVO;
+    }
+    private PictureDto buildPictureDto(Picture picture) {
+        PictureDto dto = new PictureDto();
+        dto.setCreateTime(picture.getCreateTime());
+        dto.setId(picture.getId());
+        dto.setUrl(picture.getPictureSrc());
+        return dto;
+    }
     /**
      * @param friendId
      * @param page
